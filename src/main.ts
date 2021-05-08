@@ -1,24 +1,26 @@
 import { bus } from "./bus/bus.js";
-import { DrawEvent } from "./bus/events/draw.js";
-import { TickEvent } from "./bus/events/tick.js";
+import { Draw} from "./events/draw.js";
+import { Tick } from "./events/tick.js";
+import { initClickPuzzle } from "./click_puzzle.js";
 import { CreateBallControl } from "./controls/create_ball_control.js";
 import { FlappyControl } from "./controls/flappy_control.js";
 import { GolfControl } from "./controls/golf_control.js";
 import { camera } from "./coords/camera.js";
-import { idTable } from "./entity/id_table.js";
-import { labelTable } from "./entity/label_table.js";
-import { positionTable } from "./entity/position_table.js";
+import { idTable } from "./systems/entity/id_table.js";
+import { labelTable } from "./systems/entity/label_table.js";
+import { positionTable } from "./systems/entity/position_table.js";
 import { Gfx2d } from "./gfx/gfx_2d.js";
-import { physics } from './physics/physics.js';
+import { physics } from './systems/physics/physics.js';
 import { initPhysicsSandbox } from "./physics_sandbox.js";
-import { renderer } from "./rendering/renderer.js";
+
+import { renderer } from "./systems/rendering/renderer.js";
 
 const canvas = document.querySelector('canvas')!;
 const gfx = new Gfx2d(canvas);
 
 const reusableEvents = {
-    tick: new TickEvent(),
-    draw: new DrawEvent(gfx),
+    tick: new Tick(gfx),
+    draw: new Draw(gfx),
 };
 
 const controls = new Map<String, Control>([
@@ -70,14 +72,13 @@ function onViewportSizeChange() {
     gfx.onViewportSizeChange();
     draw();
 }
+onViewportSizeChange();
+window.addEventListener('resize', onViewportSizeChange);
 
 function draw() {
     gfx.clearAndSetTransform();
     bus.dispatch(reusableEvents.draw);
 }
-
-onViewportSizeChange();
-window.addEventListener('resize', onViewportSizeChange);
 
 function tick() {
     bus.dispatch(reusableEvents.tick);
@@ -86,4 +87,6 @@ function tick() {
 }
 tick();
 
-initPhysicsSandbox();
+// initPhysicsSandbox();
+
+initClickPuzzle();

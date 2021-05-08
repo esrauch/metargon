@@ -2,9 +2,9 @@
 // or else managed by the Physics singleton. Either case positions should be
 
 import { Pos } from "../coords/coords.js";
-import { Id } from "../entity/entity_id.js";
-import { positionTable } from "../entity/position_table.js";
-import { physics } from "../physics/physics.js";
+import { Id } from "../systems/entity/entity_id.js";
+import { positionTable } from "../systems/entity/position_table.js";
+import { physics } from "../systems/physics/physics.js";
 
 // looked up through this class which will check both.
 export function getCenterPosition(id: Id): Pos {

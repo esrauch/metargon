@@ -1,4 +1,4 @@
-import { BusEvent, BusListener } from "../bus/bus.js";
+import { BusEvent, BusListener } from "../../bus/bus.js";
 import { Id } from "./entity_id.js";
 
 export class IdTable implements BusListener {

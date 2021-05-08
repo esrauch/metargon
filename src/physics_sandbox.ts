@@ -1,6 +1,6 @@
-import { makeEntity } from "./bus/events/make_entity_helper.js";
+import { makeEntity } from "./events/make_entity_helper.js";
 import { Pos, VWIDTH, VHEIGHT } from "./coords/coords.js";
-import { PLAYER } from "./entity/entity_id.js";
+import { PLAYER } from "./systems/entity/entity_id.js";
 
 export function initPhysicsSandbox() {
 

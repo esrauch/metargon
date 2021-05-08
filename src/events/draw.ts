@@ -1,7 +1,7 @@
-import { Gfx } from "../../gfx/gfx.js";
+import { Gfx } from "../gfx/gfx.js";
 
 // Requests anything interested to draw themselves.
-export class DrawEvent {
+export class Draw {
     readonly type = 'DRAW'
     constructor(readonly gfx: Gfx) {}
 }

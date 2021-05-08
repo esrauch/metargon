@@ -1,7 +1,7 @@
 import { SPos } from "../coords/coords.js";
 import { AbstractPointerEvtControl } from "./pointer_helper.js";
 import { camera } from "../coords/camera.js";
-import { makeEntity } from "../bus/events/make_entity_helper.js";
+import { makeEntity } from "../events/make_entity_helper.js";
 
 // Tap to trigger a CreateObject event for a new ball.
 export class CreateBallControl extends AbstractPointerEvtControl {

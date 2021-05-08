@@ -1,4 +1,4 @@
-import { Pos, Vec, VPositions } from "../coords/coords.js";
+import { Pos, Vec, Positions } from "../coords/coords.js";
 
 const Colors = {
     BLACK: '#000',
@@ -7,16 +7,19 @@ const Colors = {
     GREEN: '#E2F0CB',
     BLUE: '#D4F0F0',
     PURPLE: '#C7CEEA',
+    WHITE: '#FFF',
 }
 
 export const DEBUG_COLOR = '#F00';
 export const BG_COLOR = Colors.BLACK;
-export const FG_COLOR = Colors.BLUE;
+export const FG_COLOR = Colors.WHITE;
 
 export interface Gfx {
     onViewportSizeChange(): void;
 
     clearAndSetTransform(): void;
+
+    setGlobalOpacity(opacity: number): void;
 
     line(from: Pos, to: Pos, color?: string): void;
 
@@ -24,11 +27,15 @@ export interface Gfx {
 
     circle(center: Pos, radius: number, color?: string): void;
 
-    linestrip(c: VPositions, color?: string): void;
+    linestrip(c: Positions, color?: string): void;
 
-    lineloop(c: VPositions, color?: string): void;
+    lineloop(c: Positions, color?: string): void;
 
-    filledpoly(c: VPositions, color?: string): void;
+    filledpoly(c: Positions, color?: string): void;
 
-    text(p: Pos, s: string, color?: string): void;
+    text(p: Pos, s: string, opts?: {
+        color?: string,
+        size?: number,
+        font?: string,
+    }): void;
 }

@@ -1,33 +1,20 @@
 /// <reference types="./matter" />
 
-import { ApplyForce, EnablePhysics, SetVelocity } from "../bus/events/physics.js";
-import { BusEvent, BusListener } from "../bus/bus.js";
-import { VPositions, Pos, VHEIGHT } from "../coords/coords.js";
-import { DrawEvent } from "../bus/events/draw.js";
-import { DestroyEntity } from "../bus/events/core_entity_events.js";
-import { Id, makeEntityId } from "../entity/entity_id.js";
+import { ApplyForce, EnablePhysics, SetVelocity } from "../../events/physics.js";
+import { BusEvent, BusListener } from "../../bus/bus.js";
+import { Pos, VHEIGHT, Positions } from "../../coords/coords.js";
+import { Draw } from "../../events/draw.js";
+import { DestroyEntity } from "../../events/core_entity_events.js";
+import { Id } from "../entity/entity_id.js";
 import { labelTable } from "../entity/label_table.js";
-import { getCenterPosition } from "../util/get_position.js";
+import { getCenterPosition } from "../../util/get_position.js";
 
-// Importing a js module with typings is incredibly difficult for some reason.
+// Importing a js module with ts typings is incredibly difficult for some reason.
 // Matter should be loaded as a module, but instead we just
 // load it into the global namespace in index.html.
 const M = window.Matter;
 
 const STEP = 1000 / 60;
-
-function makeStaticBlock(
-    label: string,
-    x1: number, y1: number, x2: number, y2: number) {
-    // Matter rectangle() does x/y based on _center_ for some reason
-    const w = Math.abs(x2 - x1);
-    const h = Math.abs(y2 - y1);
-    const x = Math.min(x1, x2) + w / 2;
-    const y = Math.min(y1, y2) + h / 2;
-    return M.Bodies.rectangle(
-        x, y, w, h, { isStatic: true, label, id: makeEntityId() }
-    );
-}
 
 export class Physics implements BusListener {
     readonly debugUi = {
@@ -82,16 +69,15 @@ export class Physics implements BusListener {
         M.Engine.update(this.engine, STEP);
     }
 
-    private draw(ev: DrawEvent) {
+    private draw(ev: Draw) {
         if (this.debugUi.renderHulls) {
             for (const b of M.Composite.allBodies(this.engine.world)) {
                 ev.gfx.lineloop(
-                    new VPositions(b.vertices.map(v => [v.x, v.y]))
+                    new Positions(b.vertices.map(v => [v.x, v.y]))
                 );
             }
         }
     }
-
 
     private setVelocity(ev: SetVelocity) {
         const body = this.getBody(ev.entityId);

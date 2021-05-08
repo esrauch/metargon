@@ -1,5 +1,5 @@
-import { Pos } from "../../coords/coords.js";
-import { Id, makeEntityId } from "../../entity/entity_id.js";
+import { Pos } from "../coords/coords.js";
+import { Id, makeEntityId } from "../systems/entity/entity_id.js";
 
 
 export class CreateEntity {

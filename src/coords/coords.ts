@@ -23,7 +23,7 @@ export interface PosBase {
     readonly type: CoordType;
 }
 
-export interface Positions {
+export interface PositionsBase {
     readonly pts: untypedVec2[];
     readonly type: CoordType;
 }
@@ -80,11 +80,11 @@ export class Pos implements PosBase {
         return x >= 0 && y >= 0 && x <= VWIDTH && y <= VHEIGHT;
     }
 }
-export class SPositions implements Positions {
+export class SPositions implements PositionsBase {
     readonly type = 'SCREEN';
     constructor(readonly pts: untypedVec2[]) { }
 }
-export class VPositions implements Positions {
+export class Positions implements PositionsBase {
     readonly type = 'VIRTUAL';
     constructor(readonly pts: untypedVec2[]) { }
 }

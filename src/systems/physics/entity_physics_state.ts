@@ -13,7 +13,7 @@ interface RectangleHull {
     height: number,
 }
 
-interface EntityPhysicsOptions {
+interface EntityPhysicsState {
     static?: boolean,
     restitution?: number,   // How "elastic" it is (default 0.8)
 

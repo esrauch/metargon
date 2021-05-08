@@ -1,10 +1,10 @@
-import { ApplyForce, SetVelocity } from "../bus/events/physics.js";
+import { ApplyForce, SetVelocity } from "../events/physics.js";
 import { bus } from "../bus/bus.js";
 import { Pos, Vec } from "../coords/coords.js";
 import { VectorControl } from "./vector_control.js";
-import { Id, PLAYER } from "../entity/entity_id.js";
-import { CreateEntity, DestroyEntity, SetPosition } from "../bus/events/core_entity_events.js";
-import { SetRendering } from "../bus/events/rendering.js";
+import { Id, PLAYER } from "../systems/entity/entity_id.js";
+import { CreateEntity, DestroyEntity, SetPosition } from "../events/core_entity_events.js";
+import { SetRendering } from "../events/rendering.js";
 
 // Classic pull-and-drag "Golf" control: drag and release to apply force to something.
 export class GolfControl implements Control {

@@ -1,7 +1,7 @@
 
 
-import { BusEvent, BusListener } from "../bus/bus.js";
-import { Pos } from "../coords/coords.js";
+import { BusEvent, BusListener } from "../../bus/bus.js";
+import { Pos } from "../../coords/coords.js";
 import { physics } from "../physics/physics.js";
 import { Id } from "./entity_id.js";
 

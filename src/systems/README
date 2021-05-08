@@ -1,0 +1,7 @@
+Systems are defined as the handling of some corresponding State
+
+Entity: Ids, Labels, Position (if not physics-enabled)
+Physics: Manages the objects under physics using Matterjs
+Rendering: User visible state for entities to be displayed
+
+Chess: A Chess board for puzzles (not necessarily 8x8)
