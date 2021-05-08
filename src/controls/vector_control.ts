@@ -20,8 +20,9 @@ export class VectorControl extends AbstractPointerEvtControl {
 
     onDown(ev: PointerEvent): void {
         this.reset();
-        this.startPosition = 
-            camera.toVirtualPos(new SPos(ev.clientX, ev.clientY));
+        const pos = camera.toVirtualPos(new SPos(ev.clientX, ev.clientY));
+        if (pos.isInBounds())
+            this.startPosition = pos;
     }
 
     onMove(ev: PointerEvent): void {

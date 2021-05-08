@@ -7,6 +7,10 @@ import { makeEntity } from "../bus/events/make_entity_helper.js";
 export class CreateBallControl extends AbstractPointerEvtControl {
     onDown(ev: PointerEvent): void {
         const initialPos = camera.toVirtualPos(new SPos(ev.x, ev.y));
+        if (!initialPos.isInBounds()) {
+            console.error('discarding createBall since its OOB');
+            return;
+        }
         makeEntity({
             initialPos,
             label: "ball",

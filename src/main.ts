@@ -1,13 +1,10 @@
 import { bus } from "./bus/bus.js";
 import { DrawEvent } from "./bus/events/draw.js";
-import { makeEntity } from "./bus/events/make_entity_helper.js";
 import { TickEvent } from "./bus/events/tick.js";
 import { CreateBallControl } from "./controls/create_ball_control.js";
 import { FlappyControl } from "./controls/flappy_control.js";
 import { GolfControl } from "./controls/golf_control.js";
 import { camera } from "./coords/camera.js";
-import { Pos, VHEIGHT, VWIDTH } from "./coords/coords.js";
-import { PLAYER } from "./entity/entity_id.js";
 import { idTable } from "./entity/id_table.js";
 import { labelTable } from "./entity/label_table.js";
 import { positionTable } from "./entity/position_table.js";
@@ -87,7 +84,6 @@ function tick() {
     draw();
     requestAnimationFrame(tick);
 }
-
 tick();
 
 initPhysicsSandbox();

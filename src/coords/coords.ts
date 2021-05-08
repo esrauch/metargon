@@ -1,7 +1,7 @@
 export const VWIDTH = 2000;
 export const VHEIGHT = 3000;
 
-export type CoordType = 
+export type CoordType =
     // SCREEN is the actual screen px coordinates
     // [0,0] top left to some runtime determined [w,h] bottom right of the viewport.
     'SCREEN' |
@@ -59,26 +59,32 @@ export function add(a: PosBase, b: VecBase): PosBase {
 // Tagged enum classes.
 export class SVec implements VecBase {
     readonly type = 'SCREEN';
-    constructor(readonly dx: number, readonly dy: number){}
+    constructor(readonly dx: number, readonly dy: number) { }
 }
 export class Vec implements VecBase {
     readonly type = 'VIRTUAL';
-    constructor(readonly dx: number, readonly dy: number){}
+    constructor(readonly dx: number, readonly dy: number) { }
 }
 
 export class SPos implements PosBase {
     readonly type = 'SCREEN';
-    constructor(readonly x: number, readonly y:number) {}
+    constructor(readonly x: number, readonly y: number) { }
 }
 export class Pos implements PosBase {
     readonly type = 'VIRTUAL';
-    constructor(readonly x: number, readonly y:number) {}
+    constructor(readonly x: number, readonly y: number) { }
+
+    isInBounds(): boolean {
+        const x = this.x;
+        const y = this.y;
+        return x >= 0 && y >= 0 && x <= VWIDTH && y <= VHEIGHT;
+    }
 }
 export class SPositions implements Positions {
     readonly type = 'SCREEN';
-    constructor(readonly pts: untypedVec2[]) {}
+    constructor(readonly pts: untypedVec2[]) { }
 }
 export class VPositions implements Positions {
     readonly type = 'VIRTUAL';
-    constructor(readonly pts: untypedVec2[]) {}
+    constructor(readonly pts: untypedVec2[]) { }
 }
