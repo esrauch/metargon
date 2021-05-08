@@ -4,7 +4,6 @@ import { Pos, Vec } from "../coords/coords.js";
 import { VectorControl } from "./vector_control.js";
 import { Id, PLAYER } from "../entity/entity_id.js";
 import { CreateEntity, DestroyEntity, SetPosition } from "../bus/events/core_entity_events.js";
-import { Gfx } from "../gfx/gfx.js";
 import { SetRendering } from "../bus/events/rendering.js";
 
 // Classic pull-and-drag "Golf" control: drag and release to apply force to something.
@@ -25,17 +24,9 @@ export class GolfControl implements Control {
         // We'll destroy it when we disable.
         if (!this.displayEntity) {
             const createEvt = new CreateEntity(
-                "golf_indicator_" + this.type,
-                new Pos(0, 0),
-            );
+                "golf_indicator_" + this.type);
             this.displayEntity = createEvt.entityId;
             bus.dispatch(createEvt);
-
-            bus.dispatch(new SetRendering(this.displayEntity,
-                {
-                    type: 'CUSTOM',
-                    draw: (gfx) => this.draw(gfx)
-                }))
         }
 
         this.vectorControl.enable();
@@ -69,12 +60,5 @@ export class GolfControl implements Control {
     }
 
     onCancel(): void {
-    }
-
-    draw(gfx: Gfx): void {
-        const from = this.vectorControl.startPosition
-        const vec = this.vectorControl.vector;
-        if (from && vec)
-            gfx.vector(from, vec);
     }
 }

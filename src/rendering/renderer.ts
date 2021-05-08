@@ -4,8 +4,52 @@ import { add, Pos, VPositions } from "../coords/coords.js";
 import { Id } from "../entity/entity_id.js";
 import { idTable } from "../entity/id_table.js";
 import { labelTable } from "../entity/label_table.js";
+import { Gfx } from "../gfx/gfx.js";
 import { getCenterPosition } from "../util/get_position.js";
-import { EntityRenderingOptions } from "./entity_rendering_options.js";
+import { EntityRenderingOptions, Primitive } from "./entity_rendering_options.js";
+
+type DrawFn = (gfx: Gfx, pos: Pos) => void;
+
+function makeRenderingFn(ero: EntityRenderingOptions): DrawFn {
+    switch(ero.type) {
+        case 'CUSTOM':
+            return ero.fn;
+        case 'COMPOUND':
+            return makeCompoundRenderingFn(ero.prims);
+        default:
+            return makeCompoundRenderingFn([ero]);
+    }
+}
+
+function makeCompoundRenderingFn(prims: Primitive[]): DrawFn {
+    return (gfx: Gfx, pos: Pos) => {
+        for (const p of prims) {
+            switch (p.type) {
+                case 'CIRCLE':
+                    gfx.circle(pos, p.radius);
+                    break;
+                case 'LINE':
+                    const to = add(pos, p.vec);
+                    gfx.line(pos, to);
+                    break;
+                case 'RECT':
+                    const halfw = p.width / 2;
+                    const halfh = p.height / 2;
+                    const top = pos.y - halfh;
+                    const right = pos.x + halfw;
+                    const bottom = pos.y + halfh;
+                    const left = pos.x - halfw;
+                    gfx.filledpoly(new VPositions([
+                        [left, top],
+                        [right, top],
+                        [right, bottom],
+                        [left, bottom],
+                    ]));
+                    break;
+            }
+        }
+    };
+}
 
 
 export class Renderer implements BusListener {
@@ -17,19 +61,18 @@ export class Renderer implements BusListener {
 
     private constructor() { }
     static singleton = new Renderer();
-
-    readonly renderingData = new Map<Id, EntityRenderingOptions>();
+    readonly renderingFns = new Map<Id, DrawFn>();
 
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
             case 'SET_RENDERING':
-                if (ev.renderingData) 
-                    this.renderingData.set(ev.entityId, ev.renderingData);
+                if (ev.renderingData)
+                    this.renderingFns.set(ev.entityId, makeRenderingFn(ev.renderingData));
                 else
-                    this.renderingData.delete(ev.entityId);
+                    this.renderingFns.delete(ev.entityId);
                 break;
             case 'DESTROY_ENTITY':
-                this.renderingData.delete(ev.entityId);
+                this.renderingFns.delete(ev.entityId);
                 break;
             case 'DRAW':
                 this.draw(ev);
@@ -41,33 +84,9 @@ export class Renderer implements BusListener {
         const gfx = ev.gfx;
 
         if (!this.debugUi.disableNormalRendering) {
-            for (const [id, renderingData] of this.renderingData) {
+            for (const [id, fn] of this.renderingFns) {
                 const pos = getCenterPosition(id);
-                switch (renderingData.type) {
-                    case 'CIRCLE':
-                        gfx.circle(pos, renderingData.radius);
-                        break;
-                    case 'LINE':
-                        const to = add(pos, renderingData.vec);
-                        gfx.line(pos, to);
-                        break;
-                    case 'RECT':
-                        const halfw = renderingData.width / 2;
-                        const halfh = renderingData.height / 2;
-                        const top = pos.y - halfh;
-                        const right = pos.x + halfw;
-                        const bottom = pos.y + halfh;
-                        const left = pos.x - halfw;
-                        gfx.filledpoly(new VPositions([
-                            [left, top],
-                            [right, top],
-                            [right, bottom],
-                            [left, bottom],
-                        ]));
-                        break;
-                    case 'CUSTOM':
-                        renderingData.draw(gfx);
-                }
+                fn(gfx, pos);
             }
         }
 
