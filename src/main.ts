@@ -7,6 +7,7 @@ import { FlappyControl } from "./controls/flappy_control.js";
 import { GolfControl } from "./controls/golf_control.js";
 import { camera } from "./coords/camera.js";
 import { Pos, VHEIGHT, VWIDTH } from "./coords/coords.js";
+import { PLAYER } from "./entity/entity_id.js";
 import { idTable } from "./entity/id_table.js";
 import { labelTable } from "./entity/label_table.js";
 import { positionTable } from "./entity/position_table.js";
@@ -89,11 +90,12 @@ function tick() {
 tick();
 
 makeEntity({
+    entityId: PLAYER,
     initialPos: new Pos(200, 200),
-    label: "ball",
+    label: "player",
     renderingData: {
         type: 'CIRCLE',
-        radius: 150,
+        radius: 25,
     },
     physicsData: {
         hull: {

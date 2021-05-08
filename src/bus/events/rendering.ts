@@ -1,10 +1,11 @@
 import { Id } from "../../entity/entity_id.js";
 import { EntityRenderingOptions } from "../../rendering/entity_rendering_options.js";
 
-export class EnableRendering {
-    readonly type = 'ENABLE_RENDERING'
+export class SetRendering {
+    readonly type = 'SET_RENDERING'
     constructor(
         readonly entityId: Id,
-        readonly renderingData: EntityRenderingOptions
+        // renderingData unset means "clear rendering data"
+        readonly renderingData?: EntityRenderingOptions
     ) {}
 }

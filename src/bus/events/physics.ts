@@ -9,7 +9,7 @@ export class EnablePhysics {
     ) {}
 }
 
-export class ApplyForceEvent {
+export class ApplyForce {
     readonly type = 'APPLY_FORCE';
     constructor(
         readonly entityId: Id,
@@ -17,7 +17,7 @@ export class ApplyForceEvent {
     }
 }
 
-export class SetVelocityEvent {
+export class SetVelocity {
     readonly type = 'SET_VELOCITY';
     constructor(
         readonly entityId: Id,

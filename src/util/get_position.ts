@@ -8,11 +8,12 @@ import { physics } from "../physics/physics.js";
 
 // looked up through this class which will check both.
 export function getCenterPosition(id: Id): Pos {
-    const fromTable = positionTable.simpleTable.get(id);
+    const fromTable = positionTable.get(id);
     if (fromTable) return fromTable;
 
     const fromPhysics = physics.getPosition(id);
     if (fromPhysics) return fromPhysics;
 
-    throw Error('Tried to get the position but no one knew it');
+    debugger;
+    throw Error(`Tried to get the position for ${id} but no one knew it`);
 }

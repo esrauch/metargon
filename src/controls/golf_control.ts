@@ -1,13 +1,11 @@
-import { ApplyForceEvent, SetVelocityEvent } from "../bus/events/physics.js";
+import { ApplyForce, SetVelocity } from "../bus/events/physics.js";
 import { bus } from "../bus/bus.js";
-import { add, Pos, Vec } from "../coords/coords.js";
+import { Pos, Vec } from "../coords/coords.js";
 import { VectorControl } from "./vector_control.js";
-import { Id } from "../entity/entity_id.js";
-import { DestroyEntityEvent } from "../bus/events/destroy_entity.js";
-import { CreateEntityEvent } from "../bus/events/create_entity.js";
+import { Id, PLAYER } from "../entity/entity_id.js";
+import { CreateEntity, DestroyEntity, SetPosition } from "../bus/events/core_entity_events.js";
 import { Gfx } from "../gfx/gfx.js";
-import { EntityRenderingOptions } from "../rendering/entity_rendering_options.js";
-import { EnableRendering } from "../bus/events/rendering.js";
+import { SetRendering } from "../bus/events/rendering.js";
 
 // Classic pull-and-drag "Golf" control: drag and release to apply force to something.
 export class GolfControl implements Control {
@@ -26,14 +24,14 @@ export class GolfControl implements Control {
         // When we enable, create a new element that will represent our line.
         // We'll destroy it when we disable.
         if (!this.displayEntity) {
-            const createEvt = new CreateEntityEvent(
+            const createEvt = new CreateEntity(
                 "golf_indicator_" + this.type,
                 new Pos(0, 0),
             );
             this.displayEntity = createEvt.entityId;
             bus.dispatch(createEvt);
 
-            bus.dispatch(new EnableRendering(this.displayEntity,
+            bus.dispatch(new SetRendering(this.displayEntity,
                 {
                     type: 'CUSTOM',
                     draw: (gfx) => this.draw(gfx)
@@ -45,21 +43,29 @@ export class GolfControl implements Control {
 
     disable(): void {
         if (this.displayEntity) {
-            bus.dispatch(new DestroyEntityEvent(this.displayEntity));
+            bus.dispatch(new DestroyEntity(this.displayEntity));
             this.displayEntity = undefined;
         }
         this.vectorControl.disable();
     }
 
     onUpdate(pos: Pos, vec: Vec): void {
+        if (!this.displayEntity) return;
+        bus.dispatch(new SetPosition(this.displayEntity, pos));
+        bus.dispatch(new SetRendering(this.displayEntity, {
+            type: 'LINE',
+            vec
+        }));
     }
 
     onRelease(pos: Pos, vec: Vec): void {
-        if (this.type == 'FORCE') {
-            bus.dispatch(new ApplyForceEvent(1, vec));
-        } else {
-            bus.dispatch(new SetVelocityEvent(1, vec));
-        }
+        if (this.type == 'FORCE')
+            bus.dispatch(new ApplyForce(PLAYER, vec));
+        else
+            bus.dispatch(new SetVelocity(PLAYER, vec));
+
+        if (this.displayEntity)
+            bus.dispatch(new SetRendering(this.displayEntity));
     }
 
     onCancel(): void {

@@ -1,12 +1,11 @@
 /// <reference types="./matter" />
 
-import { ApplyForceEvent, EnablePhysics, SetVelocityEvent } from "../bus/events/physics.js";
-import { bus, BusEvent, BusListener } from "../bus/bus.js";
-import { VHEIGHT, VWIDTH, VPositions, SVec, Vec, Pos } from "../coords/coords.js";
+import { ApplyForce, EnablePhysics, SetVelocity } from "../bus/events/physics.js";
+import { BusEvent, BusListener } from "../bus/bus.js";
+import { VPositions, Pos, VHEIGHT } from "../coords/coords.js";
 import { DrawEvent } from "../bus/events/draw.js";
-import { CreateEntityEvent } from "../bus/events/create_entity.js";
+import { DestroyEntity } from "../bus/events/core_entity_events.js";
 import { Id, makeEntityId } from "../entity/entity_id.js";
-import { DestroyEntityEvent } from "../bus/events/destroy_entity.js";
 import { labelTable } from "../entity/label_table.js";
 import { getCenterPosition } from "../util/get_position.js";
 
@@ -35,27 +34,15 @@ export class Physics implements BusListener {
         renderHulls: false,
     };
     readonly engine: Matter.Engine;
-    private ball?: Matter.Body;
 
     static singleton = new Physics();
 
     private constructor() {
-        const engine = this.engine = M.Engine.create({
+        this.engine = M.Engine.create({
             gravity: {
-                y: 5,
+                y: VHEIGHT / 600,
             }
         });
-
-        // The entire world is [0-2000] x [0-3000]
-        // Box in that world with boxes of aribitrary size D
-        // We double-cover the corners with this.
-        // const [T, R, B, L] = [0, VWIDTH, VHEIGHT, 0];
-        // const D = 500;
-        // const left = makeStaticBlock("left", L - D, T - D, L, B + D);
-        // const right = makeStaticBlock("right", R, T - D, R + D, B + D);
-        // const top = makeStaticBlock("top", L - D, T - D, R + D, T);
-        // const bottom = makeStaticBlock("bottom", L - D, B, R + D, B + D);
-        // M.Composite.add(engine.world, [left, right, top, bottom]);
     }
 
     getBody(id: Id): Matter.Body | undefined {
@@ -91,7 +78,6 @@ export class Physics implements BusListener {
         }
     }
 
-
     private tick() {
         M.Engine.update(this.engine, STEP);
     }
@@ -106,28 +92,36 @@ export class Physics implements BusListener {
         }
     }
 
-    
-    private setVelocity(ev: SetVelocityEvent) {
-        if (!this.ball) return;
+
+    private setVelocity(ev: SetVelocity) {
+        const body = this.getBody(ev.entityId);
+        if (!body) {
+            console.error(`setvelocity on unknown body ${ev.entityId}`);
+            return;
+        }
         const vec = ev.newVelocity;
         const arbitraryNerf = 1 / 5;
         const fx = vec.dx * arbitraryNerf;
         const fy = vec.dy * arbitraryNerf;
         M.Body.setVelocity(
-            this.ball,
+            body,
             M.Vector.create(fx, fy)
         );
     }
 
-    private applyForce(ev: ApplyForceEvent) {
-        if (!this.ball) return;
+    private applyForce(ev: ApplyForce) {
+        const body = this.getBody(ev.entityId);
+        if (!body) {
+            console.error(`applyforce on unknown body ${ev.entityId}`);
+            return;
+        }
         const vec = ev.force;
         const arbitraryNerf = 1 / 200;
         const fx = vec.dx * arbitraryNerf;
         const fy = vec.dy * arbitraryNerf;
         M.Body.applyForce(
-            this.ball,
-            this.ball.position,
+            body,
+            body.position,
             M.Vector.create(fx, fy));
     }
 
@@ -139,32 +133,34 @@ export class Physics implements BusListener {
         const label = labelTable.getLabel(id)
 
         const hull = physicsOptions.hull;
-        if (hull.type == 'CIRCLE') {
-            const ball = M.Bodies.circle(initialPos.x, initialPos.y, hull.radius,
-                {
-                    id: id,
-                    label: label,
-                    // TODO: this precludes 0
+        switch (hull.type) {
+            case 'CIRCLE':
+                const ball = M.Bodies.circle(initialPos.x, initialPos.y, hull.radius,
+                    {
+                        id,
+                        label,
+                        // TODO: this precludes 0
+                        restitution: physicsOptions.restitution || 0.8,
+                        isStatic: physicsOptions.static,
+                    });
+                M.Composite.add(this.engine.world, ball);
+                break;
+            case 'RECT':
+                const rect = M.Bodies.rectangle(
+                    initialPos.x, initialPos.y, hull.width, hull.height, {
+                    id,
+                    label,
                     restitution: physicsOptions.restitution || 0.8,
                     isStatic: physicsOptions.static,
                 });
-            M.Composite.add(this.engine.world, ball);
-            if (!this.ball) this.ball = ball;
-        } else if (hull.type == 'RECT') {
-            const rect = M.Bodies.rectangle(
-                initialPos.x, initialPos.y, hull.width, hull.height, {
-                id: id,
-                label: label,
-                restitution: physicsOptions.restitution || 0.8,
-                isStatic: physicsOptions.static,
-            });
-            M.Composite.add(this.engine.world, rect);
-        } else {
-            throw Error('Unknown hull type!')
+                M.Composite.add(this.engine.world, rect);
+                break;
+            default:
+                throw Error('Unknown hull type!')
         }
     }
 
-    destroyEntity(ev: DestroyEntityEvent) {
+    destroyEntity(ev: DestroyEntity) {
         const body = this.getBody(ev.entityId);
         if (body) M.Composite.remove(this.engine.world, body);
     }

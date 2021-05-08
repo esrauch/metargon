@@ -1,6 +1,4 @@
 import { BusEvent, BusListener } from "../bus/bus.js";
-import { CreateEntityEvent } from "../bus/events/create_entity.js";
-import { DestroyEntityEvent } from "../bus/events/destroy_entity.js";
 import { Id } from "./entity_id.js";
 
 export class IdTable implements BusListener {
@@ -15,18 +13,14 @@ export class IdTable implements BusListener {
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
             case 'CREATE_ENTITY':
-                this.createEntity(ev);
+                if (this.ids.has(ev.entityId))
+                    throw Error(`Double create of ${ev.entityId}`);
+                this.ids.add(ev.entityId);
                 break;
             case 'DESTROY_ENTITY':
-                this.destroyEntity(ev);
+                this.ids.delete(ev.entityId);
                 break;
         }
-    }
-    private createEntity(ev: CreateEntityEvent) {
-        this.ids.add(ev.entityId);
-    }
-    private destroyEntity(ev: DestroyEntityEvent) {
-        this.ids.delete(ev.entityId);
     }
 }
 

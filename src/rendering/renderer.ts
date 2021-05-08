@@ -4,7 +4,6 @@ import { add, Pos, VPositions } from "../coords/coords.js";
 import { Id } from "../entity/entity_id.js";
 import { idTable } from "../entity/id_table.js";
 import { labelTable } from "../entity/label_table.js";
-import { positionTable } from "../entity/position_table.js";
 import { getCenterPosition } from "../util/get_position.js";
 import { EntityRenderingOptions } from "./entity_rendering_options.js";
 
@@ -23,10 +22,11 @@ export class Renderer implements BusListener {
 
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
-            case 'ENABLE_RENDERING':
-                if (ev.renderingData) {
+            case 'SET_RENDERING':
+                if (ev.renderingData) 
                     this.renderingData.set(ev.entityId, ev.renderingData);
-                }
+                else
+                    this.renderingData.delete(ev.entityId);
                 break;
             case 'DESTROY_ENTITY':
                 this.renderingData.delete(ev.entityId);

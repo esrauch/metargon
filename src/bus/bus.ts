@@ -1,25 +1,25 @@
 // The Bus is a single global point where everything flows through.
 // At least for now, all possible event types are centrally defined here.
 
-import { ApplyForceEvent, EnablePhysics, SetVelocityEvent } from "./events/physics.js";
-import { CreateEntityEvent } from "./events/create_entity.js";
-import { DestroyEntityEvent } from "./events/destroy_entity.js";
+import { ApplyForce, EnablePhysics, SetVelocity } from "./events/physics.js";
+import { CreateEntity, DestroyEntity, SetPosition } from "./events/core_entity_events.js";
 import { DrawEvent } from "./events/draw.js";
 import { TickEvent } from "./events/tick.js";
-import { EnableRendering } from "./events/rendering.js";
+import { SetRendering } from "./events/rendering.js";
 
 // Core idea is that we should be able to record + replay events for
 // deterministic behavior.
 
 export type BusEvent =
     EnablePhysics |
-    SetVelocityEvent |
-    ApplyForceEvent |
+    SetVelocity |
+    ApplyForce |
     TickEvent |
     DrawEvent |
-    EnableRendering |
-    CreateEntityEvent |
-    DestroyEntityEvent;
+    SetRendering |
+    CreateEntity |
+    SetPosition |
+    DestroyEntity;
 
 export interface BusListener {
     onEvent(ev: BusEvent): void;
@@ -32,7 +32,15 @@ export class Bus {
     private constructor() { }
     static singleton = new Bus();
 
+    logAllEventsBesidesTickAndDraw = true
+    logTickAndDraw = false
+
     dispatch(ev: BusEvent) {
+        const isTickOrDraw = ev.type == 'TICK' || ev.type == 'DRAW';
+        if ((this.logAllEventsBesidesTickAndDraw && !isTickOrDraw) ||
+            (this.logTickAndDraw && isTickOrDraw)) {
+            console.log(JSON.stringify(ev));
+        }
         for (const l of this.listeners) {
             l.onEvent(ev);
         }
