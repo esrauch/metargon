@@ -1,4 +1,4 @@
-import { ApplyForceEvent } from "../bus/events/apply_force.js";
+import { ApplyForceEvent, SetVelocityEvent } from "../bus/events/physics.js";
 import { bus } from "../bus/bus.js";
 import { add, Pos, Vec } from "../coords/coords.js";
 import { VectorControl } from "./vector_control.js";
@@ -6,6 +6,8 @@ import { Id } from "../entity/entity_id.js";
 import { DestroyEntityEvent } from "../bus/events/destroy_entity.js";
 import { CreateEntityEvent } from "../bus/events/create_entity.js";
 import { Gfx } from "../gfx/gfx.js";
+import { EntityRenderingOptions } from "../rendering/entity_rendering_options.js";
+import { EnableRendering } from "../bus/events/rendering.js";
 
 // Classic pull-and-drag "Golf" control: drag and release to apply force to something.
 export class GolfControl implements Control {
@@ -17,20 +19,25 @@ export class GolfControl implements Control {
 
     private displayEntity?: Id;
 
+    constructor(private type: 'FORCE'|'VELOCITY' = 'VELOCITY') {
+    }
+
     enable(): void {
         // When we enable, create a new element that will represent our line.
         // We'll destroy it when we disable.
         if (!this.displayEntity) {
-            const createEvt = CreateEntityEvent.create({
-                initial_pos: new Pos(0, 0),
-                label: "golf_indicator",
-                rendering_data: {
-                    type: 'CUSTOM',
-                    draw: (gfx) => this.draw(gfx),
-                }
-            });
+            const createEvt = new CreateEntityEvent(
+                "golf_indicator_" + this.type,
+                new Pos(0, 0),
+            );
             this.displayEntity = createEvt.entityId;
             bus.dispatch(createEvt);
+
+            bus.dispatch(new EnableRendering(this.displayEntity,
+                {
+                    type: 'CUSTOM',
+                    draw: (gfx) => this.draw(gfx)
+                }))
         }
 
         this.vectorControl.enable();
@@ -48,7 +55,11 @@ export class GolfControl implements Control {
     }
 
     onRelease(pos: Pos, vec: Vec): void {
-        bus.dispatch(new ApplyForceEvent(1, vec));
+        if (this.type == 'FORCE') {
+            bus.dispatch(new ApplyForceEvent(1, vec));
+        } else {
+            bus.dispatch(new SetVelocityEvent(1, vec));
+        }
     }
 
     onCancel(): void {

@@ -1,6 +1,6 @@
 /// <reference types="./matter" />
 
-import { ApplyForceEvent } from "../bus/events/apply_force.js";
+import { ApplyForceEvent, EnablePhysics, SetVelocityEvent } from "../bus/events/physics.js";
 import { bus, BusEvent, BusListener } from "../bus/bus.js";
 import { VHEIGHT, VWIDTH, VPositions, SVec, Vec, Pos } from "../coords/coords.js";
 import { DrawEvent } from "../bus/events/draw.js";
@@ -8,6 +8,7 @@ import { CreateEntityEvent } from "../bus/events/create_entity.js";
 import { Id, makeEntityId } from "../entity/entity_id.js";
 import { DestroyEntityEvent } from "../bus/events/destroy_entity.js";
 import { labelTable } from "../entity/label_table.js";
+import { getCenterPosition } from "../util/get_position.js";
 
 // Importing a js module with typings is incredibly difficult for some reason.
 // Matter should be loaded as a module, but instead we just
@@ -78,8 +79,11 @@ export class Physics implements BusListener {
             case 'APPLY_FORCE':
                 this.applyForce(ev);
                 break;
-            case 'CREATE_ENTITY':
-                this.createEntity(ev);
+            case 'SET_VELOCITY':
+                this.setVelocity(ev);
+                break;
+            case 'ENABLE_PHYSICS':
+                this.enablePhysics(ev);
                 break;
             case 'DESTROY_ENTITY':
                 this.destroyEntity(ev);
@@ -102,6 +106,19 @@ export class Physics implements BusListener {
         }
     }
 
+    
+    private setVelocity(ev: SetVelocityEvent) {
+        if (!this.ball) return;
+        const vec = ev.newVelocity;
+        const arbitraryNerf = 1 / 5;
+        const fx = vec.dx * arbitraryNerf;
+        const fy = vec.dy * arbitraryNerf;
+        M.Body.setVelocity(
+            this.ball,
+            M.Vector.create(fx, fy)
+        );
+    }
+
     private applyForce(ev: ApplyForceEvent) {
         if (!this.ball) return;
         const vec = ev.force;
@@ -114,16 +131,19 @@ export class Physics implements BusListener {
             M.Vector.create(fx, fy));
     }
 
-    private createEntity(ev: CreateEntityEvent) {
-        const physicsOptions = ev.physics;
+    private enablePhysics(ev: EnablePhysics) {
+        const physicsOptions = ev.physicsData;
         if (!physicsOptions) return;
+        const id = ev.entityId;
+        const initialPos = getCenterPosition(id);
+        const label = labelTable.getLabel(id)
 
         const hull = physicsOptions.hull;
         if (hull.type == 'CIRCLE') {
-            const ball = M.Bodies.circle(ev.initial_pos.x, ev.initial_pos.y, hull.radius,
+            const ball = M.Bodies.circle(initialPos.x, initialPos.y, hull.radius,
                 {
-                    id: ev.entityId,
-                    label: ev.label,
+                    id: id,
+                    label: label,
                     // TODO: this precludes 0
                     restitution: physicsOptions.restitution || 0.8,
                     isStatic: physicsOptions.static,
@@ -132,9 +152,9 @@ export class Physics implements BusListener {
             if (!this.ball) this.ball = ball;
         } else if (hull.type == 'RECT') {
             const rect = M.Bodies.rectangle(
-                ev.initial_pos.x, ev.initial_pos.y, hull.width, hull.height, {
-                id: ev.entityId,
-                label: ev.label,
+                initialPos.x, initialPos.y, hull.width, hull.height, {
+                id: id,
+                label: label,
                 restitution: physicsOptions.restitution || 0.8,
                 isStatic: physicsOptions.static,
             });

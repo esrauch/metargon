@@ -1,27 +1,26 @@
-import { bus } from "../bus/bus.js";
 import { SPos } from "../coords/coords.js";
 import { AbstractPointerEvtControl } from "./pointer_helper.js";
-import { CreateEntityEvent } from "../bus/events/create_entity.js";
 import { camera } from "../coords/camera.js";
+import { makeEntity } from "../bus/events/make_entity_helper.js";
 
 // Tap to trigger a CreateObject event for a new ball.
 export class CreateBallControl extends AbstractPointerEvtControl {
     onDown(ev: PointerEvent): void {
-        const initial_pos = camera.toVirtualPos(new SPos(ev.x, ev.y));
-        bus.dispatch(CreateEntityEvent.create({
-            initial_pos,
+        const initialPos = camera.toVirtualPos(new SPos(ev.x, ev.y));
+        makeEntity({
+            initialPos,
             label: "ball",
-            rendering_data: {
+            renderingData: {
                 type: 'CIRCLE',
                 radius: 50,
             },
-            physics: {
+            physicsData: {
                 hull: {
                     type: 'CIRCLE',
                     radius: 50,
                 }
             }
-        }));
+        });
     }
     onMove(ev: PointerEvent): void {
     }

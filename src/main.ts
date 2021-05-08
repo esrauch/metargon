@@ -1,6 +1,6 @@
 import { bus } from "./bus/bus.js";
-import { CreateEntityEvent } from "./bus/events/create_entity.js";
 import { DrawEvent } from "./bus/events/draw.js";
+import { makeEntity } from "./bus/events/make_entity_helper.js";
 import { TickEvent } from "./bus/events/tick.js";
 import { CreateBallControl } from "./controls/create_ball_control.js";
 import { FlappyControl } from "./controls/flappy_control.js";
@@ -23,9 +23,10 @@ const reusableEvents = {
 };
 
 const controls = new Map<String, Control>([
-    ['1', new GolfControl()],
-    ['2', new FlappyControl()],
-    ['3', new CreateBallControl()]
+    ['1', new GolfControl('FORCE')],
+    ['2', new GolfControl('VELOCITY')],
+    ['3', new FlappyControl()],
+    ['4', new CreateBallControl()]
 ]);
 
 const singletons = {
@@ -39,11 +40,17 @@ const singletons = {
 // Log a bunch of the top level objects so they can be trivially inspected.
 console.log(singletons);
 
-bus.addListener(idTable);
-bus.addListener(labelTable);
-bus.addListener(physics);
-bus.addListener(renderer);
-bus.addListener(positionTable);
+bus.addListeners([
+    idTable,
+    labelTable,
+    physics,
+    // Note: posTable *must* come after Physics for the EnablePhysics path,
+    // where physics will look up the current location in the posTable, and posTable
+    // will drop its knowledge of the position. Possibly we could let the posTable
+    // just continue to know the stale position instead?
+    positionTable,
+    renderer]);
+
 
 let currentControl: Control | undefined;
 
@@ -67,16 +74,7 @@ function onViewportSizeChange() {
 
 function draw() {
     gfx.clearAndSetTransform();
-
     bus.dispatch(reusableEvents.draw);
-
-    // Draw the golf indicator line
-    /*
-    const [vFrom, vVec] = [control.startPosition, control.vector];
-    if (!vFrom || !vVec) return;
-    const vTo = add(vFrom, vVec);
-    gfx.line(vFrom, vTo);
-    */
 }
 
 onViewportSizeChange();
@@ -90,20 +88,20 @@ function tick() {
 
 tick();
 
-bus.dispatch(CreateEntityEvent.create({
-    initial_pos: new Pos(200, 200),
+makeEntity({
+    initialPos: new Pos(200, 200),
     label: "ball",
-    rendering_data: {
+    renderingData: {
         type: 'CIRCLE',
         radius: 150,
     },
-    physics: {
+    physicsData: {
         hull: {
             type: 'CIRCLE',
             radius: 50,
         }
     }
-}));
+});
 
 // Build 4 walls around.
 function makeStaticBlock(
@@ -115,15 +113,15 @@ function makeStaticBlock(
     const x = Math.min(x1, x2) + w / 2;
     const y = Math.min(y1, y2) + h / 2;
 
-    return CreateEntityEvent.create({
-        initial_pos: new Pos(x, y),
+    makeEntity({
+        initialPos: new Pos(x, y),
         label,
-        rendering_data: {
+        renderingData: {
             type: 'RECT',
             width: w,
             height: h,
         },
-        physics: {
+        physicsData: {
             hull: {
                 type: 'RECT',
                 width: w,
@@ -139,7 +137,7 @@ function makeStaticBlock(
 // We double-cover the corners with this.
 const [T, R, B, L] = [0, VWIDTH, VHEIGHT, 0];
 const D = 500;
-bus.dispatch(makeStaticBlock("left", L - D, T - D, L, B + D));
-bus.dispatch(makeStaticBlock("right", R, T - D, R + D, B + D));
-bus.dispatch(makeStaticBlock("top", L - D, T - D, R + D, T));
-bus.dispatch(makeStaticBlock("bottom", L - D, B, R + D, B + D));
+makeStaticBlock("left", L - D, T - D, L, B + D);
+makeStaticBlock("right", R, T - D, R + D, B + D);
+makeStaticBlock("top", L - D, T - D, R + D, T);
+makeStaticBlock("bottom", L - D, B, R + D, B + D);

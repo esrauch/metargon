@@ -1,4 +1,4 @@
-import { ApplyForceEvent } from "../bus/events/apply_force.js";
+import { ApplyForceEvent } from "../bus/events/physics.js";
 import { bus } from "../bus/bus.js";
 import { Vec } from "../coords/coords.js";
 import { AbstractPointerEvtControl } from "./pointer_helper.js";

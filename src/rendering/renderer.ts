@@ -5,6 +5,7 @@ import { Id } from "../entity/entity_id.js";
 import { idTable } from "../entity/id_table.js";
 import { labelTable } from "../entity/label_table.js";
 import { positionTable } from "../entity/position_table.js";
+import { getCenterPosition } from "../util/get_position.js";
 import { EntityRenderingOptions } from "./entity_rendering_options.js";
 
 
@@ -22,9 +23,9 @@ export class Renderer implements BusListener {
 
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
-            case 'CREATE_ENTITY':
-                if (ev.rendering_data) {
-                    this.renderingData.set(ev.entityId, ev.rendering_data);
+            case 'ENABLE_RENDERING':
+                if (ev.renderingData) {
+                    this.renderingData.set(ev.entityId, ev.renderingData);
                 }
                 break;
             case 'DESTROY_ENTITY':
@@ -41,7 +42,7 @@ export class Renderer implements BusListener {
 
         if (!this.debugUi.disableNormalRendering) {
             for (const [id, renderingData] of this.renderingData) {
-                const pos = positionTable.getCenterPosition(id);
+                const pos = getCenterPosition(id);
                 switch (renderingData.type) {
                     case 'CIRCLE':
                         gfx.circle(pos, renderingData.radius);
@@ -72,7 +73,7 @@ export class Renderer implements BusListener {
 
         if (this.debugUi.renderLabels || this.debugUi.renderIds) {
             for (const id of idTable.allIds()) {
-                const pos = positionTable.getCenterPosition(id);
+                const pos = getCenterPosition(id);
                 let debugString = "";
                 if (this.debugUi.renderLabels)
                     debugString += labelTable.getLabel(id) || "<unknown>";
