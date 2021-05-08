@@ -13,6 +13,7 @@ import { labelTable } from "./entity/label_table.js";
 import { positionTable } from "./entity/position_table.js";
 import { Gfx2d } from "./gfx/gfx_2d.js";
 import { physics } from './physics/physics.js';
+import { initPhysicsSandbox } from "./physics_sandbox.js";
 import { renderer } from "./rendering/renderer.js";
 
 const canvas = document.querySelector('canvas')!;
@@ -89,57 +90,4 @@ function tick() {
 
 tick();
 
-makeEntity({
-    entityId: PLAYER,
-    initialPos: new Pos(200, 200),
-    label: "player",
-    renderingData: {
-        type: 'CIRCLE',
-        radius: 25,
-    },
-    physicsData: {
-        hull: {
-            type: 'CIRCLE',
-            radius: 50,
-        }
-    }
-});
-
-// Build 4 walls around.
-function makeStaticBlock(
-    label: string,
-    x1: number, y1: number, x2: number, y2: number) {
-    // Matter rectangle() does x/y based on _center_ for some reason
-    const w = Math.abs(x2 - x1);
-    const h = Math.abs(y2 - y1);
-    const x = Math.min(x1, x2) + w / 2;
-    const y = Math.min(y1, y2) + h / 2;
-
-    makeEntity({
-        initialPos: new Pos(x, y),
-        label,
-        renderingData: {
-            type: 'RECT',
-            width: w,
-            height: h,
-        },
-        physicsData: {
-            hull: {
-                type: 'RECT',
-                width: w,
-                height: h,
-            },
-            static: true,
-        }
-    });
-}
-
-// The entire world is [0-2000] x [0-3000]
-// Box in that world with boxes of aribitrary size D
-// We double-cover the corners with this.
-const [T, R, B, L] = [0, VWIDTH, VHEIGHT, 0];
-const D = 500;
-makeStaticBlock("left", L - D, T - D, L, B + D);
-makeStaticBlock("right", R, T - D, R + D, B + D);
-makeStaticBlock("top", L - D, T - D, R + D, T);
-makeStaticBlock("bottom", L - D, B, R + D, B + D);
+initPhysicsSandbox();
