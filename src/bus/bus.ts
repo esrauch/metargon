@@ -1,25 +1,24 @@
 // The Bus is a single global point where everything flows through.
 // At least for now, all possible event types are centrally defined here.
 
-import { ApplyForce, EnablePhysics, SetVelocity } from "../events/physics.js";
+import { ApplyForce, SetVelocity } from "../events/physics.js";
 import { CreateEntity, DestroyEntity, SetPosition } from "../events/core_entity_events.js";
 import { Draw } from "../events/draw.js";
 import { Tick } from "../events/tick.js";
-import { SetRendering } from "../events/rendering.js";
+import { SetPayload } from "../events/set_payload.js";
 
 // Core idea is that we should be able to record + replay events for
 // deterministic behavior.
 
 export type BusEvent =
-    EnablePhysics |
     SetVelocity |
     ApplyForce |
     Tick |
     Draw |
-    SetRendering |
     CreateEntity |
+    DestroyEntity |
     SetPosition |
-    DestroyEntity;
+    SetPayload;
 
 export interface BusListener {
     onEvent(ev: BusEvent): void;

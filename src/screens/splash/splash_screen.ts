@@ -2,7 +2,7 @@ import { bus } from "../../bus/bus.js";
 import { DestroyEntity } from "../../events/core_entity_events.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
-import { Id } from "../../systems/entity/entity_id.js";
+import { Id } from "../../payloads/entity_id.js";
 import { ActiveScreen, crossFadeScreen } from '../screen.js';
 
 export class SplashScreen implements ActiveScreen {
@@ -13,7 +13,7 @@ export class SplashScreen implements ActiveScreen {
         this.dispEntity = makeEntity({
             label: 'splash',
             initialPos: new Pos(VWIDTH / 2, VHEIGHT / 2),
-            renderingData: {
+            rendering: {
                 type: 'TEXT',
                 text: 'å',
                 size: VHEIGHT / 2,

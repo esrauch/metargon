@@ -1,13 +1,5 @@
 import { Vec } from "../coords/coords.js";
-import { Id } from "../systems/entity/entity_id.js";
-
-export class EnablePhysics {
-    readonly type = 'ENABLE_PHYSICS';
-    constructor(
-        readonly entityId: Id,
-        readonly physicsData: EntityPhysicsState
-    ) {}
-}
+import { Id } from "../payloads/entity_id.js";
 
 export class ApplyForce {
     readonly type = 'APPLY_FORCE';

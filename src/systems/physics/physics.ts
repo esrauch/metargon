@@ -1,13 +1,14 @@
 /// <reference types="./matter" />
 
-import { ApplyForce, EnablePhysics, SetVelocity } from "../../events/physics.js";
+import { ApplyForce, SetVelocity } from "../../events/physics.js";
 import { BusEvent, BusListener } from "../../bus/bus.js";
 import { Pos, VHEIGHT, Positions } from "../../coords/coords.js";
 import { Draw } from "../../events/draw.js";
 import { DestroyEntity } from "../../events/core_entity_events.js";
-import { Id } from "../entity/entity_id.js";
-import { labelTable } from "../entity/label_table.js";
+import { Id } from "../../payloads/entity_id.js";
 import { getCenterPosition } from "../../util/get_position.js";
+import { PhysicsPayload } from "../../payloads/physics_payload.js";
+import { coreTable } from "../core_table.js";
 
 // Importing a js module with ts typings is incredibly difficult for some reason.
 // Matter should be loaded as a module, but instead we just
@@ -56,8 +57,9 @@ export class Physics implements BusListener {
             case 'SET_VELOCITY':
                 this.setVelocity(ev);
                 break;
-            case 'ENABLE_PHYSICS':
-                this.enablePhysics(ev);
+            case 'SET_PAYLOAD':
+                if (ev.payload.type == 'PHYSICS')
+                    this.setPhysicsPayload(ev.entityId, ev.payload);
                 break;
             case 'DESTROY_ENTITY':
                 this.destroyEntity(ev);
@@ -111,12 +113,14 @@ export class Physics implements BusListener {
             M.Vector.create(fx, fy));
     }
 
-    private enablePhysics(ev: EnablePhysics) {
-        const physicsOptions = ev.physicsData;
+    private setPhysicsPayload(id: Id, payload: PhysicsPayload) {
+        if (this.getBody(id)) {
+            throw Error('Cannot set a physics payload when there already is one');
+        }
+        const physicsOptions = payload.value;
         if (!physicsOptions) return;
-        const id = ev.entityId;
         const initialPos = getCenterPosition(id);
-        const label = labelTable.getLabel(id)
+        const label = coreTable.getLabel(id)
 
         const hull = physicsOptions.hull;
         switch (hull.type) {
@@ -125,9 +129,8 @@ export class Physics implements BusListener {
                     {
                         id,
                         label,
-                        // TODO: this precludes 0
                         restitution: physicsOptions.restitution || 0.8,
-                        isStatic: physicsOptions.static,
+                        isStatic: physicsOptions.isStatic,
                     });
                 M.Composite.add(this.engine.world, ball);
                 break;
@@ -137,7 +140,7 @@ export class Physics implements BusListener {
                     id,
                     label,
                     restitution: physicsOptions.restitution || 0.8,
-                    isStatic: physicsOptions.static,
+                    isStatic: physicsOptions.isStatic,
                 });
                 M.Composite.add(this.engine.world, rect);
                 break;

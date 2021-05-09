@@ -14,11 +14,11 @@ export class CreateBallControl extends AbstractPointerEvtControl {
         makeEntity({
             initialPos,
             label: "ball",
-            renderingData: {
+            rendering: {
                 type: 'CIRCLE',
                 radius: 50,
             },
-            physicsData: {
+            physics: {
                 hull: {
                     type: 'CIRCLE',
                     radius: 50,

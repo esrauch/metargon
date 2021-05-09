@@ -1,4 +1,4 @@
-Systems are defined as the handling of some corresponding State
+Systems are defined as the handling of some corresponding Payload
 
 Entity: Ids, Labels, Position (if not physics-enabled)
 Physics: Manages the objects under physics using Matterjs

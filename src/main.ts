@@ -6,14 +6,12 @@ import { CreateBallControl } from "./controls/create_ball_control.js";
 import { FlappyControl } from "./controls/flappy_control.js";
 import { GolfControl } from "./controls/golf_control.js";
 import { camera } from "./coords/camera.js";
-import { idTable } from "./systems/entity/id_table.js";
-import { labelTable } from "./systems/entity/label_table.js";
-import { positionTable } from "./systems/entity/position_table.js";
 import { Gfx2d } from "./gfx/gfx_2d.js";
 import { physics } from './systems/physics/physics.js';
 import { initPhysicsSandbox } from "./physics_sandbox.js";
 
-import { renderer } from "./systems/rendering/renderer.js";
+import { renderer } from "./systems/renderer.js";
+import { coreTable } from "./systems/core_table.js";
 
 const canvas = document.querySelector('canvas')!;
 const gfx = new Gfx2d(canvas);
@@ -31,10 +29,8 @@ const controls = new Map<String, Control>([
 ]);
 
 const singletons = {
-    idTable,
-    labelTable,
+    coreTable,
     physics,
-    positionTable,
     renderer,
     controls,
 }
@@ -42,14 +38,8 @@ const singletons = {
 console.log(singletons);
 
 bus.addListeners([
-    idTable,
-    labelTable,
+    coreTable,
     physics,
-    // Note: posTable *must* come after Physics for the EnablePhysics path,
-    // where physics will look up the current location in the posTable, and posTable
-    // will drop its knowledge of the position. Possibly we could let the posTable
-    // just continue to know the stale position instead?
-    positionTable,
     renderer]);
 
 

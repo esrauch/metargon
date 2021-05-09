@@ -1,6 +1,6 @@
 import { makeEntity } from "./events/make_entity_helper.js";
 import { Pos, VWIDTH, VHEIGHT } from "./coords/coords.js";
-import { PLAYER } from "./systems/entity/entity_id.js";
+import { PLAYER } from "./payloads/entity_id.js";
 
 export function initPhysicsSandbox() {
 
@@ -8,11 +8,11 @@ export function initPhysicsSandbox() {
         entityId: PLAYER,
         initialPos: new Pos(200, 200),
         label: "player",
-        renderingData: {
+        rendering: {
             type: 'CIRCLE',
-            radius: 25,
+            radius: 50,
         },
-        physicsData: {
+        physics: {
             hull: {
                 type: 'CIRCLE',
                 radius: 50,
@@ -29,22 +29,23 @@ export function initPhysicsSandbox() {
         const h = Math.abs(y2 - y1);
         const x = Math.min(x1, x2) + w / 2;
         const y = Math.min(y1, y2) + h / 2;
+        const initialPos = new Pos(x, y);
 
         makeEntity({
-            initialPos: new Pos(x, y),
+            initialPos,
             label,
-            renderingData: {
+            rendering: {
                 type: 'RECT',
                 width: w,
                 height: h,
             },
-            physicsData: {
+            physics: {
                 hull: {
                     type: 'RECT',
                     width: w,
                     height: h,
                 },
-                static: true,
+                isStatic: true
             }
         });
     }

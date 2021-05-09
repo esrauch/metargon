@@ -88,11 +88,11 @@ export class Gfx2d implements Gfx {
     }
 
     circle(center: Pos, radius: number, color?: string): void {
-        this.setFillStyle(color || FG_COLOR);
+        this.setStrokeStyle(color || FG_COLOR);
         const ctx = this.ctx;
         ctx.beginPath();
         ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
-        ctx.fill()
+        ctx.stroke()
     }
 
     linestrip(c: Positions, color?: string) {

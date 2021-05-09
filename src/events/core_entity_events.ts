@@ -1,20 +1,28 @@
 import { Pos } from "../coords/coords.js";
-import { Id, makeEntityId } from "../systems/entity/entity_id.js";
+import { CorePayload } from "../payloads/core_payload.js";
+import { Id, makeEntityId } from "../payloads/entity_id.js";
 
 
 export class CreateEntity {
     readonly type = 'CREATE_ENTITY';
     readonly entityId: number;
-    readonly initialPos: Pos;
+    readonly corePayload: CorePayload;
 
     constructor(
-        readonly label: string,
+        label: string,
         initialPos?: Pos,
         // Note: it's an error to create an id that already exists.
         entityId?: Id
     ) {
         this.entityId = entityId === undefined ? makeEntityId() : entityId;
-        this.initialPos = initialPos === undefined ? new Pos(0, 0) : initialPos;
+        initialPos = initialPos === undefined ? new Pos(0, 0) : initialPos;
+        this.corePayload = {
+            type: 'CORE',
+            value: {
+                label,
+                pos: initialPos,
+            }
+        }
     }
 }
 

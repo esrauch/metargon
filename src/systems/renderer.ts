@@ -1,25 +1,25 @@
-import { BusEvent, BusListener } from "../../bus/bus.js";
-import { Draw } from "../../events/draw.js";
-import { add, Pos, Positions } from "../../coords/coords.js";
-import { DEBUG_COLOR, Gfx } from "../../gfx/gfx.js";
-import { getCenterPosition } from "../../util/get_position.js";
-import { EntityRenderingState, Primitive } from "./entity_rendering_state.js";
-import { Id } from "../entity/entity_id.js";
-import { idTable } from "../entity/id_table.js";
-import { labelTable } from "../entity/label_table.js";
+import { BusEvent, BusListener } from "../bus/bus.js";
+import { Draw } from "../events/draw.js";
+import { add, Pos, Positions } from "../coords/coords.js";
+import { DEBUG_COLOR, Gfx } from "../gfx/gfx.js";
+import { getCenterPosition } from "../util/get_position.js";
+import { RenderingPayload, Primitive, RenderingPayloadValue } from "../payloads/rendering_payload.js";
+import { Id } from "../payloads/entity_id.js";
+import { SetPayload } from "../events/set_payload.js";
+import { coreTable } from "./core_table.js";
 
 type DrawFn = (gfx: Gfx, pos: Pos) => void;
 
-function makeRenderingFn(ero: EntityRenderingState): DrawFn {
-    switch(ero.type) {
+function makeRenderingFn(value: RenderingPayloadValue): DrawFn {
+    switch(value.type) {
         case 'FUNCTION':
-            return ero.fn;
+            return value.fn;
         case 'CUSTOM':
-            return (gfx, pos) => ero.obj.draw(gfx, pos);
+            return (gfx, pos) => value.obj.draw(gfx, pos);
         case 'COMPOUND':
-            return makeCompoundRenderingFn(ero.prims);
+            return makeCompoundRenderingFn(value.prims);
         default:
-            return makeCompoundRenderingFn([ero]);
+            return makeCompoundRenderingFn([value]);
     }
 }
 
@@ -80,11 +80,8 @@ export class Renderer implements BusListener {
 
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
-            case 'SET_RENDERING':
-                if (ev.renderingData)
-                    this.renderingFns.set(ev.entityId, makeRenderingFn(ev.renderingData));
-                else
-                    this.renderingFns.delete(ev.entityId);
+            case 'SET_PAYLOAD':
+                this.maybeSetPayload(ev);
                 break;
             case 'DESTROY_ENTITY':
                 this.renderingFns.delete(ev.entityId);
@@ -93,6 +90,15 @@ export class Renderer implements BusListener {
                 this.draw(ev);
                 break;
         }
+    }
+
+    maybeSetPayload(ev: SetPayload) {
+        const payload = ev.payload;
+        if (payload.type !== 'RENDERING') return;
+        if (payload.value)
+            this.renderingFns.set(ev.entityId, makeRenderingFn(payload.value));
+        else
+            this.renderingFns.delete(ev.entityId);
     }
 
     draw(ev: Draw) {
@@ -106,11 +112,11 @@ export class Renderer implements BusListener {
         }
 
         if (this.debugUi.renderLabels || this.debugUi.renderIds) {
-            for (const id of idTable.allIds()) {
+            for (const id of coreTable.allIds()) {
                 const pos = getCenterPosition(id);
                 let debugString = "";
                 if (this.debugUi.renderLabels)
-                    debugString += labelTable.getLabel(id) || "<unknown>";
+                    debugString += coreTable.getLabel(id) || "<unknown>";
                 if (this.debugUi.renderIds)
                     debugString += " " + id;
                 gfx.text(pos, debugString, {color: DEBUG_COLOR});

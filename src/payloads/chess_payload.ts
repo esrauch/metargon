@@ -1,10 +1,12 @@
+import { Payload } from "./payload.js";
 
 export enum ChessPiece {
     EMPTY,
     KING,
 }
 
-export class EntityChessState {
+
+export class ChessPayloadValue {
     readonly board: ChessPiece[][];
 
     constructor(w: number, h: number) {
@@ -17,4 +19,8 @@ export class EntityChessState {
             this.board.push(column);
         }
     }
+}
+
+export interface ChessPayload extends Payload<ChessPayloadValue> {
+    readonly type: 'CHESS';
 }
