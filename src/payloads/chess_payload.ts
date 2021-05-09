@@ -1,4 +1,4 @@
-import { Payload } from "./payload.js";
+import { TypedPayload } from "./payload.js";
 
 export enum ChessPieceType {
     KING = '♔',
@@ -55,7 +55,7 @@ class ChessPiece {
 }
 
 
-export class ChessPayloadValue {
+export class ChessPayload {
     readonly board: (ChessPiece | undefined)[][];
     readonly dims: [number, number];
 
@@ -76,6 +76,6 @@ export class ChessPayloadValue {
     }
 }
 
-export interface ChessPayload extends Payload<ChessPayloadValue> {
+export interface ChessTypedPayload extends TypedPayload<ChessPayload> {
     readonly type: 'CHESS';
 }

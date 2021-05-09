@@ -7,7 +7,7 @@ import { Draw } from "../../events/draw.js";
 import { DestroyEntity } from "../../events/core_entity_events.js";
 import { Id } from "../../payloads/entity_id.js";
 import { getCenterPosition } from "../multi_table_getters.js";
-import { PhysicsPayload } from "../../payloads/physics_payload.js";
+import { PhysicsTypedPayload } from "../../payloads/physics_payload.js";
 import { coreTable } from "../core_table.js";
 
 // Importing a js module with ts typings is incredibly difficult for some reason.
@@ -113,11 +113,11 @@ export class Physics implements BusListener {
             M.Vector.create(fx, fy));
     }
 
-    private setPhysicsPayload(id: Id, payload: PhysicsPayload) {
+    private setPhysicsPayload(id: Id, payload: PhysicsTypedPayload) {
         if (this.getBody(id)) {
             throw Error('Cannot set a physics payload when there already is one');
         }
-        const physicsOptions = payload.value;
+        const physicsOptions = payload.payload;
         if (!physicsOptions) return;
         const initialPos = getCenterPosition(id);
         const label = coreTable.getLabel(id)

@@ -2,15 +2,15 @@
 // "Core" Properties that we essentially all Entities have.
 
 import { Pos } from "../coords/coords.js";
-import { Payload } from "./payload.js";
+import { TypedPayload } from "./payload.js";
 
-export class CorePayloadValue {
+export class CorePayload {
     constructor(
         readonly label: string,
         readonly pos: Pos
         ) {}
 }
 
-export interface CorePayload extends Payload<CorePayloadValue> {
+export interface CoreTypedPayload extends TypedPayload<CorePayload> {
     readonly type: 'CORE';
 }

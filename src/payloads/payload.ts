@@ -1,25 +1,26 @@
-import { ChessPayload } from "./chess_payload.js";
-import { RenderingPayload } from "./rendering_payload.js";
-import { CorePayload } from './core_payload.js';
-import { PhysicsPayload } from "./physics_payload.js";
-import { WidgetPayload } from "./widget_payload.js";
+import { ChessTypedPayload } from "./chess_payload.js";
+import { RenderingTypedPayload } from "./rendering_payload.js";
+import { CoreTypedPayload } from './core_payload.js';
+import { PhysicsTypedPayload } from "./physics_payload.js";
+import { WidgetTypedPayload } from "./widget_payload.js";
 
-export interface Payload<T> {
+// TODO: maybe "TaggedPayload" instead
+export interface TypedPayload<T> {
     readonly type: String;
-    readonly value: T
+    readonly payload: T
 }
 
-export type SomePayload =
-    CorePayload |
-    PhysicsPayload |
-    RenderingPayload |
-    ChessPayload |
-    WidgetPayload;
+export type SomeTypedPayload =
+    CoreTypedPayload |
+    PhysicsTypedPayload |
+    RenderingTypedPayload |
+    ChessTypedPayload |
+    WidgetTypedPayload;
 
-export type PayloadType = SomePayload["type"];
+export type PayloadType = SomeTypedPayload["type"];
 
-export type TypedPayload<T extends PayloadType> = (SomePayload & { type: T });
+export type SpecificTypedPayload<T extends PayloadType> = (SomeTypedPayload & { type: T });
 
-export function isPayloadType<T extends PayloadType>(p: SomePayload, type: T): p is TypedPayload<T> {
+export function isPayloadType<T extends PayloadType>(p: SomeTypedPayload, type: T): p is SpecificTypedPayload<T> {
     return p.type === type;
 }

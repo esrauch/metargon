@@ -1,12 +1,12 @@
 import { WidgetSpecificData, WidgetType } from "../widgets/widgets.js";
-import { Payload } from "./payload.js";
+import { TypedPayload } from "./payload.js";
 
-export interface WidgetPayloadValue {
+export interface WidgetPayload {
     readonly w: number;
     readonly h: number;
     readonly widgetSpecificData: WidgetSpecificData;
 }
 
-export interface WidgetPayload extends Payload<WidgetPayloadValue> {
+export interface WidgetTypedPayload extends TypedPayload<WidgetPayload> {
     readonly type: "WIDGET";
 }

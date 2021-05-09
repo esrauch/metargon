@@ -40,7 +40,7 @@ export class GolfControl extends VectorControl {
             this.displayEntity,
             {
                 type: 'RENDERING',
-                value: {
+                payload: {
                     type: 'LINE',
                     vec
                 }
@@ -53,7 +53,7 @@ export class GolfControl extends VectorControl {
                 this.displayEntity,
                 {
                     type: 'RENDERING',
-                    value: undefined,
+                    payload: undefined,
                 }
             ));
     }

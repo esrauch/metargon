@@ -1,7 +1,7 @@
 import { BusEvent, BusListener } from "../bus/bus.js";
 import { Pos } from "../coords/coords.js";
 import { Id } from "../payloads/entity_id.js";
-import { WidgetPayloadValue } from "../payloads/widget_payload.js";
+import { WidgetPayload } from "../payloads/widget_payload.js";
 import { getCenterPosition } from "./multi_table_getters.js";
 
 function rectContains(pos: Pos, w: number, h: number, target: Pos) {
@@ -13,7 +13,7 @@ function rectContains(pos: Pos, w: number, h: number, target: Pos) {
 }
 
 export class WidgetTable implements BusListener {
-    readonly table = new Map<Id, WidgetPayloadValue>();
+    readonly table = new Map<Id, WidgetPayload>();
     private constructor() { }
     static singleton = new WidgetTable();
 
@@ -24,12 +24,12 @@ export class WidgetTable implements BusListener {
                 break;
             case 'SET_PAYLOAD':
                 if (ev.payload.type == 'WIDGET')
-                    this.table.set(ev.entityId, ev.payload.value);
+                    this.table.set(ev.entityId, ev.payload.payload);
                 break;
         }
     }
 
-    hitTest(target: Pos): WidgetPayloadValue|undefined {
+    hitTest(target: Pos): WidgetPayload|undefined {
         for (const [id, value] of this.table) {
             const pos = getCenterPosition(id);
             if (rectContains(pos, value.w, value.h, target))

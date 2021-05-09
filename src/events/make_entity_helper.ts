@@ -2,17 +2,17 @@ import { Pos } from "../coords/coords.js";
 import { Id } from "../payloads/entity_id.js";
 import { bus } from "../bus/bus.js";
 import { CreateEntity } from "./core_entity_events.js";
-import { SomePayload } from "../payloads/payload.js";
+import { SomeTypedPayload } from "../payloads/payload.js";
 import { SetPayload } from "./set_payload.js";
-import { RenderingPayloadValue } from "../payloads/rendering_payload.js";
-import { PhysicsPayloadValue } from "../payloads/physics_payload.js";
+import { RenderingPayload } from "../payloads/rendering_payload.js";
+import { PhysicsPayload } from "../payloads/physics_payload.js";
 
 type MakeEntityArgs = {
     entityId?: Id,
     initialPos?: Pos,
     label: string,
-    rendering?: RenderingPayloadValue,
-    physics?: PhysicsPayloadValue,
+    rendering?: RenderingPayload,
+    physics?: PhysicsPayload,
 };
 
 // Utility that dispatches a common bundle of events for making a new entity.
@@ -22,7 +22,7 @@ export function makeEntity({
     label,
     rendering,
     physics
-}: MakeEntityArgs, ...otherPayloads: SomePayload[]): Id {
+}: MakeEntityArgs, ...otherPayloads: SomeTypedPayload[]): Id {
     const create = new CreateEntity(label, initialPos, entityId);
     const id = create.entityId;
     bus.dispatch(create);
@@ -30,13 +30,13 @@ export function makeEntity({
     if (rendering)
         bus.dispatch(new SetPayload(id, {
             type: 'RENDERING',
-            value: rendering
+            payload: rendering
         }))
 
     if (physics)
         bus.dispatch(new SetPayload(id, {
             type: 'PHYSICS',
-            value: physics
+            payload: physics
         }))
 
     for (const p of otherPayloads) {

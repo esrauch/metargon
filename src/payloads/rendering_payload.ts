@@ -1,7 +1,7 @@
 import { Vec, Positions, Pos } from "../coords/coords.js";
 import { Gfx } from "../gfx/gfx.js";
 import { Id } from "./entity_id.js";
-import { Payload } from "./payload.js";
+import { TypedPayload } from "./payload.js";
 
 export type Primitive =
     {
@@ -48,13 +48,13 @@ export interface CustomObjRenderingOption {
     readonly obj: CustomRenderable,
 }
 
-export type RenderingPayloadValue = Primitive |
+export type RenderingPayload = Primitive |
 CompoundRenderingOption |
 CustomFnRenderingOption |
 CustomObjRenderingOption;
 
 // Note: RenderingPayload is unusual in that it permits undefined, used to
 // *stop* rendering something without destroying it.
-export interface RenderingPayload extends Payload<RenderingPayloadValue|undefined> {
+export interface RenderingTypedPayload extends TypedPayload<RenderingPayload|undefined> {
     readonly type: 'RENDERING';
 }

@@ -6,7 +6,7 @@ import { makeWorldBoundsEntity } from "../../util/world_bounds_entity.js";
 import { ActiveScreen } from "../screen.js";
 import { ChessRenderable } from "../../systems/chess/chess_renderable.js";
 import { Pos, VHEIGHT, VWIDTH } from "../../coords/coords.js";
-import { ChessPayloadValue } from "../../payloads/chess_payload.js";
+import { ChessPayload } from "../../payloads/chess_payload.js";
 
 
 export class ChessScreen implements ActiveScreen {
@@ -26,7 +26,7 @@ export class ChessScreen implements ActiveScreen {
                 }
             }, {
                 type: 'CHESS',
-                value: new ChessPayloadValue(5, 5)
+                payload: new ChessPayload(5, 5)
             }));
     }
 

@@ -1,10 +1,10 @@
 import { BusEvent, BusListener } from "../bus/bus.js";
 import { Pos } from "../coords/coords.js";
-import { CorePayloadValue } from "../payloads/core_payload.js";
+import { CorePayload } from "../payloads/core_payload.js";
 import { Id } from "../payloads/entity_id.js";
 
 export class CoreTable implements BusListener {
-    readonly table = new Map<Id, CorePayloadValue>();
+    readonly table = new Map<Id, CorePayload>();
     private constructor() { }
     static singleton = new CoreTable();
 
@@ -27,7 +27,7 @@ export class CoreTable implements BusListener {
             case 'CREATE_ENTITY':
                 if (this.table.has(ev.entityId))
                     throw Error(`Double create of ${ev.entityId}`);
-                this.table.set(ev.entityId, ev.corePayload.value);
+                this.table.set(ev.entityId, ev.corePayload.payload);
                 break;
             case 'DESTROY_ENTITY':
                 this.table.delete(ev.entityId);

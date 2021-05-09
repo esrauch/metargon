@@ -1,7 +1,7 @@
 import { linearInterp } from "../../util/interp.js";
 import { Pos, Positions, VWIDTH } from "../../coords/coords.js";
 import { COLORS, Gfx } from "../../gfx/gfx.js";
-import { ChessColor, ChessPayloadValue } from "../../payloads/chess_payload.js";
+import { ChessColor, ChessPayload } from "../../payloads/chess_payload.js";
 import { Id } from "../../payloads/entity_id.js";
 import { CustomRenderable } from "../../payloads/rendering_payload.js";
 import { genericPayloadTable } from "../generic_payload_table.js";
@@ -13,7 +13,7 @@ export class ChessRenderable implements CustomRenderable {
             console.error('ChessRenderable with no corresponding payload')
             return;
         }
-        const value = chessPayload.value;
+        const value = chessPayload.payload;
         const board = value.board;
 
         const w = VWIDTH * 2 / 3;
@@ -49,7 +49,7 @@ export class ChessRenderable implements CustomRenderable {
         boardL: number,
         i: number,
         j: number,
-        boardValue: ChessPayloadValue) {
+        boardValue: ChessPayload) {
         const isDarkSquare = (i + j) % 2 == 1;
         const boardSquaresW = boardValue.dims[0];
         const boardSquaresH = boardValue.dims[1];

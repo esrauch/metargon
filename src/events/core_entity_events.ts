@@ -1,12 +1,12 @@
 import { Pos } from "../coords/coords.js";
-import { CorePayload } from "../payloads/core_payload.js";
+import { CoreTypedPayload } from "../payloads/core_payload.js";
 import { Id, makeEntityId } from "../payloads/entity_id.js";
 
 
 export class CreateEntity {
     readonly type = 'CREATE_ENTITY';
     readonly entityId: number;
-    readonly corePayload: CorePayload;
+    readonly corePayload: CoreTypedPayload;
 
     constructor(
         label: string,
@@ -18,7 +18,7 @@ export class CreateEntity {
         initialPos = initialPos === undefined ? new Pos(0, 0) : initialPos;
         this.corePayload = {
             type: 'CORE',
-            value: {
+            payload: {
                 label,
                 pos: initialPos,
             }

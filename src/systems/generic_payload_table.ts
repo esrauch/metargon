@@ -1,7 +1,7 @@
 import { BusEvent, BusListener } from "../bus/bus.js";
 import { SetPayload } from "../events/set_payload.js";
 import { Id } from "../payloads/entity_id.js";
-import { isPayloadType, PayloadType, SomePayload } from "../payloads/payload.js";
+import { isPayloadType, PayloadType, SomeTypedPayload } from "../payloads/payload.js";
 
 const SPECIALIZED_PAYLOAD_TYPE: Set<PayloadType> = new Set([
     'CORE',
@@ -12,7 +12,7 @@ const SPECIALIZED_PAYLOAD_TYPE: Set<PayloadType> = new Set([
 // Lookup arbitrary payloads by EntityId, except for the "specialized" payload types
 // which are handled by their respective systems.
 export class GenericPayloadTable implements BusListener {
-    readonly table = new Map<PayloadType, Map<Id, SomePayload>>();
+    readonly table = new Map<PayloadType, Map<Id, SomeTypedPayload>>();
     private constructor() {}
     static singleton = new GenericPayloadTable();
     onEvent(ev: BusEvent): void {
@@ -26,7 +26,7 @@ export class GenericPayloadTable implements BusListener {
         }
     }
 
-    getPayload<T extends PayloadType>(type: T, id: Id) : (SomePayload & {type: T}) | undefined {
+    getPayload<T extends PayloadType>(type: T, id: Id) : (SomeTypedPayload & {type: T}) | undefined {
         const payload = this.table.get(type)?.get(id);
         if (!payload) return undefined;
         if (!isPayloadType(payload, type)) throw Error('Wrong payload type put into table');
@@ -39,7 +39,7 @@ export class GenericPayloadTable implements BusListener {
 
         let typeSpecificMap = this.table.get(payloadType);
         if (!typeSpecificMap) {
-            typeSpecificMap = new Map<Id, SomePayload>();
+            typeSpecificMap = new Map<Id, SomeTypedPayload>();
             this.table.set(payloadType, typeSpecificMap)
         }
         typeSpecificMap.set(ev.entityId, ev.payload);
