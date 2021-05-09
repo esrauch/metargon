@@ -12,6 +12,7 @@ import { initPhysicsSandbox } from "./physics_sandbox.js";
 
 import { renderer } from "./systems/renderer.js";
 import { coreTable } from "./systems/core_table.js";
+import { genericPayloadTable } from "./systems/generic_payload_table.js";
 
 const canvas = document.querySelector('canvas')!;
 const gfx = new Gfx2d(canvas);
@@ -28,19 +29,21 @@ const controls = new Map<String, Control>([
     ['4', new CreateBallControl()]
 ]);
 
-const singletons = {
+// Log a bunch of the top level objects so they can be trivially inspected.
+console.log({
     coreTable,
     physics,
     renderer,
     controls,
-}
-// Log a bunch of the top level objects so they can be trivially inspected.
-console.log(singletons);
+    genericPayloadTable,    
+});
 
 bus.addListeners([
     coreTable,
+    genericPayloadTable,
     physics,
-    renderer]);
+    renderer,
+]);
 
 
 let currentControl: Control | undefined;

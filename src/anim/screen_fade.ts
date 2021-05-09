@@ -1,6 +1,6 @@
 import { bus, BusEvent, BusListener } from "../bus/bus.js";
 import { Tick } from "../events/tick.js";
-import { linear } from './interp.js';
+import { linearInterp } from '../util/interp.js';
 
 export type Direction = 'IN'|'OUT';
 
@@ -51,7 +51,7 @@ class ScreenFade implements BusListener {
             const amt = this.tickCount / this.tickDuration;
             const start = this.startAlpha;
             const end = this.endAlpha;
-            ev.gfx.setGlobalOpacity(linear(start, end, amt));
+            ev.gfx.setGlobalOpacity(linearInterp(start, end, amt));
         }
         this.tickCount++;
     }

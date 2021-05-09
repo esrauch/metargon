@@ -1,38 +1,38 @@
 
 
-import { SPos, delta, SVec } from "../coords/coords.js";
-import { AbstractPointerEvtControl } from "./pointer_helper.js";
+import { delta, Pos, Vec } from "../coords/coords.js";
+import { PointerEvtControl } from "./pointer_helper.js";
 
-export class MagnetControl extends AbstractPointerEvtControl {
-    startPosition?: SPos;
-    vector?: SVec;
+export class MagnetControl extends PointerEvtControl {
+    startPosition?: Pos;
+    vector?: Vec;
 
     constructor(
-        readonly onUpdateCallback: (pos: SPos, vec: SVec) => void,
-        readonly onReleaseCallback: (pos: SPos, vec: SVec) => void) {
+        readonly onUpdateCallback: (pos: Pos, vec: Vec) => void,
+        readonly onReleaseCallback: (pos: Pos, vec: Vec) => void) {
         super();
     }
 
-    onDown(ev: PointerEvent): void {
-        this.startPosition = new SPos(ev.clientX, ev.clientY);
+    onDown(pos: Pos): void {
+        this.startPosition = pos;
     }
 
-    onMove(ev: PointerEvent): void {
+    onMove(pos: Pos): void {
         if (!this.startPosition) return;
-        const current = new SPos(ev.clientX, ev.clientY);
+        const current = pos;
         this.vector = delta(this.startPosition, current);
         this.onUpdateCallback(this.startPosition, this.vector);
     }
 
-    onUp(ev: PointerEvent): void {
-        this.upOrCancel(ev);
+    onUp(pos: Pos): void {
+        this.upOrCancel();
     }
 
-    onCancel(ev: PointerEvent): void {
-        this.upOrCancel(ev);
+    onCancel(pos: Pos): void {
+        this.upOrCancel();
     }
 
-    private upOrCancel(ev: PointerEvent) {
+    private upOrCancel() {
         if (this.startPosition && this.vector) {
             this.onReleaseCallback(this.startPosition, this.vector);
         }

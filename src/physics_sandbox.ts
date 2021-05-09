@@ -1,6 +1,7 @@
 import { makeEntity } from "./events/make_entity_helper.js";
 import { Pos, VWIDTH, VHEIGHT } from "./coords/coords.js";
 import { PLAYER } from "./payloads/entity_id.js";
+import { makeWorldBoundsEntity } from "./util/world_bounds_entity.js";
 
 export function initPhysicsSandbox() {
 
@@ -34,11 +35,6 @@ export function initPhysicsSandbox() {
         makeEntity({
             initialPos,
             label,
-            rendering: {
-                type: 'RECT',
-                width: w,
-                height: h,
-            },
             physics: {
                 hull: {
                     type: 'RECT',
@@ -55,8 +51,12 @@ export function initPhysicsSandbox() {
     // We double-cover the corners with this.
     const [T, R, B, L] = [0, VWIDTH, VHEIGHT, 0];
     const D = 500;
+
+    // Invisible blocks surrounding the world.
     makeStaticBlock("left", L - D, T - D, L, B + D);
     makeStaticBlock("right", R, T - D, R + D, B + D);
     makeStaticBlock("top", L - D, T - D, R + D, T);
     makeStaticBlock("bottom", L - D, B, R + D, B + D);
+
+    makeWorldBoundsEntity();
 }

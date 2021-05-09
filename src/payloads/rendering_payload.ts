@@ -1,5 +1,6 @@
 import { Vec, Positions, Pos } from "../coords/coords.js";
 import { Gfx } from "../gfx/gfx.js";
+import { Id } from "./entity_id.js";
 import { Payload } from "./payload.js";
 
 export type Primitive =
@@ -35,11 +36,11 @@ export interface CompoundRenderingOption {
 
 export interface CustomFnRenderingOption {
     readonly type: 'FUNCTION';
-    readonly fn: (gfx: Gfx, center: Pos) => void;
+    readonly fn: (gfx: Gfx, id: Id, center: Pos) => void;
 }
 
 export interface CustomRenderable {
-    draw: (gfx: Gfx, center: Pos) => void
+    draw: (gfx: Gfx, id: Id, center: Pos) => void
 }
 
 export interface CustomObjRenderingOption {

@@ -1,22 +1,34 @@
+import { camera } from "../coords/camera.js";
+import { Pos } from "../coords/coords.js";
 
-export abstract class AbstractPointerEvtControl implements Control {
+export abstract class PointerEvtControl implements Control {
     private el = document.body;
+    private activePointerId?: number;
 
     private OPTS: AddEventListenerOptions = {passive: true};
     // Wrap all of the event methods so that we can unregister them,
     // as well as automatically doing pointer capture on down and up/cancel.
     private downWrapper = (ev: PointerEvent) => {
+        if (this.activePointerId !== undefined) return;
+        this.activePointerId = ev.pointerId;
         this.el.setPointerCapture(ev.pointerId);
-        this.onDown(ev);
+        this.onDown(camera.toVirtualPosXy(ev.clientX, ev.clientY));
     }
-    private moveWrapper = (ev: PointerEvent) => this.onMove(ev);
+    private moveWrapper = (ev: PointerEvent) => {
+        if (this.activePointerId !== ev.pointerId) return;
+
+        this.onMove(camera.toVirtualPosXy(ev.clientX, ev.clientY));
+    }
     private upWrapper = (ev: PointerEvent) => {
+        if (this.activePointerId !== ev.pointerId) return;
+        this.activePointerId = undefined;
         this.el.releasePointerCapture(ev.pointerId);
-        this.onUp(ev);
+        this.onUp(camera.toVirtualPosXy(ev.clientX, ev.clientY));
     }
     private cancelWrapper = (ev: PointerEvent) => {
+        this.activePointerId = undefined;
         this.el.releasePointerCapture(ev.pointerId);
-        this.onCancel(ev);
+        this.onCancel(camera.toVirtualPosXy(ev.clientX, ev.clientY));
     }
 
     enable() {
@@ -35,8 +47,8 @@ export abstract class AbstractPointerEvtControl implements Control {
         this.el.removeEventListener('pointercancel', this.cancelWrapper, o);
     }
 
-    abstract onDown(ev: PointerEvent): void;
-    abstract onMove(ev: PointerEvent): void;
-    abstract onUp(ev: PointerEvent): void;
-    abstract onCancel(ev: PointerEvent): void;
+    abstract onDown(pos: Pos): void;
+    abstract onMove(pos: Pos): void;
+    abstract onUp(pos: Pos): void;
+    abstract onCancel(pos: Pos): void;
 }

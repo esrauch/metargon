@@ -62,6 +62,13 @@ export class Camera {
         );
     }
 
+    toVirtualPosXy(sx: number, sy: number): Pos {
+        return new Pos(
+            (sx / this.mult) - this.vleftoff,
+            (sy / this.mult) - this.vtopoff
+        );
+    }
+
     toVirtualVec(spos: SVec): Vec {
         return new Vec(
             (spos.dx / this.mult),

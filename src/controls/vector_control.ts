@@ -5,9 +5,9 @@
 
 import { camera } from "../coords/camera.js";
 import { SPos, delta, Pos, Vec } from "../coords/coords.js";
-import { AbstractPointerEvtControl } from "./pointer_helper.js";
+import { PointerEvtControl } from "./pointer_helper.js";
 
-export class VectorControl extends AbstractPointerEvtControl {
+export class VectorControl extends PointerEvtControl {
     startPosition?: Pos;
     vector?: Vec;
 
@@ -18,28 +18,26 @@ export class VectorControl extends AbstractPointerEvtControl {
         super();
     }
 
-    onDown(ev: PointerEvent): void {
+    onDown(pos: Pos): void {
         this.reset();
-        const pos = camera.toVirtualPos(new SPos(ev.clientX, ev.clientY));
         if (pos.isInBounds())
             this.startPosition = pos;
     }
 
-    onMove(ev: PointerEvent): void {
+    onMove(pos: Pos): void {
         if (!this.startPosition) return;
-        const current = camera.toVirtualPos(new SPos(ev.clientX, ev.clientY));
-        this.vector = delta(this.startPosition, current);
+        this.vector = delta(this.startPosition, pos);
         this.onUpdateCallback(this.startPosition, this.vector);
     }
 
-    onUp(ev: PointerEvent): void {
+    onUp(pos: Pos): void {
         if (this.startPosition && this.vector) {
             this.onReleaseCallback(this.startPosition, this.vector);
         }
         this.reset();
     }
 
-    onCancel(ev: PointerEvent): void {
+    onCancel(pos: Pos): void {
         if (this.startPosition && this.vector) {
             this.onCancelCallback();
         }

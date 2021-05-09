@@ -1,18 +1,12 @@
 import { Pos, Vec, Positions } from "../coords/coords.js";
 
-const Colors = {
-    BLACK: '#000',
-    RED: '#FF9AA2',
-    ORANGE: '#FFB7B2',
-    GREEN: '#E2F0CB',
-    BLUE: '#D4F0F0',
-    PURPLE: '#C7CEEA',
-    WHITE: '#FFF',
+export enum COLORS {
+    DEBUG = '#F00',
+    BG = '#000',
+    BG_MILD = '#222',
+    FG = '#FFF',
+    FIRE = '#F8A',
 }
-
-export const DEBUG_COLOR = '#F00';
-export const BG_COLOR = Colors.BLACK;
-export const FG_COLOR = Colors.WHITE;
 
 export interface Gfx {
     onViewportSizeChange(): void;
@@ -32,6 +26,10 @@ export interface Gfx {
     lineloop(c: Positions, color?: string): void;
 
     filledpoly(c: Positions, color?: string): void;
+
+    strokerect(center: Pos, w: number, h: number, color?:string): void;
+
+    fillrect(center: Pos, w: number, h: number, color?:string): void;
 
     text(p: Pos, s: string, opts?: {
         color?: string,

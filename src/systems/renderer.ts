@@ -1,21 +1,21 @@
 import { BusEvent, BusListener } from "../bus/bus.js";
 import { Draw } from "../events/draw.js";
 import { add, Pos, Positions } from "../coords/coords.js";
-import { DEBUG_COLOR, Gfx } from "../gfx/gfx.js";
+import { COLORS, Gfx } from "../gfx/gfx.js";
 import { getCenterPosition } from "../util/get_position.js";
-import { RenderingPayload, Primitive, RenderingPayloadValue } from "../payloads/rendering_payload.js";
+import { Primitive, RenderingPayloadValue } from "../payloads/rendering_payload.js";
 import { Id } from "../payloads/entity_id.js";
 import { SetPayload } from "../events/set_payload.js";
 import { coreTable } from "./core_table.js";
 
-type DrawFn = (gfx: Gfx, pos: Pos) => void;
+type DrawFn = (gfx: Gfx, id: Id, pos: Pos) => void;
 
 function makeRenderingFn(value: RenderingPayloadValue): DrawFn {
     switch(value.type) {
         case 'FUNCTION':
             return value.fn;
         case 'CUSTOM':
-            return (gfx, pos) => value.obj.draw(gfx, pos);
+            return (gfx, id, pos) => value.obj.draw(gfx, id, pos);
         case 'COMPOUND':
             return makeCompoundRenderingFn(value.prims);
         default:
@@ -24,7 +24,7 @@ function makeRenderingFn(value: RenderingPayloadValue): DrawFn {
 }
 
 function makeCompoundRenderingFn(prims: Primitive[]): DrawFn {
-    return (gfx: Gfx, pos: Pos) => {
+    return (gfx: Gfx, id: Id, pos: Pos) => {
         for (const p of prims) {
             switch (p.type) {
                 case 'CIRCLE':
@@ -39,18 +39,7 @@ function makeCompoundRenderingFn(prims: Primitive[]): DrawFn {
                     gfx.lineloop(p.pts);
                     break;
                 case 'RECT':
-                    const halfw = p.width / 2;
-                    const halfh = p.height / 2;
-                    const top = pos.y - halfh;
-                    const right = pos.x + halfw;
-                    const bottom = pos.y + halfh;
-                    const left = pos.x - halfw;
-                    gfx.filledpoly(new Positions([
-                        [left, top],
-                        [right, top],
-                        [right, bottom],
-                        [left, bottom],
-                    ]));
+                    gfx.strokerect(pos, p.width, p.height);
                     break;
                 case 'TEXT':
                     gfx.text(pos, p.text, {
@@ -107,7 +96,7 @@ export class Renderer implements BusListener {
         if (!this.debugUi.disableNormalRendering) {
             for (const [id, fn] of this.renderingFns) {
                 const pos = getCenterPosition(id);
-                fn(gfx, pos);
+                fn(gfx, id, pos);
             }
         }
 
@@ -119,7 +108,7 @@ export class Renderer implements BusListener {
                     debugString += coreTable.getLabel(id) || "<unknown>";
                 if (this.debugUi.renderIds)
                     debugString += " " + id;
-                gfx.text(pos, debugString, {color: DEBUG_COLOR});
+                gfx.text(pos, debugString, {color: COLORS.DEBUG});
             }
         }
     }

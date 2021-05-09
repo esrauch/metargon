@@ -2,7 +2,8 @@ import { fadeScreen } from "../anim/screen_fade.js";
 
 enum FadeSpeed {
     INSTANT = 0,
-    SLOW = 200/60,
+    //SLOW = 200/60,
+    SLOW = 0,
 }
 
 export interface ActiveScreen {

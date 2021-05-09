@@ -1,7 +1,7 @@
 import { camera } from "../coords/camera.js";
 import { Positions, Pos, add, Vec } from "../coords/coords.js";
 import { assert } from "../util/util.js";
-import { BG_COLOR, FG_COLOR, Gfx } from "./gfx.js";
+import { COLORS, Gfx } from "./gfx.js";
 
 const DEFAULT_FONT = '100px sans-serif';
 
@@ -45,8 +45,8 @@ export class Gfx2d implements Gfx {
         this.h = this.canvas.height;
         // This px size is in virt coords.
         this.ctx.font = '100px sans-serif';
-        this.setFillStyle(FG_COLOR, { force: true });
-        this.setStrokeStyle(FG_COLOR, { force: true });
+        this.setFillStyle(COLORS.FG, { force: true });
+        this.setStrokeStyle(COLORS.FG, { force: true });
         this.ctx.lineWidth = 10;
     }
 
@@ -58,7 +58,7 @@ export class Gfx2d implements Gfx {
         
         this.ctx.globalAlpha = 1;
         this.ctx.clearRect(0, 0, this.w, this.h);
-        this.setFillStyle(BG_COLOR);
+        this.setFillStyle(COLORS.BG);
         this.ctx.fillRect(0, 0, this.w, this.h);
         this.setFillStyle('#00f');
 
@@ -76,7 +76,7 @@ export class Gfx2d implements Gfx {
 
     line(from: Pos, to: Pos, color?: string) {
         const ctx = this.ctx;
-        this.setStrokeStyle(color || FG_COLOR);
+        this.setStrokeStyle(color || COLORS.FG);
         ctx.beginPath();
         ctx.lineTo(from.x, from.y);
         ctx.lineTo(to.x, to.y);
@@ -88,7 +88,7 @@ export class Gfx2d implements Gfx {
     }
 
     circle(center: Pos, radius: number, color?: string): void {
-        this.setStrokeStyle(color || FG_COLOR);
+        this.setStrokeStyle(color || COLORS.FG);
         const ctx = this.ctx;
         ctx.beginPath();
         ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
@@ -96,7 +96,7 @@ export class Gfx2d implements Gfx {
     }
 
     linestrip(c: Positions, color?: string) {
-        this.setStrokeStyle(color || FG_COLOR);
+        this.setStrokeStyle(color || COLORS.FG);
         const ctx = this.ctx;
         ctx.beginPath();
         this.poly(c);
@@ -104,7 +104,7 @@ export class Gfx2d implements Gfx {
     }
 
     lineloop(c: Positions, color?: string) {
-        this.setStrokeStyle(color || FG_COLOR);
+        this.setStrokeStyle(color || COLORS.FG);
         const ctx = this.ctx;
         ctx.beginPath();
         this.poly(c);
@@ -113,11 +113,37 @@ export class Gfx2d implements Gfx {
     }
 
     filledpoly(c: Positions, color?: string) {
-        this.setFillStyle(color || FG_COLOR);
+        this.setFillStyle(color || COLORS.FG);
         const ctx = this.ctx;
         ctx.beginPath();
         this.poly(c);
         ctx.fill();
+    }
+
+    fillrect(center: Pos, w: number, h: number, color?: string): void {
+        const L = center.x - w / 2;
+        const R = center.x + w / 2;
+        const T = center.y - h / 2;
+        const B = center.y + h / 2;
+        this.filledpoly(new Positions([
+            [L, T],
+            [R, T],
+            [R, B],
+            [L, B],
+        ]), color);
+    }
+
+    strokerect(center: Pos, w: number, h: number, color?: string): void {
+        const L = center.x - w / 2;
+        const R = center.x + w / 2;
+        const T = center.y - h / 2;
+        const B = center.y + h / 2;
+        this.lineloop(new Positions([
+            [L, T],
+            [R, T],
+            [R, B],
+            [L, B],
+        ]), color);
     }
 
     text(p: Pos, s: string, opts?: {
@@ -125,12 +151,31 @@ export class Gfx2d implements Gfx {
         size?: number,
         font?: string,
     }) {
-        this.setFillStyle(opts?.color || FG_COLOR);
-        this.ctx.font = toFont(opts?.size, opts?.font);
+        this.setFillStyle(opts?.color || COLORS.FG);
         const c = this.ctx;
-        // TODO: do we need to cache this?
-        const metrics = c.measureText(s);
+        const fontStr = toFont(opts?.size, opts?.font);
+        const metrics = this.setFontAndMeasureText(s, fontStr);
         const w = metrics.width;
         c.fillText(s, p.x - metrics.width / 2, p.y + metrics.actualBoundingBoxAscent / 2);
+    }
+
+    private sizeCache = new Map<string, Map<string, TextMetrics>>();
+    private setFontAndMeasureText(s: string, font: string) {
+        const c = this.ctx;
+        c.font = font;
+
+        let perFontCache = this.sizeCache.get(font);
+        if (!perFontCache) {
+            perFontCache = new Map();
+            this.sizeCache.set(font, perFontCache);
+        }
+
+        let cachedMetrics = perFontCache.get(s);
+        if (!cachedMetrics) {
+            const metrics = c.measureText(s);
+            perFontCache.set(s, metrics);
+            return metrics;
+        }
+        return cachedMetrics;
     }
 }

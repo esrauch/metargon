@@ -5,6 +5,8 @@ import { Id } from "../../payloads/entity_id.js";
 import { makeWorldBoundsEntity } from "../../util/world_bounds_entity.js";
 import { ActiveScreen } from "../screen.js";
 import { ChessRenderable } from "../../systems/chess/chess_renderable.js";
+import { Pos, VHEIGHT, VWIDTH } from "../../coords/coords.js";
+import { ChessPayloadValue } from "../../payloads/chess_payload.js";
 
 
 export class ChessScreen implements ActiveScreen {
@@ -17,10 +19,14 @@ export class ChessScreen implements ActiveScreen {
         this.entities.push(
             makeEntity({
                 label: "Board",
+                initialPos: new Pos(VWIDTH / 2, VHEIGHT / 2),
                 rendering: {
                     type: 'CUSTOM',
                     obj: this.chessRenderable,
                 }
+            }, {
+                type: 'CHESS',
+                value: new ChessPayloadValue(5, 5)
             }));
     }
 
