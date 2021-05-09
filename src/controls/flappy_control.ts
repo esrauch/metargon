@@ -9,10 +9,4 @@ export class FlappyControl extends PointerEvtControl {
     onDown(): void {
         bus.dispatch(new ApplyForce(PLAYER, new Vec(0, -250)));
     }
-    onMove(): void {
-    }
-    onUp(): void {
-    }
-    onCancel(): void {
-    }
 }

@@ -26,10 +26,4 @@ export class CreateBallControl extends PointerEvtControl {
             }
         });
     }
-    onMove(): void {
-    }
-    onUp(): void {
-    }
-    onCancel(): void {
-    }
 }

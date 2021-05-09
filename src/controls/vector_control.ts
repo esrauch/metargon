@@ -3,8 +3,7 @@
 // that points in the opposite direction.
 // For example, a GolfControl uses this to apply a force to a given object.
 
-import { camera } from "../coords/camera.js";
-import { SPos, delta, Pos, Vec } from "../coords/coords.js";
+import { delta, Pos, Vec } from "../coords/coords.js";
 import { PointerEvtControl } from "./pointer_helper.js";
 
 export class VectorControl extends PointerEvtControl {

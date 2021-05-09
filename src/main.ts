@@ -80,6 +80,6 @@ function tick() {
 }
 tick();
 
-// initPhysicsSandbox();
+initPhysicsSandbox();
 
-initClickPuzzle();
+// initClickPuzzle();

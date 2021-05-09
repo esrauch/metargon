@@ -16,7 +16,6 @@ export abstract class PointerEvtControl implements Control {
     }
     private moveWrapper = (ev: PointerEvent) => {
         if (this.activePointerId !== ev.pointerId) return;
-
         this.onMove(camera.toVirtualPosXy(ev.clientX, ev.clientY));
     }
     private upWrapper = (ev: PointerEvent) => {
@@ -47,8 +46,9 @@ export abstract class PointerEvtControl implements Control {
         this.el.removeEventListener('pointercancel', this.cancelWrapper, o);
     }
 
-    abstract onDown(pos: Pos): void;
-    abstract onMove(pos: Pos): void;
-    abstract onUp(pos: Pos): void;
-    abstract onCancel(pos: Pos): void;
+    // Specific controls should implement these.
+    onDown(pos: Pos): void {}
+    onMove(pos: Pos): void {}
+    onUp(pos: Pos): void {}
+    onCancel(pos: Pos): void {}
 }

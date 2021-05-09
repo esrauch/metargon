@@ -1,5 +1,5 @@
 
-// A control is basically a user mode that can be activated or deactivated.
+// A control is an exclusive mode that turns user input into whatever actions.
 
 interface Control {
     enable(): void;

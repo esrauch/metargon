@@ -54,11 +54,7 @@ export class GolfControl implements Control {
             }));
     }
 
-    onRelease(pos: Pos, vec: Vec): void {
-        if (this.type == 'FORCE')
-            bus.dispatch(new ApplyForce(PLAYER, vec));
-        else
-            bus.dispatch(new SetVelocity(PLAYER, vec));
+    private hideDisplayEntity() {
 
         if (this.displayEntity)
             bus.dispatch(new SetPayload(
@@ -70,6 +66,15 @@ export class GolfControl implements Control {
             ));
     }
 
+    onRelease(pos: Pos, vec: Vec): void {
+        if (this.type == 'FORCE')
+            bus.dispatch(new ApplyForce(PLAYER, vec));
+        else
+            bus.dispatch(new SetVelocity(PLAYER, vec));
+        this.hideDisplayEntity();
+    }
+
     onCancel(): void {
+        this.hideDisplayEntity();
     }
 }
