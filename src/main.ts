@@ -1,18 +1,15 @@
 import { bus } from "./bus/bus.js";
 import { Draw} from "./events/draw.js";
 import { Tick } from "./events/tick.js";
-import { initClickPuzzle } from "./click_puzzle.js";
-import { CreateBallControl } from "./controls/create_ball_control.js";
-import { FlappyControl } from "./controls/flappy_control.js";
-import { GolfControl } from "./controls/golf_control.js";
 import { camera } from "./coords/camera.js";
 import { Gfx2d } from "./gfx/gfx_2d.js";
 import { physics } from './systems/physics/physics.js';
 import { initPhysicsSandbox } from "./physics_sandbox.js";
-
 import { renderer } from "./systems/renderer.js";
 import { coreTable } from "./systems/core_table.js";
 import { genericPayloadTable } from "./systems/generic_payload_table.js";
+import { addControlKeyListener, controls } from "./controls/controls.js";
+import {input} from './input/input.js';
 
 const canvas = document.querySelector('canvas')!;
 const gfx = new Gfx2d(canvas);
@@ -22,12 +19,7 @@ const reusableEvents = {
     draw: new Draw(gfx),
 };
 
-const controls = new Map<String, Control>([
-    ['1', new GolfControl('FORCE')],
-    ['2', new GolfControl('VELOCITY')],
-    ['3', new FlappyControl()],
-    ['4', new CreateBallControl()]
-]);
+addControlKeyListener();
 
 // Log a bunch of the top level objects so they can be trivially inspected.
 console.log({
@@ -35,8 +27,11 @@ console.log({
     physics,
     renderer,
     controls,
-    genericPayloadTable,    
+    genericPayloadTable,
+    input,
 });
+
+input.enable();
 
 bus.addListeners([
     coreTable,
@@ -44,19 +39,6 @@ bus.addListeners([
     physics,
     renderer,
 ]);
-
-
-let currentControl: Control | undefined;
-
-window.addEventListener('keydown', (ev: KeyboardEvent) => {
-    const c = controls.get(ev.key);
-    if (c) {
-        console.log('Activating control #', ev.key);
-        if (currentControl) currentControl.disable();
-        currentControl = c;
-        currentControl.enable();
-    }
-});
 
 function onViewportSizeChange() {
     const swidth = canvas.width = window.innerWidth;

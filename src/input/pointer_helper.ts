@@ -1,7 +1,7 @@
 import { camera } from "../coords/camera.js";
 import { Pos } from "../coords/coords.js";
 
-export abstract class PointerEvtControl implements Control {
+export abstract class PointerEvtControl {
     private el = document.body;
     private activePointerId?: number;
 
@@ -27,7 +27,7 @@ export abstract class PointerEvtControl implements Control {
     private cancelWrapper = (ev: PointerEvent) => {
         this.activePointerId = undefined;
         this.el.releasePointerCapture(ev.pointerId);
-        this.onCancel(camera.toVirtualPosXy(ev.clientX, ev.clientY));
+        this.onCancel();
     }
 
     enable() {
@@ -38,17 +38,8 @@ export abstract class PointerEvtControl implements Control {
         this.el.addEventListener('pointercancel', this.cancelWrapper, o);
     }
 
-    disable() {
-        const o = this.OPTS;
-        this.el.removeEventListener('pointerdown', this.downWrapper, o);
-        this.el.removeEventListener('pointermove', this.moveWrapper, o);
-        this.el.removeEventListener('pointerup', this.upWrapper, o);
-        this.el.removeEventListener('pointercancel', this.cancelWrapper, o);
-    }
-
-    // Specific controls should implement these.
-    onDown(pos: Pos): void {}
-    onMove(pos: Pos): void {}
-    onUp(pos: Pos): void {}
-    onCancel(pos: Pos): void {}
+    abstract onDown(pos: Pos): void;
+    abstract onMove(pos: Pos): void;
+    abstract onUp(pos: Pos): void;
+    abstract onCancel(): void;
 }

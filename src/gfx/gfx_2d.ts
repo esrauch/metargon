@@ -1,6 +1,6 @@
 import { camera } from "../coords/camera.js";
 import { Positions, Pos, add, Vec } from "../coords/coords.js";
-import { assert } from "../util/util.js";
+import { assert } from "../util/assert.js";
 import { COLORS, Gfx } from "./gfx.js";
 
 const DEFAULT_FONT = '100px sans-serif';

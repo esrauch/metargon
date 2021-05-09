@@ -6,7 +6,7 @@ import { Pos, VHEIGHT, Positions } from "../../coords/coords.js";
 import { Draw } from "../../events/draw.js";
 import { DestroyEntity } from "../../events/core_entity_events.js";
 import { Id } from "../../payloads/entity_id.js";
-import { getCenterPosition } from "../../util/get_position.js";
+import { getCenterPosition } from "../multi_table_getters.js";
 import { PhysicsPayload } from "../../payloads/physics_payload.js";
 import { coreTable } from "../core_table.js";
 

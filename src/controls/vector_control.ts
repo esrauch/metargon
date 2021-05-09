@@ -4,16 +4,13 @@
 // For example, a GolfControl uses this to apply a force to a given object.
 
 import { delta, Pos, Vec } from "../coords/coords.js";
-import { PointerEvtControl } from "./pointer_helper.js";
+import { Control } from "./control.js";
 
-export class VectorControl extends PointerEvtControl {
+export abstract class VectorControl extends Control {
     startPosition?: Pos;
     vector?: Vec;
 
-    constructor(
-        readonly onUpdateCallback: (pos: Pos, vec: Vec) => void,
-        readonly onReleaseCallback: (pos: Pos, vec: Vec) => void,
-        readonly onCancelCallback: () => void) {
+    constructor() {
         super();
     }
 
@@ -26,19 +23,19 @@ export class VectorControl extends PointerEvtControl {
     onMove(pos: Pos): void {
         if (!this.startPosition) return;
         this.vector = delta(this.startPosition, pos);
-        this.onUpdateCallback(this.startPosition, this.vector);
+        this.onVectorUpdate(this.startPosition, this.vector);
     }
 
     onUp(pos: Pos): void {
         if (this.startPosition && this.vector) {
-            this.onReleaseCallback(this.startPosition, this.vector);
+            this.onVectorRelease(this.startPosition, this.vector);
         }
         this.reset();
     }
 
-    onCancel(pos: Pos): void {
+    onCancel(): void {
         if (this.startPosition && this.vector) {
-            this.onCancelCallback();
+            this.onVectorCancel();
         }
         this.reset();
     }
@@ -47,4 +44,8 @@ export class VectorControl extends PointerEvtControl {
         this.startPosition = undefined;
         this.vector = undefined;
     }
+
+    abstract onVectorUpdate(pos: Pos, vec: Vec): void;
+    abstract onVectorRelease(pos: Pos, vec: Vec): void;
+    abstract onVectorCancel(): void;
 }

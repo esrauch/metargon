@@ -5,18 +5,14 @@ import { VectorControl } from "./vector_control.js";
 import { Id, PLAYER } from "../payloads/entity_id.js";
 import { CreateEntity, DestroyEntity, SetPosition } from "../events/core_entity_events.js";
 import { SetPayload } from "../events/set_payload.js";
+import { Control } from "./control.js";
 
 // Classic pull-and-drag "Golf" control: drag and release to apply force to something.
-export class GolfControl implements Control {
-    private vectorControl = new VectorControl(
-        (pos, vec) => this.onUpdate(pos, vec),
-        (pos, vec) => this.onRelease(pos, vec),
-        () => this.onCancel(),
-    );
-
+export class GolfControl extends VectorControl {
     private displayEntity?: Id;
 
     constructor(private type: 'FORCE' | 'VELOCITY' = 'VELOCITY') {
+        super();
     }
 
     enable(): void {
@@ -28,8 +24,6 @@ export class GolfControl implements Control {
             this.displayEntity = createEvt.entityId;
             bus.dispatch(createEvt);
         }
-
-        this.vectorControl.enable();
     }
 
     disable(): void {
@@ -37,10 +31,9 @@ export class GolfControl implements Control {
             bus.dispatch(new DestroyEntity(this.displayEntity));
             this.displayEntity = undefined;
         }
-        this.vectorControl.disable();
     }
 
-    onUpdate(pos: Pos, vec: Vec): void {
+    onVectorUpdate(pos: Pos, vec: Vec): void {
         if (!this.displayEntity) return;
         bus.dispatch(new SetPosition(this.displayEntity, pos));
         bus.dispatch(new SetPayload(
@@ -55,7 +48,6 @@ export class GolfControl implements Control {
     }
 
     private hideDisplayEntity() {
-
         if (this.displayEntity)
             bus.dispatch(new SetPayload(
                 this.displayEntity,
@@ -66,7 +58,7 @@ export class GolfControl implements Control {
             ));
     }
 
-    onRelease(pos: Pos, vec: Vec): void {
+    onVectorRelease(_pos: Pos, vec: Vec): void {
         if (this.type == 'FORCE')
             bus.dispatch(new ApplyForce(PLAYER, vec));
         else
@@ -74,7 +66,7 @@ export class GolfControl implements Control {
         this.hideDisplayEntity();
     }
 
-    onCancel(): void {
+    onVectorCancel(): void {
         this.hideDisplayEntity();
     }
 }

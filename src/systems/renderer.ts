@@ -2,11 +2,11 @@ import { BusEvent, BusListener } from "../bus/bus.js";
 import { Draw } from "../events/draw.js";
 import { add, Pos, Positions } from "../coords/coords.js";
 import { COLORS, Gfx } from "../gfx/gfx.js";
-import { getCenterPosition } from "../util/get_position.js";
 import { Primitive, RenderingPayloadValue } from "../payloads/rendering_payload.js";
 import { Id } from "../payloads/entity_id.js";
 import { SetPayload } from "../events/set_payload.js";
 import { coreTable } from "./core_table.js";
+import { getCenterPosition } from "./multi_table_getters.js";
 
 type DrawFn = (gfx: Gfx, id: Id, pos: Pos) => void;
 
