@@ -2,7 +2,7 @@ import { camera } from "../coords/camera.js";
 import { Pos } from "../coords/coords.js";
 
 export abstract class PointerEvtControl {
-    private el = document.body;
+    private el = document.querySelector('canvas')!;
     private activePointerId?: number;
 
     private OPTS: AddEventListenerOptions = {passive: true};
@@ -21,12 +21,12 @@ export abstract class PointerEvtControl {
     private upWrapper = (ev: PointerEvent) => {
         if (this.activePointerId !== ev.pointerId) return;
         this.activePointerId = undefined;
-        this.el.releasePointerCapture(ev.pointerId);
+        // this.el.releasePointerCapture(ev.pointerId);
         this.onUp(camera.toVirtualPosXy(ev.clientX, ev.clientY));
     }
     private cancelWrapper = (ev: PointerEvent) => {
         this.activePointerId = undefined;
-        this.el.releasePointerCapture(ev.pointerId);
+        // this.el.releasePointerCapture(ev.pointerId);
         this.onCancel();
     }
 

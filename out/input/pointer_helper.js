@@ -1,7 +1,7 @@
 import { camera } from "../coords/camera.js";
 export class PointerEvtControl {
     constructor() {
-        this.el = document.body;
+        this.el = document.querySelector('canvas');
         this.OPTS = { passive: true };
         // Wrap all of the event methods so that we can unregister them,
         // as well as automatically doing pointer capture on down and up/cancel.
@@ -21,12 +21,12 @@ export class PointerEvtControl {
             if (this.activePointerId !== ev.pointerId)
                 return;
             this.activePointerId = undefined;
-            this.el.releasePointerCapture(ev.pointerId);
+            // this.el.releasePointerCapture(ev.pointerId);
             this.onUp(camera.toVirtualPosXy(ev.clientX, ev.clientY));
         };
         this.cancelWrapper = (ev) => {
             this.activePointerId = undefined;
-            this.el.releasePointerCapture(ev.pointerId);
+            // this.el.releasePointerCapture(ev.pointerId);
             this.onCancel();
         };
     }
