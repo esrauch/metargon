@@ -6,6 +6,8 @@ export enum COLORS {
     BG_MILD = '#222',
     FG = '#FFF',
     FIRE = '#F8A',
+    GRASS = '#BFC',
+    WATER = '#9CF',
 }
 
 export interface Gfx {

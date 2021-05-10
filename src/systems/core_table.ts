@@ -42,7 +42,7 @@ export class CoreTable implements BusListener {
                 }
                 break;
             case 'SET_PAYLOAD':
-                if (ev.payload.type == 'CORE')
+                if (ev.typedPayload.type == 'CORE')
                     throw Error('Not allowed to SET_PAYLOAD Core');
                 break;
         }

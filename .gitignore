@@ -1,1 +1,3 @@
-out/**
+# Don't .gitignore out/ since we're just letting the entire
+# repo act as the site on github pages
+# out/**

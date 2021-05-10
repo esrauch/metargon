@@ -3,13 +3,10 @@ import { Draw} from "./events/draw.js";
 import { Tick } from "./events/tick.js";
 import { camera } from "./coords/camera.js";
 import { Gfx2d } from "./gfx/gfx_2d.js";
-import { physics } from './systems/physics/physics.js';
 import { initPhysicsSandbox } from "./physics_sandbox.js";
-import { renderer } from "./systems/renderer.js";
-import { coreTable } from "./systems/core_table.js";
-import { genericPayloadTable } from "./systems/generic_payload_table.js";
 import { addControlKeyListener, controls } from "./controls/controls.js";
 import {input} from './input/input.js';
+import { allSystems } from "./systems/all_systems.js";
 
 const canvas = document.querySelector('canvas')!;
 const gfx = new Gfx2d(canvas);
@@ -23,22 +20,14 @@ addControlKeyListener();
 
 // Log a bunch of the top level objects so they can be trivially inspected.
 console.log({
-    coreTable,
-    physics,
-    renderer,
+    systems: allSystems,
     controls,
-    genericPayloadTable,
     input,
 });
 
 input.enable();
 
-bus.addListeners([
-    coreTable,
-    genericPayloadTable,
-    physics,
-    renderer,
-]);
+bus.addListeners(allSystems);
 
 function onViewportSizeChange() {
     const swidth = canvas.width = window.innerWidth;

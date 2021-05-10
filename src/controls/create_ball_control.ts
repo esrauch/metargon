@@ -4,6 +4,7 @@ import { Control } from "./control.js";
 
 // Tap to trigger a CreateObject event for a new ball.
 export class CreateBallControl extends Control {
+    readonly type = 'CREATE_BALL_CONTROL';
     onDown(pos: Pos): void {
         const initialPos = pos;
         if (!initialPos.isInBounds()) {

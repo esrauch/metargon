@@ -6,7 +6,7 @@ import { Pos, VHEIGHT, Positions } from "../../coords/coords.js";
 import { Draw } from "../../events/draw.js";
 import { DestroyEntity } from "../../events/core_entity_events.js";
 import { Id } from "../../payloads/entity_id.js";
-import { getCenterPosition } from "../multi_table_getters.js";
+import { getCenterPosition } from "../getters.js";
 import { PhysicsTypedPayload } from "../../payloads/physics_payload.js";
 import { coreTable } from "../core_table.js";
 
@@ -58,8 +58,8 @@ export class Physics implements BusListener {
                 this.setVelocity(ev);
                 break;
             case 'SET_PAYLOAD':
-                if (ev.payload.type == 'PHYSICS')
-                    this.setPhysicsPayload(ev.entityId, ev.payload);
+                if (ev.typedPayload.type == 'PHYSICS')
+                    this.setPhysicsPayload(ev.entityId, ev.typedPayload);
                 break;
             case 'DESTROY_ENTITY':
                 this.destroyEntity(ev);

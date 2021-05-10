@@ -4,26 +4,46 @@ import { CreateBallControl } from "./create_ball_control.js";
 import { FlappyControl } from "./flappy_control.js";
 import { GolfControl } from "./golf_control.js";
 
-const controls = new Map<String, Control>([
-    ['1', new GolfControl('FORCE')],
-    ['2', new GolfControl('VELOCITY')],
-    ['3', new FlappyControl()],
-    ['4', new CreateBallControl()]
+export type ControlName =
+    'GOLF_FORCE' | 'GOLF_VELOCITY' | 'FLAPPY' | 'BALL';
+
+const controls = new Map<ControlName, Control>([
+    ['GOLF_FORCE', new GolfControl('FORCE')],
+    ['GOLF_VELOCITY', new GolfControl('VELOCITY')],
+    ['FLAPPY', new FlappyControl()],
+    ['BALL', new CreateBallControl()]
 ]);
 
+const keyToControl = new Map<string, ControlName>([
+    ['1', 'GOLF_FORCE'],
+    ['2', 'GOLF_VELOCITY'],
+    ['3', 'FLAPPY'],
+    ['4', 'BALL'],
+])
+
 let currentControl: Control | undefined;
+let activeControlName: ControlName | undefined;
 
 export function addControlKeyListener() {
     window.addEventListener('keydown', (ev: KeyboardEvent) => {
-        const c = controls.get(ev.key);
-        if (c) {
-            console.log('Activating control #', ev.key);
-            if (currentControl) currentControl.disable();
-            currentControl = c;
-            currentControl.enable();
-            input.setFallbackInputHandler(currentControl);
-        }
-    });
+        const name = keyToControl.get(ev.key);
+        if (!name) return;
+        activateControlNamed(name);
+    })
 }
+
+export function activateControlNamed(name: ControlName) {
+    const c = controls.get(name);
+    if (c) {
+        console.log('Activating control', name);
+        if (currentControl) currentControl.disable();
+        currentControl = c;
+        currentControl.enable();
+        input.setFallbackInputHandler(currentControl);
+        activeControlName = name;
+    }
+}
+
+export function getActiveControlName() { return activeControlName; }
 
 export {controls};

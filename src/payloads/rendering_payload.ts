@@ -1,3 +1,4 @@
+import { ControlName } from "../controls/controls.js";
 import { Vec, Positions, Pos } from "../coords/coords.js";
 import { Gfx } from "../gfx/gfx.js";
 import { Id } from "./entity_id.js";
@@ -48,10 +49,18 @@ export interface CustomObjRenderingOption {
     readonly obj: CustomRenderable,
 }
 
+export interface ControlButtonRenderingOption {
+    readonly type: 'CONTROL_BUTTON',
+    readonly controlName: ControlName,
+    readonly w: number,
+}
+
 export type RenderingPayload = Primitive |
 CompoundRenderingOption |
 CustomFnRenderingOption |
-CustomObjRenderingOption;
+CustomObjRenderingOption |
+ControlButtonRenderingOption;
+    
 
 // Note: RenderingPayload is unusual in that it permits undefined, used to
 // *stop* rendering something without destroying it.

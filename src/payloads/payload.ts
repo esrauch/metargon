@@ -2,7 +2,7 @@ import { ChessTypedPayload } from "./chess_payload.js";
 import { RenderingTypedPayload } from "./rendering_payload.js";
 import { CoreTypedPayload } from './core_payload.js';
 import { PhysicsTypedPayload } from "./physics_payload.js";
-import { WidgetTypedPayload } from "./widget_payload.js";
+import { HittestTypedPayload } from "./hittest_payload.js";
 
 // TODO: maybe "TaggedPayload" instead
 export interface TypedPayload<T> {
@@ -15,7 +15,7 @@ export type SomeTypedPayload =
     PhysicsTypedPayload |
     RenderingTypedPayload |
     ChessTypedPayload |
-    WidgetTypedPayload;
+    HittestTypedPayload;
 
 export type PayloadType = SomeTypedPayload["type"];
 

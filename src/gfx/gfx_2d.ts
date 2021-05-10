@@ -164,6 +164,10 @@ export class Gfx2d implements Gfx {
         const c = this.ctx;
         c.font = font;
 
+        // To avoid some bad edge case of growing without bounds,
+        // clear out the cache after we hit 100 measurements.
+        if (this.sizeCache.size > 100) this.sizeCache.clear();
+
         let perFontCache = this.sizeCache.get(font);
         if (!perFontCache) {
             perFontCache = new Map();

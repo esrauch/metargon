@@ -1,14 +1,18 @@
 import { Pos } from "../coords/coords.js";
-import { widgetTable } from "../systems/widget_table.js";
+import { hittest } from "../systems/getters.js";
 import { PointerEvtControl } from "./pointer_helper.js";
 
-export class InputHandler {
+export interface InputHandlerInterface {
+    onDown(pos: Pos): void;
+    onMove(pos: Pos): void;
+    onUp(pos: Pos): void;
+    onCancel(): void;
+}
+export class InputHandler implements InputHandlerInterface {
     onDown(pos: Pos): void {}
     onMove(pos: Pos): void {}
     onUp(pos: Pos): void {}
     onCancel(): void {}
-
-    onKeyDown(key: string): void {}
 }
 
 export class Input extends PointerEvtControl {
@@ -16,9 +20,10 @@ export class Input extends PointerEvtControl {
         super();
     }
     static singleton = new Input();
-    private activeHandler?: InputHandler;
 
-    private fallbackHandler?: InputHandler;
+    private activeHandler?: InputHandlerInterface;
+
+    private fallbackHandler?: InputHandlerInterface;
 
     setFallbackInputHandler(fallbackHandler?: InputHandler) {
         this.fallbackHandler = fallbackHandler;
@@ -27,14 +32,12 @@ export class Input extends PointerEvtControl {
     onDown(pos: Pos): void {
         this.activeHandler?.onCancel();
 
-        // See if we hit a Widget handler.
-        const widget = widgetTable.hitTest(pos);
-        if (widget) {
-            // this.activeHandler = widget;
+        const hitId = hittest(pos);
+        if (hitId) {
+            hitId.payload.callback();
         } else if (this.fallbackHandler) {
             this.activeHandler = this.fallbackHandler;
         }
-
         this.activeHandler?.onDown(pos);
     }
     onMove(pos: Pos): void {
@@ -48,8 +51,6 @@ export class Input extends PointerEvtControl {
         this.activeHandler?.onCancel();
         this.activeHandler = undefined;
     }
-
-    onKeyPress(): void {}
 }
 
 const input = Input.singleton;
