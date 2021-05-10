@@ -5,8 +5,7 @@ export abstract class PointerEvtControl {
     private el = document.querySelector('canvas')!;
     private activePointerId?: number;
 
-    // private OPTS: AddEventListenerOptions = {passive: true};
-    private OPTS = undefined;
+    private OPTS: AddEventListenerOptions = {passive: true};
     // Wrap all of the event methods so that we can unregister them,
     // as well as automatically doing pointer capture on down and up/cancel.
     private downWrapper = (ev: PointerEvent) => {
@@ -22,12 +21,12 @@ export abstract class PointerEvtControl {
     private upWrapper = (ev: PointerEvent) => {
         if (this.activePointerId !== ev.pointerId) return;
         this.activePointerId = undefined;
-        // this.el.releasePointerCapture(ev.pointerId);
+        this.el.releasePointerCapture(ev.pointerId);
         this.onUp(camera.toVirtualPosXy(ev.clientX, ev.clientY));
     }
     private cancelWrapper = (ev: PointerEvent) => {
         this.activePointerId = undefined;
-        // this.el.releasePointerCapture(ev.pointerId);
+        this.el.releasePointerCapture(ev.pointerId);
         this.onCancel();
     }
 
