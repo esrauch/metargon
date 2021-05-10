@@ -2,7 +2,8 @@ import { camera } from "../coords/camera.js";
 export class PointerEvtControl {
     constructor() {
         this.el = document.querySelector('canvas');
-        this.OPTS = { passive: true };
+        // private OPTS: AddEventListenerOptions = {passive: true};
+        this.OPTS = undefined;
         // Wrap all of the event methods so that we can unregister them,
         // as well as automatically doing pointer capture on down and up/cancel.
         this.downWrapper = (ev) => {

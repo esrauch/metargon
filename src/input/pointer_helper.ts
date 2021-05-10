@@ -5,7 +5,8 @@ export abstract class PointerEvtControl {
     private el = document.querySelector('canvas')!;
     private activePointerId?: number;
 
-    private OPTS: AddEventListenerOptions = {passive: true};
+    // private OPTS: AddEventListenerOptions = {passive: true};
+    private OPTS = undefined;
     // Wrap all of the event methods so that we can unregister them,
     // as well as automatically doing pointer capture on down and up/cancel.
     private downWrapper = (ev: PointerEvent) => {
