@@ -36,6 +36,11 @@ export function addControlKeyListener() {
     })
 }
 
+export function activateNullControl() {
+    currentControl = undefined;
+    activeControlName = undefined;
+}
+
 export function activateControlNamed(name: ControlName) {
     const c = controls.get(name);
     if (c) {

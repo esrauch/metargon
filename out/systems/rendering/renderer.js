@@ -11,6 +11,7 @@ export class Renderer {
         };
         this.renderingFns = new Map();
     }
+    reset() { this.renderingFns.clear(); }
     onEvent(ev) {
         switch (ev.type) {
             case 'SET_PAYLOAD':

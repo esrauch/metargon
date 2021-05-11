@@ -8,5 +8,10 @@ const allSystems = [
     coreTable,
     genericPayloadTable,
     renderer,
-]
+];
+
+export function resetAllSystems() {
+    allSystems.forEach(system => system.reset());
+}
+
 export {allSystems}

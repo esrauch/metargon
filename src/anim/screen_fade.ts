@@ -4,12 +4,12 @@ import { linearInterp } from '../util/interp.js';
 
 export type Direction = 'IN'|'OUT';
 
-export function fadeScreen(
+export function makeFadeScreenAnimation(
     dir: Direction,
     seconds: number
 ): Promise<void> {
     return new Promise((resolve) => {
-        new ScreenFade(
+        new ScreenFadeAnimation(
             resolve,
             dir,
             seconds
@@ -17,7 +17,7 @@ export function fadeScreen(
     })
 }
 
-class ScreenFade implements BusListener {
+class ScreenFadeAnimation implements BusListener {
     private tickCount = 0;
     private readonly tickDuration: number;
     private startAlpha: number;

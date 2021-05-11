@@ -1,9 +1,12 @@
 import { fadeScreen } from "../anim/screen_fade.js";
+import { activateNullControl } from "../controls/controls.js";
+import { resetAllSystems } from "../systems/all_systems.js";
 var FadeSpeed;
 (function (FadeSpeed) {
     FadeSpeed[FadeSpeed["INSTANT"] = 0] = "INSTANT";
     //SLOW = 200/60,
-    FadeSpeed[FadeSpeed["SLOW"] = 0] = "SLOW";
+    //SLOW = 0,
+    FadeSpeed[FadeSpeed["SLOW"] = 0.5] = "SLOW";
 })(FadeSpeed || (FadeSpeed = {}));
 let activeScreen;
 let activeAnimation;
@@ -21,13 +24,17 @@ export function crossFadeScreen(next, fadeSpeed = FadeSpeed.SLOW) {
         activeAnimation = fadeScreen('IN', fadeSpeed);
         return activeAnimation;
     }).then(() => {
+        var _a;
         activeAnimation = undefined;
-        activeScreen === null || activeScreen === void 0 ? void 0 : activeScreen.fullyShown();
+        (_a = activeScreen === null || activeScreen === void 0 ? void 0 : activeScreen.fullyShown) === null || _a === void 0 ? void 0 : _a.call(activeScreen);
     });
 }
 function instantSwapInScreen(a) {
+    var _a;
     if (activeScreen)
-        activeScreen.deactivate();
+        (_a = activeScreen.deactivate) === null || _a === void 0 ? void 0 : _a.call(activeScreen);
+    resetAllSystems();
+    activateNullControl();
     activeScreen = a;
     a.activate();
 }

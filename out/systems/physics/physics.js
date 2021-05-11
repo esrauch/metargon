@@ -18,6 +18,10 @@ export class Physics {
             }
         });
     }
+    reset() {
+        M.Engine.clear(this.engine);
+        M.Composite.clear(this.engine.world, false, true);
+    }
     getBody(id) {
         return M.Composite.get(this.engine.world, id, 'body');
     }
@@ -114,6 +118,7 @@ export class Physics {
                     label,
                     restitution: physicsOptions.restitution || 0.8,
                     isStatic: physicsOptions.isStatic,
+                    friction: 0.3,
                 });
                 M.Composite.add(this.engine.world, ball);
                 break;
@@ -123,6 +128,7 @@ export class Physics {
                     label,
                     restitution: physicsOptions.restitution || 0.8,
                     isStatic: physicsOptions.isStatic,
+                    friction: 0.3,
                 });
                 M.Composite.add(this.engine.world, rect);
                 break;

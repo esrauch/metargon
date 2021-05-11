@@ -19,6 +19,8 @@ export class Renderer implements BusListener {
     static singleton = new Renderer();
     readonly renderingFns = new Map<Id, DrawFn>();
 
+    reset() { this.renderingFns.clear(); }
+
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
             case 'SET_PAYLOAD':

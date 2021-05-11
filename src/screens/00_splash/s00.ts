@@ -4,13 +4,13 @@ import { makeEntity } from "../../events/make_entity_helper.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { Id } from "../../payloads/entity_id.js";
 import { ActiveScreen, crossFadeScreen } from '../screen.js';
+import { getScreenNumber } from "../screens.js";
 
-export class SplashScreen implements ActiveScreen {
-    private dispEntity?: Id;
-    constructor(readonly nextScreen: ActiveScreen) {}
+export class S00 implements ActiveScreen {
+    constructor() {}
 
     activate() {
-        this.dispEntity = makeEntity({
+        makeEntity({
             label: 'splash',
             initialPos: new Pos(VWIDTH / 2, VHEIGHT / 2),
             rendering: {
@@ -23,12 +23,7 @@ export class SplashScreen implements ActiveScreen {
     }
 
     fullyShown() {
-        crossFadeScreen(this.nextScreen);
-    }
-    
-    deactivate() {
-        if (this.dispEntity !== undefined)
-            bus.dispatch(new DestroyEntity(this.dispEntity));
+        crossFadeScreen(getScreenNumber(1));
     }
 
 }

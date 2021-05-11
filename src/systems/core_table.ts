@@ -8,6 +8,8 @@ export class CoreTable implements BusListener {
     private constructor() { }
     static singleton = new CoreTable();
 
+    reset() { this.table.clear(); }
+
     allIds(): Iterable<Id> {
         return this.table.keys();
     }

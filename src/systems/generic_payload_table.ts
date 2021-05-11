@@ -15,6 +15,9 @@ export class GenericPayloadTable implements BusListener {
     readonly table = new Map<PayloadType, Map<Id, SomeTypedPayload>>();
     private constructor() {}
     static singleton = new GenericPayloadTable();
+
+    reset() { this.table.clear(); }
+
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
             case 'SET_PAYLOAD':

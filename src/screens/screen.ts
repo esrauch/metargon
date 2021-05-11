@@ -1,17 +1,20 @@
-import { fadeScreen } from "../anim/screen_fade.js";
+import { makeFadeScreenAnimation } from "../anim/screen_fade.js";
+import { activateNullControl } from "../controls/controls.js";
+import { allSystems, resetAllSystems } from "../systems/all_systems.js";
 
 enum FadeSpeed {
     INSTANT = 0,
     //SLOW = 200/60,
-    SLOW = 0,
+    //SLOW = 0,
+    SLOW = 0.5,
 }
 
 export interface ActiveScreen {
-    activate(): void;
-    deactivate(): void;
+    activate: () => void;
+    deactivate?: () => void;
 
     // Called when any fade in animations are done.
-    fullyShown(): void;
+    fullyShown?: () => void;
 }
 
 let activeScreen: ActiveScreen|undefined;
@@ -28,21 +31,23 @@ export function crossFadeScreen(
     // First time we try to crossfade force the "fade-out" to be instant to 
     // immediately start fading in the new screen. Otherwise respect the provided
     // FadeSpeed.
-    activeAnimation = fadeScreen('OUT', activeScreen ? fadeSpeed : FadeSpeed.INSTANT);
+    activeAnimation = makeFadeScreenAnimation('OUT', activeScreen ? fadeSpeed : FadeSpeed.INSTANT);
 
     activeAnimation.then(() => {
         instantSwapInScreen(next);
-        activeAnimation = fadeScreen('IN', fadeSpeed);
+        activeAnimation = makeFadeScreenAnimation('IN', fadeSpeed);
         return activeAnimation;
     }).then(() => {
         activeAnimation = undefined;
-        activeScreen?.fullyShown();
+        activeScreen?.fullyShown?.();
     })
 }
 
 
 function instantSwapInScreen(a: ActiveScreen) {
-    if (activeScreen) activeScreen.deactivate();
+    if (activeScreen) activeScreen.deactivate?.();
+    resetAllSystems();
+    activateNullControl();
     activeScreen = a;
     a.activate();
 }

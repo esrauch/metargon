@@ -3,10 +3,11 @@ import { Draw } from "./events/draw.js";
 import { Tick } from "./events/tick.js";
 import { camera } from "./coords/camera.js";
 import { Gfx2d } from "./gfx/gfx_2d.js";
-import { initPhysicsSandbox } from "./physics_sandbox.js";
 import { addControlKeyListener, controls } from "./controls/controls.js";
 import { input } from './input/input.js';
 import { allSystems } from "./systems/all_systems.js";
+import { crossFadeScreen } from "./screens/screen.js";
+import { getScreenNumber } from "./screens/screens.js";
 
 const canvas = document.querySelector('canvas')!;
 const gfx = new Gfx2d(canvas);
@@ -51,6 +52,5 @@ function tick() {
 }
 tick();
 
-initPhysicsSandbox();
 
-// initClickPuzzle();
+crossFadeScreen(getScreenNumber(0));

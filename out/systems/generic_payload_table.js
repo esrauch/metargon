@@ -10,6 +10,7 @@ export class GenericPayloadTable {
     constructor() {
         this.table = new Map();
     }
+    reset() { this.table.clear(); }
     onEvent(ev) {
         switch (ev.type) {
             case 'SET_PAYLOAD':

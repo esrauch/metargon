@@ -33,6 +33,11 @@ export class Physics implements BusListener {
         });
     }
 
+    reset() {
+        M.Engine.clear(this.engine);
+        M.Composite.clear(this.engine.world, false, true);
+    }
+
     getBody(id: Id): Matter.Body | undefined {
         return M.Composite.get(this.engine.world, id, 'body') as Matter.Body | undefined;
     }
@@ -147,6 +152,7 @@ export class Physics implements BusListener {
                         label,
                         restitution: physicsOptions.restitution || 0.8,
                         isStatic: physicsOptions.isStatic,
+                        friction: 0.3,
                     });
                 M.Composite.add(this.engine.world, ball);
                 break;
@@ -157,6 +163,7 @@ export class Physics implements BusListener {
                     label,
                     restitution: physicsOptions.restitution || 0.8,
                     isStatic: physicsOptions.isStatic,
+                    friction: 0.3,
                 });
                 M.Composite.add(this.engine.world, rect);
                 break;

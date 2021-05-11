@@ -2,6 +2,7 @@ export class CoreTable {
     constructor() {
         this.table = new Map();
     }
+    reset() { this.table.clear(); }
     allIds() {
         return this.table.keys();
     }
