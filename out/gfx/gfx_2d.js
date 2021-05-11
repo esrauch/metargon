@@ -76,6 +76,13 @@ export class Gfx2d {
         ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
         ctx.stroke();
     }
+    fillcircle(center, radius, color) {
+        this.setFillStyle(color || COLORS.FG);
+        const ctx = this.ctx;
+        ctx.beginPath();
+        ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
+        ctx.fill();
+    }
     linestrip(c, color) {
         this.setStrokeStyle(color || COLORS.FG);
         const ctx = this.ctx;

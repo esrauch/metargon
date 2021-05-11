@@ -46,11 +46,22 @@ function makeCompoundRenderingFn(prims) {
         }
     };
 }
+function dispCharacterForControl(control) {
+    switch (control) {
+        case 'BALL': return 'O';
+        case 'FLAPPY': return 'F';
+        case 'GOLF_FORCE': return 'G';
+        case 'GOLF_VELOCITY': return 'V';
+        case 'ROLL': return 'R';
+    }
+}
 function makeControlButtonRenderingFn(value) {
+    const control = value.controlName;
     return (gfx, id, pos) => {
-        const color = value.controlName == getActiveControlName()
+        const color = control == getActiveControlName()
             ? COLORS.WATER : COLORS.BG_MILD;
         gfx.strokerect(pos, value.w, value.w, color);
-        gfx.text(pos, 'X', { size: value.w, color });
+        const dispChar = dispCharacterForControl(control);
+        gfx.text(pos, dispChar, { size: value.w, color });
     };
 }

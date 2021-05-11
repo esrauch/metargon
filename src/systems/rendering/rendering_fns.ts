@@ -1,4 +1,4 @@
-import { getActiveControlName } from "../../controls/controls.js";
+import { ControlName, controls, getActiveControlName } from "../../controls/controls.js";
 import { Pos, add } from "../../coords/coords.js";
 import { COLORS, Gfx } from "../../gfx/gfx.js";
 import { Id } from "../../payloads/entity_id.js";
@@ -53,12 +53,25 @@ function makeCompoundRenderingFn(prims: Primitive[]): DrawFn {
     };
 }
 
+function dispCharacterForControl(control: ControlName): string {
+    switch(control) {
+        case 'BALL': return 'O';
+        case 'FLAPPY': return 'F';
+        case 'GOLF_FORCE': return 'G';
+        case 'GOLF_VELOCITY': return 'V';
+        case 'ROLL': return 'R';
+    }
+}
+
 function makeControlButtonRenderingFn(value: ControlButtonRenderingOption): DrawFn {
+    const control = value.controlName;
     return (gfx, id, pos) => {
-        const color = value.controlName == getActiveControlName()
+        const color = control == getActiveControlName()
             ? COLORS.WATER : COLORS.BG_MILD;
         gfx.strokerect(pos, value.w, value.w, color);
-        gfx.text(pos, 'X', { size: value.w, color} );
+
+        const dispChar = dispCharacterForControl(control)
+        gfx.text(pos, dispChar, { size: value.w, color} );
     };
 }
 

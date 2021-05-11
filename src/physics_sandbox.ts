@@ -3,6 +3,7 @@ import { Pos, VWIDTH, VHEIGHT } from "./coords/coords.js";
 import { PLAYER } from "./payloads/entity_id.js";
 import { makeWorldBoundsEntity } from "./util/world_bounds_entity.js";
 import { activateControlNamed, ControlName, controls } from "./controls/controls.js";
+import { getRotation } from "./systems/getters.js";
 
 export function initPhysicsSandbox() {
     makeEntity({
@@ -10,8 +11,18 @@ export function initPhysicsSandbox() {
         initialPos: new Pos(200, 200),
         label: "player",
         rendering: {
-            type: 'CIRCLE',
-            radius: 50,
+            type: 'FUNCTION',
+            fn: (gfx, id, center) => {
+                gfx.fillcircle(center, 50);
+                const angle = getRotation(id)||0;
+                const eye =
+                    new Pos(
+                        center.x + Math.cos(angle) * 20,
+                        center.y + Math.sin(angle) * 20);
+
+                gfx.fillcircle(eye, 20, '#000');
+
+            }
         },
         physics: {
             hull: {
@@ -92,4 +103,5 @@ function makeControlsWidget() {
     makeControlsWidget('GOLF_VELOCITY', VWIDTH / 2 - w)
     makeControlsWidget('FLAPPY', VWIDTH / 2 + w)
     makeControlsWidget('BALL', VWIDTH / 2 + w * 2)
+    makeControlsWidget('ROLL', VWIDTH / 2)
 }

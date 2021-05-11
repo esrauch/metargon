@@ -14,6 +14,11 @@ export function getCenterPosition(id) {
         return fromTable;
     throw Error(`Tried to get the position for ${id} but no one knew it`);
 }
+export function getRotation(id) {
+    var _a;
+    // Only if its managed by physics, otherwise nothing.
+    return (_a = physics.getBody(id)) === null || _a === void 0 ? void 0 : _a.angle;
+}
 export function hittest(test) {
     const payloads = genericPayloadTable.getPayloads("HITTEST");
     for (const [id, hittestPayload] of payloads) {

@@ -12,3 +12,10 @@ export class SetVelocity {
         this.type = 'SET_VELOCITY';
     }
 }
+export class RollMove {
+    constructor(entityId, dir) {
+        this.entityId = entityId;
+        this.dir = dir;
+        this.type = 'ROLL_MOVE';
+    }
+}

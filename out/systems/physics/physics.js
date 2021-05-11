@@ -41,6 +41,9 @@ export class Physics {
             case 'SET_VELOCITY':
                 this.setVelocity(ev);
                 break;
+            case 'ROLL_MOVE':
+                this.rollMove(ev);
+                break;
             case 'SET_PAYLOAD':
                 if (ev.typedPayload.type == 'PHYSICS')
                     this.setPhysicsPayload(ev.entityId, ev.typedPayload);
@@ -71,6 +74,16 @@ export class Physics {
         const fx = vec.dx * arbitraryNerf;
         const fy = vec.dy * arbitraryNerf;
         M.Body.setVelocity(body, M.Vector.create(fx, fy));
+    }
+    rollMove(ev) {
+        const body = this.getBody(ev.entityId);
+        if (!body) {
+            console.error(`rollmove on unknown body ${ev.entityId}`);
+            return;
+        }
+        // Apply the force offset from the center to cause some torque.
+        const bodyPos = body.position;
+        M.Body.applyForce(body, M.Vector.create(bodyPos.x, bodyPos.y - 30), M.Vector.create(ev.dir, 0));
     }
     applyForce(ev) {
         const body = this.getBody(ev.entityId);

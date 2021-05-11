@@ -20,6 +20,11 @@ export function getCenterPosition(id: Id): Pos {
     throw Error(`Tried to get the position for ${id} but no one knew it`);
 }
 
+export function getRotation(id: Id): number|undefined {
+    // Only if its managed by physics, otherwise nothing.
+    return physics.getBody(id)?.angle;
+}
+
 export function hittest(test: Pos): HittestTypedPayload | undefined {
     const payloads = genericPayloadTable.getPayloads("HITTEST");
     for (const [id, hittestPayload] of payloads) {

@@ -95,6 +95,14 @@ export class Gfx2d implements Gfx {
         ctx.stroke()
     }
 
+    fillcircle(center: Pos, radius: number, color?: string): void {
+        this.setFillStyle(color || COLORS.FG);
+        const ctx = this.ctx;
+        ctx.beginPath();
+        ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
+        ctx.fill()
+    }
+
     linestrip(c: Positions, color?: string) {
         this.setStrokeStyle(color || COLORS.FG);
         const ctx = this.ctx;

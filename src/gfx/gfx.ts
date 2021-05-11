@@ -23,6 +23,8 @@ export interface Gfx {
 
     circle(center: Pos, radius: number, color?: string): void;
 
+    fillcircle(center: Pos, radius: number, color?: string): void;
+
     linestrip(c: Positions, color?: string): void;
 
     lineloop(c: Positions, color?: string): void;

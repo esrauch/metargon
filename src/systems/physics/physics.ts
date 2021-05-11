@@ -1,6 +1,6 @@
 /// <reference types="./matter" />
 
-import { ApplyForce, SetVelocity } from "../../events/physics.js";
+import { ApplyForce, RollMove, SetVelocity } from "../../events/physics.js";
 import { BusEvent, BusListener } from "../../bus/bus.js";
 import { Pos, VHEIGHT, Positions } from "../../coords/coords.js";
 import { Draw } from "../../events/draw.js";
@@ -57,6 +57,9 @@ export class Physics implements BusListener {
             case 'SET_VELOCITY':
                 this.setVelocity(ev);
                 break;
+            case 'ROLL_MOVE':
+                this.rollMove(ev);
+                break;
             case 'SET_PAYLOAD':
                 if (ev.typedPayload.type == 'PHYSICS')
                     this.setPhysicsPayload(ev.entityId, ev.typedPayload);
@@ -95,6 +98,19 @@ export class Physics implements BusListener {
             body,
             M.Vector.create(fx, fy)
         );
+    }
+
+    private rollMove(ev: RollMove) {
+        const body = this.getBody(ev.entityId);
+        if (!body) {
+            console.error(`rollmove on unknown body ${ev.entityId}`);
+            return;
+        }
+        // Apply the force offset from the center to cause some torque.
+        const bodyPos = body.position;
+        M.Body.applyForce(body,
+            M.Vector.create(bodyPos.x, bodyPos.y - 30),
+            M.Vector.create(ev.dir, 0));
     }
 
     private applyForce(ev: ApplyForce) {

@@ -16,3 +16,11 @@ export class SetVelocity {
         readonly newVelocity: Vec) {
     }
 }
+
+export class RollMove {
+    readonly type = 'ROLL_MOVE';
+    constructor(
+        readonly entityId: Id,
+        readonly dir: number) {
+    }
+}
