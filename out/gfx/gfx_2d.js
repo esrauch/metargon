@@ -13,7 +13,6 @@ export class Gfx2d {
         this.canvas = canvas;
         this.globalOpacity = 1;
         this.framecount = 0;
-        this.i = 0;
         this.sizeCache = new Map();
         this.ctx = assert(canvas.getContext('2d'));
         this.onViewportSizeChange();
@@ -137,9 +136,6 @@ export class Gfx2d {
         const metrics = this.setFontAndMeasureText(s, fontStr);
         if (!metrics)
             return;
-        const w = metrics.width;
-        if (this.i++ < 100)
-            console.log(s, p.x - metrics.width / 2, p.y + metrics.actualBoundingBoxAscent / 2);
         c.fillText(s, p.x - metrics.width / 2, p.y + metrics.actualBoundingBoxAscent / 2);
     }
     setFontAndMeasureText(s, font) {

@@ -154,8 +154,6 @@ export class Gfx2d implements Gfx {
         ]), color);
     }
     
-    private i = 0;
-
     text(p: Pos, s: string, opts?: {
         color?: string
         size?: number,
@@ -166,9 +164,6 @@ export class Gfx2d implements Gfx {
         const fontStr = toFont(opts?.size, opts?.font);
         const metrics = this.setFontAndMeasureText(s, fontStr);
         if (!metrics) return;
-        const w = metrics.width;
-        if (this.i++ < 100)
-            console.log(s,p.x - metrics.width / 2, p.y + metrics.actualBoundingBoxAscent / 2);
         c.fillText(s, p.x - metrics.width / 2, p.y + metrics.actualBoundingBoxAscent / 2);
     }
 
