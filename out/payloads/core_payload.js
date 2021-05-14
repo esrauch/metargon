@@ -1,7 +1,6 @@
-// "Core" Properties that we essentially all Entities have.
+// "Core" Properties that all Entities have.
 export class CorePayload {
-    constructor(label, pos) {
+    constructor(label) {
         this.label = label;
-        this.pos = pos;
     }
 }

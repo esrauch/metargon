@@ -62,8 +62,6 @@ CustomObjRenderingOption |
 ControlButtonRenderingOption;
     
 
-// Note: RenderingPayload is unusual in that it permits undefined, used to
-// *stop* rendering something without destroying it.
-export interface RenderingTypedPayload extends TypedPayload<RenderingPayload|undefined> {
+export interface RenderingTypedPayload extends TypedPayload<RenderingPayload> {
     readonly type: 'RENDERING';
 }

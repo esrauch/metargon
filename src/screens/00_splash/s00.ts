@@ -7,18 +7,20 @@ import { ActiveScreen, crossFadeScreen } from '../screen.js';
 import { getScreenNumber } from "../screens.js";
 
 export class S00 implements ActiveScreen {
-    constructor() {}
+    constructor() { }
 
     activate() {
-        makeEntity({
-            label: 'splash',
-            initialPos: new Pos(VWIDTH / 2, VHEIGHT / 2),
-            rendering: {
-                type: 'TEXT',
-                text: 'å',
-                size: VHEIGHT / 2,
-                font: 'Monoton',
-            }
+        (document as any).fonts.load('10px Monoton').then(() => {
+            makeEntity({
+                label: 'splash',
+                initialPos: new Pos(VWIDTH / 2, VHEIGHT / 2),
+                rendering: {
+                    type: 'TEXT',
+                    text: 'å',
+                    size: VHEIGHT / 2,
+                    font: 'Monoton',
+                }
+            });
         });
     }
 

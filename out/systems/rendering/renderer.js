@@ -1,7 +1,7 @@
 import { COLORS } from "../../gfx/gfx.js";
-import { coreTable } from "../core_table.js";
-import { getCenterPosition } from "../getters.js";
+import { getCenterPosition, getLabel } from "../getters.js";
 import { makeRenderingFn } from "./rendering_fns.js";
+import { genericPayloadTable } from "../generic_payload_table.js";
 export class Renderer {
     constructor() {
         this.debugUi = {
@@ -16,6 +16,10 @@ export class Renderer {
         switch (ev.type) {
             case 'SET_PAYLOAD':
                 this.maybeSetPayload(ev);
+                break;
+            case 'CLEAR_PAYLOAD':
+                if (ev.payloadType == 'RENDERING')
+                    this.renderingFns.delete(ev.entityId);
                 break;
             case 'DESTROY_ENTITY':
                 this.renderingFns.delete(ev.entityId);
@@ -44,11 +48,11 @@ export class Renderer {
             }
         }
         if (this.debugUi.renderLabels || this.debugUi.renderIds) {
-            for (const id of coreTable.allIds()) {
+            for (const id of genericPayloadTable.allIds) {
                 const pos = getCenterPosition(id);
                 let debugString = "";
                 if (this.debugUi.renderLabels)
-                    debugString += coreTable.getLabel(id) || "<unknown>";
+                    debugString += getLabel(id) || "<unknown>";
                 if (this.debugUi.renderIds)
                     debugString += " " + id;
                 gfx.text(pos, debugString, { color: COLORS.DEBUG });

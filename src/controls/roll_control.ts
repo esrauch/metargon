@@ -24,16 +24,14 @@ export class RollControl extends Control implements BusListener {
     }
 
     onEvent(ev: BusEvent): void {
-        if (ev.type !== 'TICK') return;
+        if (ev.type === 'TICK' && this.dir != Dir.NO)
+            bus.dispatch(new RollMove(PLAYER, this.dir));
     }
 
     updateDir(pos: Pos) {
         if (pos.x > VWIDTH * 2/3) this.dir = Dir.RIGHT;
         else if (pos.x < VWIDTH * 1/3) this.dir = Dir.LEFT;
         else this.dir = Dir.NO;
-
-        bus.dispatch(new RollMove(
-            PLAYER, this.dir));
     }
 
     onDown(pos: Pos) {
@@ -41,7 +39,7 @@ export class RollControl extends Control implements BusListener {
     }
 
     onMove(pos: Pos) {
-        //this.updateDir(pos);
+        this.updateDir(pos);
     }
 
     onUp(pos: Pos) {

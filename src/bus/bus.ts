@@ -2,10 +2,10 @@
 // At least for now, all possible event types are centrally defined here.
 
 import { ApplyForce, RollMove, SetVelocity } from "../events/physics.js";
-import { CreateEntity, DestroyEntity, SetPosition } from "../events/core_entity_events.js";
+import { CreateEntity, DestroyEntity } from "../events/core_entity_events.js";
 import { Draw } from "../events/draw.js";
 import { Tick } from "../events/tick.js";
-import { SetPayload } from "../events/set_payload.js";
+import { ClearPayload, SetPayload } from "../events/payload_events.js";
 
 // Core idea is that we should be able to record + replay events for
 // deterministic behavior.
@@ -18,8 +18,8 @@ export type BusEvent =
     Draw |
     CreateEntity |
     DestroyEntity |
-    SetPosition |
-    SetPayload;
+    SetPayload |
+    ClearPayload;
 
 export interface BusListener {
     onEvent(ev: BusEvent): void;

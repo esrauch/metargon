@@ -1,7 +1,6 @@
 /// <reference types="./matter" />
 import { Pos, VHEIGHT, Positions } from "../../coords/coords.js";
-import { getCenterPosition } from "../getters.js";
-import { coreTable } from "../core_table.js";
+import { getCenterPosition, getLabel } from "../getters.js";
 // Importing a js module with ts typings is incredibly difficult for some reason.
 // Matter should be loaded as a module, but instead we just
 // load it into the global namespace in index.html.
@@ -52,8 +51,12 @@ export class Physics {
                 if (ev.typedPayload.type == 'PHYSICS')
                     this.setPhysicsPayload(ev.entityId, ev.typedPayload);
                 break;
+            case 'CLEAR_PAYLOAD':
+                if (ev.payloadType == 'PHYSICS')
+                    this.destroyEntity(ev.entityId);
+                break;
             case 'DESTROY_ENTITY':
-                this.destroyEntity(ev);
+                this.destroyEntity(ev.entityId);
                 break;
         }
     }
@@ -86,8 +89,17 @@ export class Physics {
             return;
         }
         // Apply the force offset from the center to cause some torque.
-        const bodyPos = body.position;
-        M.Body.applyForce(body, M.Vector.create(bodyPos.x, bodyPos.y - 30), M.Vector.create(ev.dir, 0));
+        // const bodyPos = body.position;
+        // M.Body.applyForce(body,
+        //     M.Vector.create(bodyPos.x, bodyPos.y - 30),
+        //     M.Vector.create(ev.dir, 0));
+        const V = 20;
+        // A move can't make us slow down for in the direction we're already going.
+        if (Math.sign(body.velocity.x) == Math.sign(ev.dir) && V < Math.abs(body.velocity.x)) {
+            return;
+        }
+        const newVelocity = M.Vector.create(V * ev.dir, body.velocity.y);
+        M.Body.setVelocity(body, newVelocity);
     }
     applyForce(ev) {
         const body = this.getBody(ev.entityId);
@@ -109,7 +121,7 @@ export class Physics {
         if (!physicsOptions)
             return;
         const initialPos = getCenterPosition(id);
-        const label = coreTable.getLabel(id);
+        const label = getLabel(id);
         const hull = physicsOptions.hull;
         switch (hull.type) {
             case 'CIRCLE':
@@ -136,8 +148,8 @@ export class Physics {
                 throw Error('Unknown hull type!');
         }
     }
-    destroyEntity(ev) {
-        const body = this.getBody(ev.entityId);
+    destroyEntity(id) {
+        const body = this.getBody(id);
         if (body)
             M.Composite.remove(this.engine.world, body);
     }

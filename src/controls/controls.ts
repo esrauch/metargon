@@ -37,6 +37,8 @@ export function addControlKeyListener() {
 }
 
 export function activateNullControl() {
+    currentControl?.disable();
+    input.setFallbackInputHandler(undefined);
     currentControl = undefined;
     activeControlName = undefined;
 }
@@ -45,7 +47,7 @@ export function activateControlNamed(name: ControlName) {
     const c = controls.get(name);
     if (c) {
         console.log('Activating control', name);
-        if (currentControl) currentControl.disable();
+        currentControl?.disable();
         currentControl = c;
         currentControl.enable();
         input.setFallbackInputHandler(currentControl);

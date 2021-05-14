@@ -1,6 +1,5 @@
 import { isPayloadType } from "../payloads/payload.js";
 const SPECIALIZED_PAYLOAD_TYPE = new Set([
-    'CORE',
     'PHYSICS',
     'RENDERING',
 ]);
@@ -8,16 +7,29 @@ const SPECIALIZED_PAYLOAD_TYPE = new Set([
 // which are handled by their respective systems.
 export class GenericPayloadTable {
     constructor() {
+        this.allIds = new Set();
         this.table = new Map();
     }
-    reset() { this.table.clear(); }
+    reset() {
+        this.allIds.clear();
+        this.table.clear();
+    }
     onEvent(ev) {
+        var _a;
         switch (ev.type) {
+            case 'CREATE_ENTITY':
+                this.allIds.add(ev.entityId);
+                this.handleSetPayload(ev.entityId, ev.corePayload);
+                break;
             case 'SET_PAYLOAD':
-                this.handleSetPayload(ev);
+                this.handleSetPayload(ev.entityId, ev.typedPayload);
+                break;
+            case 'CLEAR_PAYLOAD':
+                (_a = this.table.get(ev.payloadType)) === null || _a === void 0 ? void 0 : _a.delete(ev.entityId);
                 break;
             case 'DESTROY_ENTITY':
-                this.destroyEntity(ev.entityId);
+                this.allIds.delete(ev.entityId);
+                this.clearAllPayloadsFor(ev.entityId);
                 break;
         }
     }
@@ -36,8 +48,11 @@ export class GenericPayloadTable {
             throw Error('Wrong payload type put into table');
         return payload;
     }
-    handleSetPayload(ev) {
-        const payloadType = ev.typedPayload.type;
+    handleSetPayload(id, typedPayload) {
+        if (!this.allIds.has(id)) {
+            console.error('set payload on a dangling id', id);
+        }
+        const payloadType = typedPayload.type;
         if (SPECIALIZED_PAYLOAD_TYPE.has(payloadType))
             return;
         let typeSpecificMap = this.table.get(payloadType);
@@ -45,9 +60,9 @@ export class GenericPayloadTable {
             typeSpecificMap = new Map();
             this.table.set(payloadType, typeSpecificMap);
         }
-        typeSpecificMap.set(ev.entityId, ev.typedPayload);
+        typeSpecificMap.set(id, typedPayload);
     }
-    destroyEntity(entityId) {
+    clearAllPayloadsFor(entityId) {
         for (const typeSpecificMap of this.table.values())
             typeSpecificMap.delete(entityId);
     }

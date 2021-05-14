@@ -5,8 +5,9 @@ import { ActiveScreen } from "./screen.js";
 export function getScreenNumber(n: number): ActiveScreen {
     switch (n) {
         case 0:
-        default:
+        default: {
             return new S00();
+        }
         case 1:
             return new S01();
     }

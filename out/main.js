@@ -20,6 +20,7 @@ console.log({
     systems: allSystems,
     controls,
     input,
+    bus,
 });
 input.enable();
 bus.addListeners(allSystems);

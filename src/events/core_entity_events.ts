@@ -10,17 +10,14 @@ export class CreateEntity {
 
     constructor(
         label: string,
-        initialPos?: Pos,
         // Note: it's an error to create an id that already exists.
         entityId?: Id
     ) {
         this.entityId = entityId === undefined ? makeEntityId() : entityId;
-        initialPos = initialPos === undefined ? new Pos(0, 0) : initialPos;
         this.corePayload = {
             type: 'CORE',
             payload: {
                 label,
-                pos: initialPos,
             }
         }
     }
@@ -32,9 +29,4 @@ export class DestroyEntity {
     constructor(
         readonly entityId: Id
     ) { }
-}
-
-export class SetPosition {
-    readonly type = 'SET_POSITION';
-    constructor(readonly entityId: Id, readonly pos: Pos) { }
 }

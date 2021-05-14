@@ -3,9 +3,8 @@ import { bus } from "../bus/bus.js";
 import { Pos, Vec } from "../coords/coords.js";
 import { VectorControl } from "./vector_control.js";
 import { Id, PLAYER } from "../payloads/entity_id.js";
-import { CreateEntity, DestroyEntity, SetPosition } from "../events/core_entity_events.js";
-import { SetPayload } from "../events/set_payload.js";
-import { Control } from "./control.js";
+import { CreateEntity, DestroyEntity } from "../events/core_entity_events.js";
+import { ClearPayload, SetPayload } from "../events/payload_events.js";
 
 // Classic pull-and-drag "Golf" control: drag and release to apply force to something.
 export class GolfControl extends VectorControl {
@@ -23,6 +22,12 @@ export class GolfControl extends VectorControl {
                 "golf_indicator_" + this.type);
             this.displayEntity = createEvt.entityId;
             bus.dispatch(createEvt);
+            bus.dispatch(new SetPayload(this.displayEntity, {
+                type: 'POSITION_ATTACHMENT',
+                payload: {
+                    otherEntity: PLAYER,
+                }
+            }))
         }
     }
 
@@ -35,7 +40,6 @@ export class GolfControl extends VectorControl {
 
     onVectorUpdate(pos: Pos, vec: Vec): void {
         if (!this.displayEntity) return;
-        bus.dispatch(new SetPosition(this.displayEntity, pos));
         bus.dispatch(new SetPayload(
             this.displayEntity,
             {
@@ -49,13 +53,7 @@ export class GolfControl extends VectorControl {
 
     private hideDisplayEntity() {
         if (this.displayEntity)
-            bus.dispatch(new SetPayload(
-                this.displayEntity,
-                {
-                    type: 'RENDERING',
-                    payload: undefined,
-                }
-            ));
+            bus.dispatch(new ClearPayload(this.displayEntity, 'RENDERING'));
     }
 
     onVectorRelease(_pos: Pos, vec: Vec): void {

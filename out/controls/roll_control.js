@@ -23,8 +23,8 @@ export class RollControl extends Control {
         bus.removeListener(this);
     }
     onEvent(ev) {
-        if (ev.type !== 'TICK')
-            return;
+        if (ev.type === 'TICK' && this.dir != Dir.NO)
+            bus.dispatch(new RollMove(PLAYER, this.dir));
     }
     updateDir(pos) {
         if (pos.x > VWIDTH * 2 / 3)
@@ -33,13 +33,12 @@ export class RollControl extends Control {
             this.dir = Dir.LEFT;
         else
             this.dir = Dir.NO;
-        bus.dispatch(new RollMove(PLAYER, this.dir));
     }
     onDown(pos) {
         this.updateDir(pos);
     }
     onMove(pos) {
-        //this.updateDir(pos);
+        this.updateDir(pos);
     }
     onUp(pos) {
         this.dir = Dir.NO;

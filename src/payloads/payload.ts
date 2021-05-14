@@ -3,6 +3,8 @@ import { RenderingTypedPayload } from "./rendering_payload.js";
 import { CoreTypedPayload } from './core_payload.js';
 import { PhysicsTypedPayload } from "./physics_payload.js";
 import { HittestTypedPayload } from "./hittest_payload.js";
+import { PositionAttachmentTypedPayload } from "./position_attachment_payload.js";
+import { PositionTypedPayload } from "./fixed_position_payload.js";
 
 // TODO: maybe "TaggedPayload" instead
 export interface TypedPayload<T> {
@@ -12,10 +14,12 @@ export interface TypedPayload<T> {
 
 export type SomeTypedPayload =
     CoreTypedPayload |
+    PositionTypedPayload |
     PhysicsTypedPayload |
     RenderingTypedPayload |
     ChessTypedPayload |
-    HittestTypedPayload;
+    HittestTypedPayload |
+    PositionAttachmentTypedPayload;
 
 export type PayloadType = SomeTypedPayload["type"];
 

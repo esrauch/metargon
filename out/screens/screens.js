@@ -3,8 +3,9 @@ import { S01 } from "./01_tut1/s01.js";
 export function getScreenNumber(n) {
     switch (n) {
         case 0:
-        default:
+        default: {
             return new S00();
+        }
         case 1:
             return new S01();
     }

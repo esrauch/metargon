@@ -1,11 +1,11 @@
 import { bus } from "../bus/bus.js";
 import { linearInterp } from '../util/interp.js';
-export function fadeScreen(dir, seconds) {
+export function makeFadeScreenAnimation(dir, seconds) {
     return new Promise((resolve) => {
-        new ScreenFade(resolve, dir, seconds);
+        new ScreenFadeAnimation(resolve, dir, seconds);
     });
 }
-class ScreenFade {
+class ScreenFadeAnimation {
     constructor(doneCallback, inOut, seconds = 200 / 60) {
         this.doneCallback = doneCallback;
         this.inOut = inOut;

@@ -3,7 +3,6 @@ import { Pos } from "../coords/coords.js";
 import { Id } from "../payloads/entity_id.js";
 import { HittestTypedPayload } from "../payloads/hittest_payload.js";
 import { rectContains } from "../util/intersect.js";
-import { coreTable } from "./core_table.js";
 import { genericPayloadTable } from "./generic_payload_table.js";
 import { physics } from "./physics/physics.js";
 
@@ -14,15 +13,24 @@ export function getCenterPosition(id: Id): Pos {
     const fromPhysics = physics.getPosition(id);
     if (fromPhysics) return fromPhysics;
 
-    const fromTable = coreTable.getPosition(id);
-    if (fromTable) return fromTable;
+    const indirect = genericPayloadTable.getPayload('POSITION_ATTACHMENT', id);
+    if (indirect) return getCenterPosition(indirect.payload.otherEntity);
 
-    throw Error(`Tried to get the position for ${id} but no one knew it`);
+    const fixedPosition = genericPayloadTable.getPayload('POSITION', id);
+    if (fixedPosition) return fixedPosition.payload;
+
+    console.error(`tried to get the position for ${id} but no one knew it`);
+    return new Pos(0, 0);
 }
 
 export function getRotation(id: Id): number|undefined {
     // Only if its managed by physics, otherwise nothing.
     return physics.getBody(id)?.angle;
+}
+
+export function getLabel(id: Id): string {
+    const labelPayload = genericPayloadTable.getPayload('CORE', id);
+    return labelPayload?.payload.label || '<unknown>';
 }
 
 export function hittest(test: Pos): HittestTypedPayload | undefined {

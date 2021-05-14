@@ -1,4 +1,4 @@
-import { fadeScreen } from "../anim/screen_fade.js";
+import { makeFadeScreenAnimation } from "../anim/screen_fade.js";
 import { activateNullControl } from "../controls/controls.js";
 import { resetAllSystems } from "../systems/all_systems.js";
 var FadeSpeed;
@@ -18,10 +18,10 @@ export function crossFadeScreen(next, fadeSpeed = FadeSpeed.SLOW) {
     // First time we try to crossfade force the "fade-out" to be instant to 
     // immediately start fading in the new screen. Otherwise respect the provided
     // FadeSpeed.
-    activeAnimation = fadeScreen('OUT', activeScreen ? fadeSpeed : FadeSpeed.INSTANT);
+    activeAnimation = makeFadeScreenAnimation('OUT', activeScreen ? fadeSpeed : FadeSpeed.INSTANT);
     activeAnimation.then(() => {
         instantSwapInScreen(next);
-        activeAnimation = fadeScreen('IN', fadeSpeed);
+        activeAnimation = makeFadeScreenAnimation('IN', fadeSpeed);
         return activeAnimation;
     }).then(() => {
         var _a;
