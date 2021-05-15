@@ -1,6 +1,6 @@
 import { BusEvent, BusListener } from "../../bus/bus.js";
 import { Draw } from "../../events/draw.js";
-import { COLORS } from "../../gfx/gfx.js";
+import { COLOR } from "../../gfx/gfx.js";
 import { Id } from "../../payloads/entity_id.js";
 import { SetPayload } from "../../events/payload_events.js";
 import { getCenterPosition, getLabel } from "../getters.js";
@@ -68,7 +68,7 @@ export class Renderer implements BusListener {
                     debugString += getLabel(id) || "<unknown>";
                 if (this.debugUi.renderIds)
                     debugString += " " + id;
-                gfx.text(pos, debugString, {color: COLORS.DEBUG});
+                gfx.text(pos, debugString, {color: COLOR.DEBUG});
             }
         }
     }

@@ -1,7 +1,7 @@
 import { camera } from "../coords/camera.js";
 import { Positions, Pos, add, Vec } from "../coords/coords.js";
 import { assert } from "../util/assert.js";
-import { COLORS, Gfx } from "./gfx.js";
+import { COLOR, Gfx } from "./gfx.js";
 
 const DEFAULT_FONT = '100px sans-serif';
 
@@ -17,6 +17,8 @@ export class Gfx2d implements Gfx {
     private fillStyle?: string;
     private strokeStyle?: string;
     private globalOpacity = 1;
+    private foregroundColor = COLOR.FG;
+
     constructor(private canvas: HTMLCanvasElement) {
         this.ctx = assert(canvas.getContext('2d'));
         this.onViewportSizeChange();
@@ -24,6 +26,10 @@ export class Gfx2d implements Gfx {
 
     setGlobalOpacity(opacity: number) {
         this.globalOpacity = opacity;
+    }
+
+    setForegroundColor(color?: COLOR) {
+        this.foregroundColor = color || COLOR.FG;
     }
 
     setFillStyle(style: string, opts?: { force: boolean }) {
@@ -45,8 +51,8 @@ export class Gfx2d implements Gfx {
         this.h = this.canvas.height;
         // This px size is in virt coords.
         this.ctx.font = '100px sans-serif';
-        this.setFillStyle(COLORS.FG, { force: true });
-        this.setStrokeStyle(COLORS.FG, { force: true });
+        this.setFillStyle(COLOR.FG, { force: true });
+        this.setStrokeStyle(COLOR.FG, { force: true });
         this.ctx.lineWidth = 10;
     }
 
@@ -58,7 +64,7 @@ export class Gfx2d implements Gfx {
         
         this.ctx.globalAlpha = 1;
         this.ctx.clearRect(0, 0, this.w, this.h);
-        this.setFillStyle(COLORS.BG);
+        this.setFillStyle(COLOR.BG);
         this.ctx.fillRect(0, 0, this.w, this.h);
         this.setFillStyle('#00f');
 
@@ -76,7 +82,7 @@ export class Gfx2d implements Gfx {
 
     line(from: Pos, to: Pos, color?: string) {
         const ctx = this.ctx;
-        this.setStrokeStyle(color || COLORS.FG);
+        this.setStrokeStyle(color || this.foregroundColor);
         ctx.beginPath();
         ctx.lineTo(from.x, from.y);
         ctx.lineTo(to.x, to.y);
@@ -88,7 +94,7 @@ export class Gfx2d implements Gfx {
     }
 
     circle(center: Pos, radius: number, color?: string): void {
-        this.setStrokeStyle(color || COLORS.FG);
+        this.setStrokeStyle(color || this.foregroundColor);
         const ctx = this.ctx;
         ctx.beginPath();
         ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
@@ -96,7 +102,7 @@ export class Gfx2d implements Gfx {
     }
 
     fillcircle(center: Pos, radius: number, color?: string): void {
-        this.setFillStyle(color || COLORS.FG);
+        this.setFillStyle(color || this.foregroundColor);
         const ctx = this.ctx;
         ctx.beginPath();
         ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
@@ -104,7 +110,7 @@ export class Gfx2d implements Gfx {
     }
 
     linestrip(c: Positions, color?: string) {
-        this.setStrokeStyle(color || COLORS.FG);
+        this.setStrokeStyle(color || this.foregroundColor);
         const ctx = this.ctx;
         ctx.beginPath();
         this.poly(c);
@@ -112,7 +118,7 @@ export class Gfx2d implements Gfx {
     }
 
     lineloop(c: Positions, color?: string) {
-        this.setStrokeStyle(color || COLORS.FG);
+        this.setStrokeStyle(color || this.foregroundColor);
         const ctx = this.ctx;
         ctx.beginPath();
         this.poly(c);
@@ -121,7 +127,7 @@ export class Gfx2d implements Gfx {
     }
 
     filledpoly(c: Positions, color?: string) {
-        this.setFillStyle(color || COLORS.FG);
+        this.setFillStyle(color || this.foregroundColor);
         const ctx = this.ctx;
         ctx.beginPath();
         this.poly(c);
@@ -159,7 +165,7 @@ export class Gfx2d implements Gfx {
         size?: number,
         font?: string,
     }) {
-        this.setFillStyle(opts?.color || COLORS.FG);
+        this.setFillStyle(opts?.color || this.foregroundColor);
         const c = this.ctx;
         const fontStr = toFont(opts?.size, opts?.font);
         const metrics = this.setFontAndMeasureText(s, fontStr);

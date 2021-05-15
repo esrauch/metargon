@@ -1,12 +1,12 @@
 import { Pos, Vec, Positions } from "../coords/coords.js";
 
-export enum COLORS {
+export enum COLOR {
     DEBUG = '#F00',
     BG = '#000',
     BG_MILD = '#222',
     FG = '#FFF',
     FIRE = '#F8A',
-    GRASS = '#BFC',
+    GRASS = '#AFB',
     WATER = '#9CF',
 }
 
@@ -16,6 +16,8 @@ export interface Gfx {
     clearAndSetTransform(): void;
 
     setGlobalOpacity(opacity: number): void;
+
+    setForegroundColor(color?: COLOR): void;
 
     line(from: Pos, to: Pos, color?: string): void;
 
@@ -31,9 +33,9 @@ export interface Gfx {
 
     filledpoly(c: Positions, color?: string): void;
 
-    strokerect(center: Pos, w: number, h: number, color?:string): void;
+    strokerect(center: Pos, w: number, h: number, color?: string): void;
 
-    fillrect(center: Pos, w: number, h: number, color?:string): void;
+    fillrect(center: Pos, w: number, h: number, color?: string): void;
 
     text(p: Pos, s: string, opts?: {
         color?: string,

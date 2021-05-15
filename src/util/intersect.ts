@@ -1,5 +1,5 @@
 import { Pos } from "../coords/coords.js";
-
+import { PositionedRect, Rect } from "../coords/rect.js";
 
 export function rectContains(
     rectCenter: Pos,

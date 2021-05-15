@@ -1,14 +1,15 @@
 import { bus } from "../bus/bus.js";
 import { linearInterp } from '../util/interp.js';
-export function makeFadeScreenAnimation(dir, seconds) {
+export function makeFadeScreenAnimation(dir, seconds, temporaryForegroundColor) {
     return new Promise((resolve) => {
-        new ScreenFadeAnimation(resolve, dir, seconds);
+        new ScreenFadeAnimation(resolve, dir, seconds, temporaryForegroundColor);
     });
 }
 class ScreenFadeAnimation {
-    constructor(doneCallback, inOut, seconds = 200 / 60) {
+    constructor(doneCallback, inOut, seconds = 200 / 60, temporaryForegroundColor) {
         this.doneCallback = doneCallback;
         this.inOut = inOut;
+        this.temporaryForegroundColor = temporaryForegroundColor;
         this.tickCount = 0;
         this.tickDuration = seconds * 60;
         if (inOut == 'IN') {
@@ -22,6 +23,8 @@ class ScreenFadeAnimation {
         bus.addListener(this);
     }
     end(ev) {
+        if (this.temporaryForegroundColor)
+            ev.gfx.setForegroundColor(undefined);
         ev.gfx.setGlobalOpacity(this.endAlpha);
         bus.removeListener(this);
         this.doneCallback();
@@ -29,6 +32,9 @@ class ScreenFadeAnimation {
     onEvent(ev) {
         if (ev.type != 'TICK')
             return;
+        if (this.tickCount == 0) {
+            ev.gfx.setForegroundColor(this.temporaryForegroundColor);
+        }
         if (this.tickCount >= this.tickDuration) {
             this.end(ev);
         }

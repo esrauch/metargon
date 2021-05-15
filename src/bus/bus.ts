@@ -26,6 +26,9 @@ export interface BusListener {
 }
 
 export class Bus {
+    dispatchEvent(arg0: ClearPayload) {
+        throw new Error("Method not implemented.");
+    }
     // Listeners are an _ordered_ list (both ticks and draws might be heavily
     // ordered dependent).
     private readonly listeners: BusListener[] = [];

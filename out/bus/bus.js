@@ -8,6 +8,9 @@ export class Bus {
         this.logAllEventsBesidesTickAndDraw = true;
         this.logTickAndDraw = false;
     }
+    dispatchEvent(arg0) {
+        throw new Error("Method not implemented.");
+    }
     dispatch(ev) {
         const isTickOrDraw = ev.type == 'TICK' || ev.type == 'DRAW';
         if ((this.logAllEventsBesidesTickAndDraw && !isTickOrDraw) ||

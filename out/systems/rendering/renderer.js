@@ -1,4 +1,4 @@
-import { COLORS } from "../../gfx/gfx.js";
+import { COLOR } from "../../gfx/gfx.js";
 import { getCenterPosition, getLabel } from "../getters.js";
 import { makeRenderingFn } from "./rendering_fns.js";
 import { genericPayloadTable } from "../generic_payload_table.js";
@@ -55,7 +55,7 @@ export class Renderer {
                     debugString += getLabel(id) || "<unknown>";
                 if (this.debugUi.renderIds)
                     debugString += " " + id;
-                gfx.text(pos, debugString, { color: COLORS.DEBUG });
+                gfx.text(pos, debugString, { color: COLOR.DEBUG });
             }
         }
     }

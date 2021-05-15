@@ -1,6 +1,6 @@
 import { ControlName, controls, getActiveControlName } from "../../controls/controls.js";
 import { Pos, add } from "../../coords/coords.js";
-import { COLORS, Gfx } from "../../gfx/gfx.js";
+import { COLOR, Gfx } from "../../gfx/gfx.js";
 import { Id } from "../../payloads/entity_id.js";
 import { RenderingPayload, Primitive, ControlButtonRenderingOption } from "../../payloads/rendering_payload.js";
 
@@ -26,18 +26,18 @@ function makeCompoundRenderingFn(prims: Primitive[]): DrawFn {
         for (const p of prims) {
             switch (p.type) {
                 case 'CIRCLE':
-                    gfx.circle(pos, p.radius);
+                    gfx.circle(pos, p.radius, p.color);
                     break;
                 case 'LINE':
                     const to = add(pos, p.vec);
-                    gfx.line(pos, to);
+                    gfx.line(pos, to, p.color);
                     break;
                 case 'LINELOOP':
                     // TODO: offset pts by pos
-                    gfx.lineloop(p.pts);
+                    gfx.lineloop(p.pts, p.color);
                     break;
                 case 'RECT':
-                    gfx.strokerect(pos, p.width, p.height);
+                    gfx.strokerect(pos, p.width, p.height, p.color);
                     break;
                 case 'TEXT':
                     gfx.text(pos, p.text, {
@@ -67,7 +67,7 @@ function makeControlButtonRenderingFn(value: ControlButtonRenderingOption): Draw
     const control = value.controlName;
     return (gfx, id, pos) => {
         const color = control == getActiveControlName()
-            ? COLORS.WATER : COLORS.BG_MILD;
+            ? COLOR.WATER : COLOR.BG_MILD;
         gfx.strokerect(pos, value.w, value.w, color);
 
         const dispChar = dispCharacterForControl(control)

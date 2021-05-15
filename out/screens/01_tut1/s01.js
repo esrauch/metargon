@@ -1,7 +1,9 @@
-import { Pos, VWIDTH } from "../../coords/coords.js";
+import { Pos, VHEIGHT, VWIDTH } from "../../coords/coords.js";
+import { PositionedRect } from "../../coords/rect.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
-import { CONTROL_SIZE, initControlsWidget, initPlayerEntity, initWorldBounds } from "../init_helpers.js";
-import { crossFadeScreen } from "../screen.js";
+import { COLOR } from "../../gfx/gfx.js";
+import { CONTROL_SIZE, initControlsWidget, initPlayerEntity, initSensor, initWorldBounds } from "../init_helpers.js";
+import { crossFadeScreen, FadeSpeed } from "../screen.js";
 export class S01 {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 2, 100));
@@ -21,14 +23,15 @@ export class S01 {
             type: 'HITTEST',
             payload: {
                 w: CONTROL_SIZE, h: CONTROL_SIZE,
-                callback: () => {
-                    crossFadeScreen(new S01());
-                }
+                callback: () => this.restart(),
             }
         });
+        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, 250, VHEIGHT, 0), () => this.restart(), COLOR.GRASS);
+        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, VWIDTH, VHEIGHT, VWIDTH - 250), () => this.restart(), COLOR.FIRE);
     }
-    deactivate() {
+    restart() {
+        crossFadeScreen(new S01(), FadeSpeed.DEFAULT, COLOR.FIRE);
     }
-    fullyShown() {
-    }
+    deactivate() { }
+    fullyShown() { }
 }

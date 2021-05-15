@@ -1,10 +1,10 @@
-export var COLORS;
-(function (COLORS) {
-    COLORS["DEBUG"] = "#F00";
-    COLORS["BG"] = "#000";
-    COLORS["BG_MILD"] = "#222";
-    COLORS["FG"] = "#FFF";
-    COLORS["FIRE"] = "#F8A";
-    COLORS["GRASS"] = "#BFC";
-    COLORS["WATER"] = "#9CF";
-})(COLORS || (COLORS = {}));
+export var COLOR;
+(function (COLOR) {
+    COLOR["DEBUG"] = "#F00";
+    COLOR["BG"] = "#000";
+    COLOR["BG_MILD"] = "#222";
+    COLOR["FG"] = "#FFF";
+    COLOR["FIRE"] = "#F8A";
+    COLOR["GRASS"] = "#AFB";
+    COLOR["WATER"] = "#9CF";
+})(COLOR || (COLOR = {}));

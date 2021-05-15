@@ -1,9 +1,34 @@
 import { ControlName, activateControlNamed } from "../controls/controls.js";
 import { Pos, VWIDTH, VHEIGHT } from "../coords/coords.js";
+import { PositionedRect, Rect } from "../coords/rect.js";
 import { makeEntity } from "../events/make_entity_helper.js";
 import { Id, PLAYER } from "../payloads/entity_id.js";
 import { getRotation } from "../systems/getters.js";
 import { makeWorldBoundsEntity } from "../util/world_bounds_entity.js";
+
+export function initSensor(r: PositionedRect,
+                           callback: ()=>void,
+                           color?: string) {
+    return makeEntity({
+        label: 'sensor',
+        initialPos: r.center,
+        rendering: {
+            type: 'RECT',
+            width: r.w,
+            height: r.h,
+            color
+        },
+    }, {
+        type: 'SENSOR',
+        payload: {
+            target: PLAYER,
+            rect: new Rect(r.w, r.h),
+            callback
+        }
+    });
+}
+
+export function initLoseSensor(r: Rect) {}
 
 
 export function initPlayerEntity(pos?: Pos) {

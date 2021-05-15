@@ -8,19 +8,23 @@ export type Primitive =
     {
         readonly type: 'CIRCLE',
         readonly radius: number,
+        readonly color?: string,
     } |
     {
         readonly type: 'LINE',
         readonly vec: Vec,
+        readonly color?: string,
     } |
     {
         readonly type: 'RECT',
         readonly width: number,
         readonly height: number,
+        readonly color?: string,
     } |
     {
         readonly type: 'LINELOOP',
         readonly pts: Positions,
+        readonly color?: string,
     } |
     {
         readonly type: 'TEXT',

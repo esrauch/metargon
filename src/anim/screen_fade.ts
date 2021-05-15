@@ -1,18 +1,21 @@
 import { bus, BusEvent, BusListener } from "../bus/bus.js";
 import { Tick } from "../events/tick.js";
+import { COLOR } from "../gfx/gfx.js";
 import { linearInterp } from '../util/interp.js';
 
 export type Direction = 'IN'|'OUT';
 
 export function makeFadeScreenAnimation(
     dir: Direction,
-    seconds: number
+    seconds: number,
+    temporaryForegroundColor?: COLOR,
 ): Promise<void> {
     return new Promise((resolve) => {
         new ScreenFadeAnimation(
             resolve,
             dir,
-            seconds
+            seconds,
+            temporaryForegroundColor
         )
     })
 }
@@ -25,7 +28,8 @@ class ScreenFadeAnimation implements BusListener {
     constructor(
         readonly doneCallback: () => void,
         readonly inOut: 'IN'|'OUT',
-        seconds: number = 200 / 60) {
+        seconds: number = 200 / 60,
+        readonly temporaryForegroundColor ?: string) {
         this.tickDuration = seconds * 60;
         if (inOut == 'IN') {
             this.startAlpha = 0;
@@ -38,6 +42,7 @@ class ScreenFadeAnimation implements BusListener {
     }
 
     end(ev: Tick) {
+        if (this.temporaryForegroundColor) ev.gfx.setForegroundColor(undefined);
         ev.gfx.setGlobalOpacity(this.endAlpha);
         bus.removeListener(this);
         this.doneCallback();
@@ -45,6 +50,9 @@ class ScreenFadeAnimation implements BusListener {
 
     onEvent(ev: BusEvent): void {
         if (ev.type != 'TICK') return;
+        if (this.tickCount == 0) {
+            ev.gfx.setForegroundColor(this.temporaryForegroundColor)
+        }
         if (this.tickCount >= this.tickDuration) {
             this.end(ev);
         } else {

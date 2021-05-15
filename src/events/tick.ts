@@ -5,6 +5,7 @@ import { Gfx } from "../gfx/gfx.js";
 // Note that probably this should technically also be 'hidden' on the Gfx from the Draw event.
 interface GfxExposedOnTick {
     setGlobalOpacity(opacity: number): void;
+    setForegroundColor(color?: string): void;
 }
 
 export class Tick {
