@@ -17,7 +17,7 @@ export interface Gfx {
 
     setGlobalOpacity(opacity: number): void;
 
-    setForegroundColor(color?: COLOR): void;
+    forceForegroundColor(color?: COLOR): void;
 
     line(from: Pos, to: Pos, color?: string): void;
 

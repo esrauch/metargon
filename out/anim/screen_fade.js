@@ -24,7 +24,7 @@ class ScreenFadeAnimation {
     }
     end(ev) {
         if (this.temporaryForegroundColor)
-            ev.gfx.setForegroundColor(undefined);
+            ev.gfx.forceForegroundColor(undefined);
         ev.gfx.setGlobalOpacity(this.endAlpha);
         bus.removeListener(this);
         this.doneCallback();
@@ -33,7 +33,7 @@ class ScreenFadeAnimation {
         if (ev.type != 'TICK')
             return;
         if (this.tickCount == 0) {
-            ev.gfx.setForegroundColor(this.temporaryForegroundColor);
+            ev.gfx.forceForegroundColor(this.temporaryForegroundColor);
         }
         if (this.tickCount >= this.tickDuration) {
             this.end(ev);

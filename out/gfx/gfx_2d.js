@@ -12,7 +12,7 @@ export class Gfx2d {
     constructor(canvas) {
         this.canvas = canvas;
         this.globalOpacity = 1;
-        this.foregroundColor = COLOR.FG;
+        this.forcedFgColor = undefined;
         this.framecount = 0;
         this.sizeCache = new Map();
         this.ctx = assert(canvas.getContext('2d'));
@@ -21,17 +21,29 @@ export class Gfx2d {
     setGlobalOpacity(opacity) {
         this.globalOpacity = opacity;
     }
-    setForegroundColor(color) {
-        this.foregroundColor = color || COLOR.FG;
+    forceForegroundColor(color) {
+        this.forcedFgColor = color;
     }
-    setFillStyle(style, opts) {
-        if (style !== this.fillStyle || (opts === null || opts === void 0 ? void 0 : opts.force)) {
+    setFillStyle(color, opts) {
+        if (color && (opts === null || opts === void 0 ? void 0 : opts.force)) {
+            this.ctx.fillStyle = color;
+            this.fillStyle = color;
+            return;
+        }
+        const style = this.forcedFgColor || color || COLOR.FG;
+        if (style !== this.fillStyle) {
             this.ctx.fillStyle = style;
             this.fillStyle = style;
         }
     }
-    setStrokeStyle(style, opts) {
-        if (style !== this.strokeStyle || (opts === null || opts === void 0 ? void 0 : opts.force)) {
+    setStrokeStyle(color, opts) {
+        if (color && (opts === null || opts === void 0 ? void 0 : opts.force)) {
+            this.ctx.strokeStyle = color;
+            this.strokeStyle = color;
+            return;
+        }
+        const style = this.forcedFgColor || color || COLOR.FG;
+        if (style !== this.strokeStyle) {
             this.ctx.strokeStyle = style;
             this.strokeStyle = style;
         }
@@ -50,7 +62,7 @@ export class Gfx2d {
         ctx.resetTransform();
         this.ctx.globalAlpha = 1;
         this.ctx.clearRect(0, 0, this.w, this.h);
-        this.setFillStyle(COLOR.BG);
+        this.setFillStyle(COLOR.BG, { force: true });
         this.ctx.fillRect(0, 0, this.w, this.h);
         this.setFillStyle('#00f');
         ctx.scale(camera.mult, camera.mult);
@@ -64,7 +76,7 @@ export class Gfx2d {
     }
     line(from, to, color) {
         const ctx = this.ctx;
-        this.setStrokeStyle(color || this.foregroundColor);
+        this.setStrokeStyle(color);
         ctx.beginPath();
         ctx.lineTo(from.x, from.y);
         ctx.lineTo(to.x, to.y);
@@ -74,28 +86,28 @@ export class Gfx2d {
         this.line(from, add(from, vec), color);
     }
     circle(center, radius, color) {
-        this.setStrokeStyle(color || this.foregroundColor);
+        this.setStrokeStyle(color);
         const ctx = this.ctx;
         ctx.beginPath();
         ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
         ctx.stroke();
     }
     fillcircle(center, radius, color) {
-        this.setFillStyle(color || this.foregroundColor);
+        this.setFillStyle(color);
         const ctx = this.ctx;
         ctx.beginPath();
         ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
         ctx.fill();
     }
     linestrip(c, color) {
-        this.setStrokeStyle(color || this.foregroundColor);
+        this.setStrokeStyle(color);
         const ctx = this.ctx;
         ctx.beginPath();
         this.poly(c);
         ctx.stroke();
     }
     lineloop(c, color) {
-        this.setStrokeStyle(color || this.foregroundColor);
+        this.setStrokeStyle(color);
         const ctx = this.ctx;
         ctx.beginPath();
         this.poly(c);
@@ -103,7 +115,7 @@ export class Gfx2d {
         ctx.stroke();
     }
     filledpoly(c, color) {
-        this.setFillStyle(color || this.foregroundColor);
+        this.setFillStyle(color);
         const ctx = this.ctx;
         ctx.beginPath();
         this.poly(c);
@@ -134,7 +146,7 @@ export class Gfx2d {
         ]), color);
     }
     text(p, s, opts) {
-        this.setFillStyle((opts === null || opts === void 0 ? void 0 : opts.color) || this.foregroundColor);
+        this.setFillStyle(opts === null || opts === void 0 ? void 0 : opts.color);
         const c = this.ctx;
         const fontStr = toFont(opts === null || opts === void 0 ? void 0 : opts.size, opts === null || opts === void 0 ? void 0 : opts.font);
         const metrics = this.setFontAndMeasureText(s, fontStr);

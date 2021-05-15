@@ -27,16 +27,20 @@ export class S01 implements ActiveScreen {
                 type: 'HITTEST',
                 payload: {
                     w:CONTROL_SIZE, h:CONTROL_SIZE,
-                    callback: () => this.restart(),
+                    callback: () => this.fail(),
                 }
             });
 
-        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, 250, VHEIGHT, 0), () => this.restart(), COLOR.GRASS);
-        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, VWIDTH, VHEIGHT, VWIDTH - 250), () => this.restart(), COLOR.FIRE);
+        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, 250, VHEIGHT, 0), () => this.succeed(), COLOR.GRASS);
+        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, VWIDTH, VHEIGHT, VWIDTH - 250), () => this.fail(), COLOR.FIRE);
     }
 
-    private restart(): void {
+    private fail(): void {
         crossFadeScreen(new S01(), FadeSpeed.DEFAULT, COLOR.FIRE);
+    }
+
+    private succeed(): void {
+        crossFadeScreen(new S01(), FadeSpeed.DEFAULT, COLOR.GRASS);
     }
 
     deactivate(): void {}

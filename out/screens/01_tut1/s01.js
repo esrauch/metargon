@@ -23,14 +23,17 @@ export class S01 {
             type: 'HITTEST',
             payload: {
                 w: CONTROL_SIZE, h: CONTROL_SIZE,
-                callback: () => this.restart(),
+                callback: () => this.fail(),
             }
         });
-        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, 250, VHEIGHT, 0), () => this.restart(), COLOR.GRASS);
-        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, VWIDTH, VHEIGHT, VWIDTH - 250), () => this.restart(), COLOR.FIRE);
+        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, 250, VHEIGHT, 0), () => this.succeed(), COLOR.GRASS);
+        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, VWIDTH, VHEIGHT, VWIDTH - 250), () => this.fail(), COLOR.FIRE);
     }
-    restart() {
+    fail() {
         crossFadeScreen(new S01(), FadeSpeed.DEFAULT, COLOR.FIRE);
+    }
+    succeed() {
+        crossFadeScreen(new S01(), FadeSpeed.DEFAULT, COLOR.GRASS);
     }
     deactivate() { }
     fullyShown() { }
