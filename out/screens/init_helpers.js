@@ -4,10 +4,10 @@ import { makeEntity } from "../events/make_entity_helper.js";
 import { PLAYER } from "../payloads/entity_id.js";
 import { getRotation } from "../systems/getters.js";
 import { makeWorldBoundsEntity } from "../util/world_bounds_entity.js";
-export function initPlayerEntity() {
+export function initPlayerEntity(pos) {
     return makeEntity({
         entityId: PLAYER,
-        initialPos: new Pos(200, 200),
+        initialPos: pos || new Pos(200, 200),
         label: "player",
         rendering: {
             type: 'FUNCTION',

@@ -32,8 +32,9 @@ input.enable();
 bus.addListeners(allSystems);
 
 function onViewportSizeChange() {
-    const swidth = canvas.width = window.innerWidth;
-    const sheight = canvas.height = window.innerHeight;
+    const dpr = window.devicePixelRatio || 1;
+    const swidth = canvas.width = window.innerWidth * dpr;
+    const sheight = canvas.height = window.innerHeight * dpr;
     camera.onViewportSizeChange(swidth, sheight);
     gfx.onViewportSizeChange();
     draw();

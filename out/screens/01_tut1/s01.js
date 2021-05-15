@@ -1,10 +1,10 @@
-import { Pos } from "../../coords/coords.js";
+import { Pos, VWIDTH } from "../../coords/coords.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { CONTROL_SIZE, initControlsWidget, initPlayerEntity, initWorldBounds } from "../init_helpers.js";
 import { crossFadeScreen } from "../screen.js";
 export class S01 {
     activate() {
-        initPlayerEntity();
+        initPlayerEntity(new Pos(VWIDTH / 2, 100));
         initWorldBounds();
         initControlsWidget();
         makeEntity({

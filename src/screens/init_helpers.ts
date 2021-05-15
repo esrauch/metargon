@@ -6,10 +6,10 @@ import { getRotation } from "../systems/getters.js";
 import { makeWorldBoundsEntity } from "../util/world_bounds_entity.js";
 
 
-export function initPlayerEntity() {
+export function initPlayerEntity(pos?: Pos) {
     return makeEntity({
         entityId: PLAYER,
-        initialPos: new Pos(200, 200),
+        initialPos: pos || new Pos(200, 200),
         label: "player",
         rendering: {
             type: 'FUNCTION',
