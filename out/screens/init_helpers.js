@@ -4,13 +4,46 @@ import { Pos, VWIDTH, VHEIGHT } from "../coords/coords.js";
 import { PositionedRect, Rect } from "../coords/rect.js";
 import { ActivateControl } from "../events/activate_control_events.js";
 import { makeEntity } from "../events/make_entity_helper.js";
-import { Lose } from "../events/win_loss_events.js";
+import { Lose, Win } from "../events/win_loss_events.js";
 import { Color, LINE_WIDTH } from "../gfx/gfx.js";
 import { PLAYER } from "../payloads/entity_id.js";
 import { Icon } from "../payloads/rendering_payload.js";
 import { controlsSystem } from "../systems/controls_system.js";
 import { getRotation } from "../systems/getters.js";
 import { assertUnreachable } from "../util/assert.js";
+export function initStaticBox(rect, text = '') {
+    return makeEntity({
+        label: 'box',
+        initialPos: rect.center,
+        rendering: {
+            type: 'BOXED_TEXT',
+            text,
+            boxW: rect.w,
+            boxH: rect.h,
+            fontSize: 75,
+        },
+        physics: {
+            hull: {
+                type: 'RECT',
+                width: rect.w,
+                height: rect.h,
+            },
+            isStatic: true
+        }
+    });
+}
+export function initWinSensor(r) {
+    return initSensor(r, () => bus.dispatch(new Win()), {
+        color: Color.GRASS,
+        text: { value: 'WIN', fontSize: 50 },
+    });
+}
+export function initLoseSensor(r) {
+    return initSensor(r, () => bus.dispatch(new Lose()), {
+        color: Color.FIRE,
+        text: { value: 'LOSE', fontSize: 50 },
+    });
+}
 export function initSensor(r, callback, opts) {
     const renderingPayload = (opts === null || opts === void 0 ? void 0 : opts.text) ?
         {
@@ -213,7 +246,7 @@ export function initControlsWidget(controls = allControls, initialActive) {
 }
 export function initResetButton() {
     const resetBtnRect = PositionedRect.fromBounds(0, CONTROL_SIZE, CONTROL_SIZE, 0);
-    makeEntity({
+    return makeEntity({
         label: 'controls_widget',
         initialPos: resetBtnRect.center,
     }, {

@@ -6,6 +6,10 @@ export class PositionedRect {
         this.h = h;
     }
     static fromBounds(t, r, b, l) {
+        if (r <= l)
+            throw new Error('Rect must be r<=l');
+        if (b <= t)
+            throw new Error('Rect must be b<=t');
         const w = r - l;
         const h = b - t;
         const center = new Pos(l + w / 2, t + h / 2);

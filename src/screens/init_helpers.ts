@@ -4,20 +4,57 @@ import { Pos, VWIDTH, VHEIGHT } from "../coords/coords.js";
 import { PositionedRect, Rect } from "../coords/rect.js";
 import { ActivateControl } from "../events/activate_control_events.js";
 import { makeEntity } from "../events/make_entity_helper.js";
-import { Lose } from "../events/win_loss_events.js";
+import { Lose, Win } from "../events/win_loss_events.js";
 import { Color, LINE_WIDTH } from "../gfx/gfx.js";
-import { PLAYER } from "../payloads/entity_id.js";
+import { Id, PLAYER } from "../payloads/entity_id.js";
 import { Icon, RenderingPayload, RenderingTypedPayload } from "../payloads/rendering_payload.js";
 import { controlsSystem } from "../systems/controls_system.js";
 import { getRotation } from "../systems/getters.js";
 import { assertUnreachable } from "../util/assert.js";
+
+export function initStaticBox(rect: PositionedRect, text: string = ''): Id {
+    return makeEntity({
+        label: 'box',
+        initialPos: rect.center,
+        rendering: {
+            type: 'BOXED_TEXT',
+            text,
+            boxW: rect.w,
+            boxH: rect.h,
+            fontSize: 75,
+        },
+        physics: {
+            hull: {
+                type: 'RECT',
+                width: rect.w,
+                height: rect.h,
+            },
+            isStatic: true
+        }
+    });
+}
+
+
+export function initWinSensor(r: PositionedRect): Id {
+    return initSensor(r, () => bus.dispatch(new Win()), {
+        color: Color.GRASS,
+        text: {value: 'WIN', fontSize: 50},
+    })
+}
+
+export function initLoseSensor(r: PositionedRect): Id {
+    return initSensor(r, () => bus.dispatch(new Lose()), {
+        color: Color.FIRE,
+        text: {value: 'LOSE', fontSize: 50},
+    })
+}
 
 export function initSensor(r: PositionedRect,
     callback: () => void, opts?: {
         color?: string,
         triggerOnOutside?: boolean,
         text?: {value: string, fontSize: number},
-    }) {
+    }): Id {
     const renderingPayload: RenderingPayload = opts?.text ?
         {
             type: 'BOXED_TEXT',
@@ -50,7 +87,7 @@ export function initSensor(r: PositionedRect,
 }
 
 
-export function initPlayerEntity(pos?: Pos) {
+export function initPlayerEntity(pos?: Pos): Id {
     return makeEntity({
         entityId: PLAYER,
         initialPos: pos || new Pos(200, 200),
@@ -234,9 +271,9 @@ export function initControlsWidget(
     bus.dispatch(new ActivateControl(initialActive));
 }
 
-export function initResetButton() {
+export function initResetButton(): Id {
     const resetBtnRect = PositionedRect.fromBounds(0, CONTROL_SIZE, CONTROL_SIZE, 0);
-    makeEntity({
+    return makeEntity({
         label: 'controls_widget',
         initialPos: resetBtnRect.center,
     },
