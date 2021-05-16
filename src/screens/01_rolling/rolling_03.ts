@@ -12,7 +12,7 @@ export class Rolling03 {
         initWorldBounds(/* showWorldBounds */ true);
         initControlsWidget(['ROLL'], 'ROLL');
         
-        initStaticBox(PositionedRect.fromBounds(350, VWIDTH - 100, 350 + 200, 0), 'AIR CONTRTOL');
+        initStaticBox(PositionedRect.fromBounds(350, VWIDTH - 100, 350 + 200, 0), 'AIR BUD');
        
         initLoseSensor(
             PositionedRect.fromBounds(VHEIGHT/2 - 250, VWIDTH, VHEIGHT/2, VWIDTH - 250));

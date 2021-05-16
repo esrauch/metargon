@@ -12,3 +12,7 @@ export function linearInterpPos(from: Pos, to:Pos, xAmt: number, yAmt ?: number)
         linearInterp(from.y, to.y, yAmt)
     );
 }
+
+export function easeInOutInterpPos(from: Pos, to: Pos, amt: number): Pos {
+    return linearInterpPos(from, to, Math.sin(amt * Math.PI/2));
+}

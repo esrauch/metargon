@@ -41,13 +41,12 @@ export class Bus {
     private constructor() { }
     static singleton = new Bus();
 
-    logAllEventsBesidesTickAndDraw = true
-    logTickAndDraw = false
+    logSpammyEvents = false
+    logNonSpammyEvents = true
 
-    dispatch(ev: BusEvent) {
-        const isTickOrDraw = ev.type == 'TICK' || ev.type == 'DRAW';
-        if ((this.logAllEventsBesidesTickAndDraw && !isTickOrDraw) ||
-            (this.logTickAndDraw && isTickOrDraw)) {
+    dispatch(ev: BusEvent, consideredSpammyForLog: boolean = false) {
+        if ((this.logSpammyEvents && consideredSpammyForLog) ||
+            (this.logNonSpammyEvents && !consideredSpammyForLog)) {
             console.log(JSON.stringify(ev));
         }
         for (const l of this.listeners) {

@@ -7,7 +7,7 @@ import { ActiveScreen } from "../screen.js";
 export class BrokenScreen implements ActiveScreen {
     activate() {
         makeEntity({
-            label: 'credits1',
+            label: 'logo',
             initialPos: new Pos(VWIDTH / 2, VHEIGHT / 3),
             rendering: {
                 type: 'TEXT',
@@ -18,11 +18,11 @@ export class BrokenScreen implements ActiveScreen {
             }
         });
         makeEntity({
-            label: 'credits2',
+            label: 'blame',
             initialPos: new Pos(VWIDTH / 2, VHEIGHT * 2 / 3),
             rendering: {
                 type: 'TEXT',
-                text: 'YOU BROKE IT',
+                text: 'U BROKE IT :(',
                 size: 600,
                 color: Color.FIRE,
             }

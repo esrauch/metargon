@@ -4,8 +4,10 @@ import { physics } from "./physics/physics.js"
 import { renderer } from "./rendering/renderer.js"
 import { screenSystem } from "./screen_system.js";
 import { sensorSystem } from "./sensor_system.js";
+import { statsSystem } from "./stats_system.js";
 
 const allSystems = [
+    statsSystem,
     controlsSystem,
     physics,
     genericPayloadTable,

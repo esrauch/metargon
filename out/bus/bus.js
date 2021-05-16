@@ -5,13 +5,12 @@ export class Bus {
         // Listeners are an _ordered_ list (both ticks and draws might be heavily
         // ordered dependent).
         this.listeners = [];
-        this.logAllEventsBesidesTickAndDraw = true;
-        this.logTickAndDraw = false;
+        this.logSpammyEvents = false;
+        this.logNonSpammyEvents = true;
     }
-    dispatch(ev) {
-        const isTickOrDraw = ev.type == 'TICK' || ev.type == 'DRAW';
-        if ((this.logAllEventsBesidesTickAndDraw && !isTickOrDraw) ||
-            (this.logTickAndDraw && isTickOrDraw)) {
+    dispatch(ev, consideredSpammyForLog = false) {
+        if ((this.logSpammyEvents && consideredSpammyForLog) ||
+            (this.logNonSpammyEvents && !consideredSpammyForLog)) {
             console.log(JSON.stringify(ev));
         }
         for (const l of this.listeners) {

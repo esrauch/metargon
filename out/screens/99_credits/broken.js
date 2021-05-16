@@ -4,7 +4,7 @@ import { Color } from "../../gfx/gfx.js";
 export class BrokenScreen {
     activate() {
         makeEntity({
-            label: 'credits1',
+            label: 'logo',
             initialPos: new Pos(VWIDTH / 2, VHEIGHT / 3),
             rendering: {
                 type: 'TEXT',
@@ -15,11 +15,11 @@ export class BrokenScreen {
             }
         });
         makeEntity({
-            label: 'credits2',
+            label: 'blame',
             initialPos: new Pos(VWIDTH / 2, VHEIGHT * 2 / 3),
             rendering: {
                 type: 'TEXT',
-                text: 'YOU BROKE IT',
+                text: 'U BROKE IT :(',
                 size: 600,
                 color: Color.FIRE,
             }

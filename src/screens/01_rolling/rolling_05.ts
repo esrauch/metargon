@@ -1,29 +1,70 @@
-import { bus } from "../../bus/bus.js";
-import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
+import { CyclicMoveAnimation } from "../../anim/cyclic_move.js";
+import { bus, BusEvent } from "../../bus/bus.js";
+import { Pos, VWIDTH, VHEIGHT, Vec } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
-import { makeEntity } from "../../events/make_entity_helper.js";
-import { Lose, Win } from "../../events/win_loss_events.js";
-import { Color } from "../../gfx/gfx.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initSensor, initWinSensor, initResetButton, initStaticBox } from "../init_helpers.js";
+import { SetPayloadEvent } from "../../events/payload_events.js";
+import { drawIcon } from "../../gfx/gfx_2d_icons.js";
+import { Id } from "../../payloads/entity_id.js";
+import { getCenterPosition } from "../../systems/getters.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initWinSensor, initResetButton, initStaticBox, initLoseSensor } from "../init_helpers.js";
 
 const level = 'TIME IT';
 
 export class Rolling05 {
+    loseSensor?: Id;
+    animDir = 1;
+    moveAnimations: CyclicMoveAnimation[] = [];
+
     activate(): void {
+        bus.addListener(this);
         initPlayerEntity(new Pos(VWIDTH / 4, 100));
         initWorldBounds(/* showWorldBounds */ true);
         initControlsWidget(['ROLL'], 'ROLL');
         initResetButton();
-        
-        initStaticBox(PositionedRect.fromBounds(350, VWIDTH - 150, 350 + 100, 0), level);
-        initStaticBox(PositionedRect.fromBounds(650, VWIDTH, 650 + 100, 150), level);
-        initStaticBox(PositionedRect.fromBounds(950, VWIDTH, 950 + 100, 150), level);
-        initStaticBox(PositionedRect.fromBounds(1250, VWIDTH - 150, 1250 + 100, 0), level);
-        initStaticBox(PositionedRect.fromBounds(1550, VWIDTH, 1550 + 100, 150), level);
+
 
         initWinSensor(
             new PositionedRect(new Pos(VWIDTH/2, VHEIGHT - 125), VWIDTH, 250));
+        
+        {
+            initStaticBox(PositionedRect.fromBounds(350, VWIDTH - 150, 350 + 100, 0), level);
+            const loseSensor = initLoseSensor(PositionedRect.fromBounds(350, VWIDTH, 350 + 100, VWIDTH - 150));       
+            this.moveAnimations.push(CyclicMoveAnimation.ofOffset(loseSensor, new Vec(-300, 0), 4));
+        }
+        {
+            initStaticBox(PositionedRect.fromBounds(650, VWIDTH, 650 + 100, 150), level);
+            const loseSensor = initLoseSensor(PositionedRect.fromBounds(650, 150, 650 + 100, 0));       
+            this.moveAnimations.push(CyclicMoveAnimation.ofOffset(loseSensor, new Vec(200, 0), 4));
+        }
+        {
+            initStaticBox(PositionedRect.fromBounds(950, VWIDTH, 950 + 100, 150), level);
+            const loseSensor = initLoseSensor(PositionedRect.fromBounds(950, 350, 950 + 100, 350 - 150));       
+            this.moveAnimations.push(CyclicMoveAnimation.ofOffset(loseSensor, new Vec(-200, 0), 4));
+        }
+        {
+            initStaticBox(PositionedRect.fromBounds(1250, VWIDTH - 150, 1250 + 100, 0), level);
+            const loseSensor = initLoseSensor(PositionedRect.fromBounds(1250, VWIDTH, 1250 + 100, VWIDTH - 150));
+            this.moveAnimations.push(CyclicMoveAnimation.ofOffset(loseSensor, new Vec(-80, 0), 10));
+        }
+        {
+            initStaticBox(PositionedRect.fromBounds(1550, VWIDTH, 1550 + 100, 150), level);
+            const loseSensor1 = initLoseSensor(PositionedRect.fromBounds(1550, 350, 1550 + 100, 350 - 150));       
+            this.moveAnimations.push(CyclicMoveAnimation.ofOffset(loseSensor1, new Vec(-300, 0), 2));
+            const loseSensor2 = initLoseSensor(PositionedRect.fromBounds(1550, 350, 1550 + 100, 350 - 150));       
+            this.moveAnimations.push(CyclicMoveAnimation.ofOffset(loseSensor2, new Vec(-150, 0), 2.7));
+            const loseSensor3 = initLoseSensor(PositionedRect.fromBounds(1550, 350, 1550 + 100, 350 - 150));       
+            this.moveAnimations.push(CyclicMoveAnimation.ofOffset(loseSensor3, new Vec(-500, 0), 3.8));
+        }
     }
 
-    deactivate() {}
+    deactivate() {
+        bus.removeListener(this);
+    }
+
+    onEvent(ev: BusEvent) {
+        if (ev.type !== 'TICK') return;
+        for (const anim of this.moveAnimations) {
+            anim.tick();
+        }
+    }
 }

@@ -33,10 +33,10 @@ onViewportSizeChange();
 window.addEventListener('resize', onViewportSizeChange);
 function draw() {
     gfx.clearAndSetTransform();
-    bus.dispatch(reusableEvents.draw);
+    bus.dispatch(reusableEvents.draw, /* spammy */ true);
 }
 function tick() {
-    bus.dispatch(reusableEvents.tick);
+    bus.dispatch(reusableEvents.tick, /* spammy */ true);
     draw();
     requestAnimationFrame(tick);
 }
