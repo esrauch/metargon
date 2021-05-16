@@ -3,7 +3,7 @@ import { Pos, VHEIGHT, VWIDTH } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { Lose, Win } from "../../events/win_loss_events.js";
-import { COLOR } from "../../gfx/gfx.js";
+import { Color } from "../../gfx/gfx.js";
 import { initControlsWidget, initPlayerEntity, initSensor, initWorldBounds } from "../init_helpers.js";
 export class S01 {
     activate() {
@@ -24,15 +24,7 @@ export class S01 {
                 fontSize: 75,
             }
         });
-        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, 250, VHEIGHT, 0), () => bus.dispatch(new Win()), COLOR.GRASS);
-        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, VWIDTH, VHEIGHT, VWIDTH - 250), () => bus.dispatch(new Lose()), COLOR.FIRE);
+        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, 250, VHEIGHT, 0), () => bus.dispatch(new Win()), Color.GRASS);
+        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, VWIDTH, VHEIGHT, VWIDTH - 250), () => bus.dispatch(new Lose()), Color.FIRE);
     }
-    // private fail(): void {
-    //     crossFadeScreen(new S01(), FadeSpeed.DEFAULT, COLOR.FIRE);
-    // }
-    // private succeed(): void {
-    //     crossFadeScreen(new S01(), FadeSpeed.DEFAULT, COLOR.GRASS);
-    // }
-    deactivate() { }
-    fullyShown() { }
 }

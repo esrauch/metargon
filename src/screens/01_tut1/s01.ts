@@ -3,7 +3,7 @@ import { Pos, VHEIGHT, VWIDTH } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { Lose, Win } from "../../events/win_loss_events.js";
-import { COLOR } from "../../gfx/gfx.js";
+import { Color } from "../../gfx/gfx.js";
 import { initControlsWidget, initPlayerEntity, initSensor, initWorldBounds } from "../init_helpers.js";
 import { ActiveScreen } from "../screen.js";
 
@@ -38,11 +38,11 @@ export class S01 implements ActiveScreen {
         initSensor(
             PositionedRect.fromBounds(VHEIGHT - 250, 250, VHEIGHT, 0),
             () => bus.dispatch(new Win()),
-            COLOR.GRASS);
+            Color.GRASS);
         initSensor(
             PositionedRect.fromBounds(VHEIGHT - 250, VWIDTH, VHEIGHT, VWIDTH - 250),
             () => bus.dispatch(new Lose()),
-            COLOR.FIRE);
+            Color.FIRE);
     }
 
     // private fail(): void {
@@ -52,7 +52,4 @@ export class S01 implements ActiveScreen {
     // private succeed(): void {
     //     crossFadeScreen(new S01(), FadeSpeed.DEFAULT, COLOR.GRASS);
     // }
-
-    deactivate(): void {}
-    fullyShown(): void {}
 }

@@ -62,10 +62,18 @@ export interface CustomObjRenderingOption {
     readonly obj: CustomRenderable,
 }
 
+export interface ConditionalRenderingOption {
+    readonly type: 'CONDITIONAL',
+    readonly cond: () => boolean,
+    readonly ifTrue: RenderingPayload,
+    readonly ifFalse: RenderingPayload,
+}
+
 export type RenderingPayload = Primitive |
 CompoundRenderingOption |
 CustomFnRenderingOption |
-CustomObjRenderingOption;
+CustomObjRenderingOption |
+ConditionalRenderingOption;
     
 
 export interface RenderingTypedPayload extends TypedPayload<RenderingPayload> {

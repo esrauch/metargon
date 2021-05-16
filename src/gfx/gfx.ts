@@ -1,6 +1,6 @@
 import { Pos, Vec, Positions } from "../coords/coords.js";
 
-export enum COLOR {
+export enum Color {
     DEBUG = '#F00',
     BG = '#000',
     BG_MILD = '#222',
@@ -19,7 +19,7 @@ export interface Gfx {
 
     setGlobalOpacity(opacity: number): void;
 
-    forceForegroundColor(color?: COLOR): void;
+    forceForegroundColor(color?: Color): void;
 
     line(from: Pos, to: Pos, color?: string): void;
 

@@ -4,7 +4,9 @@ import { PositionedRect, Rect } from "../coords/rect.js";
 import { ActivateControl } from "../events/activate_control_events.js";
 import { makeEntity } from "../events/make_entity_helper.js";
 import { Lose } from "../events/win_loss_events.js";
+import { Color } from "../gfx/gfx.js";
 import { PLAYER } from "../payloads/entity_id.js";
+import { controlsSystem } from "../systems/controls_system.js";
 import { getRotation } from "../systems/getters.js";
 import { makeWorldBoundsEntity } from "../util/world_bounds_entity.js";
 export function initSensor(r, callback, color) {
@@ -104,11 +106,24 @@ function makeBoxedTextForControl(control) {
     return {
         type: 'RENDERING',
         payload: {
-            type: 'BOXED_TEXT',
-            text: dispChar,
-            boxW: CONTROL_SIZE,
-            boxH: CONTROL_SIZE,
-            fontSize: CONTROL_SIZE,
+            type: 'CONDITIONAL',
+            cond: () => controlsSystem.getActiveControlName() === control,
+            ifTrue: {
+                type: 'BOXED_TEXT',
+                text: dispChar,
+                boxW: CONTROL_SIZE,
+                boxH: CONTROL_SIZE,
+                fontSize: CONTROL_SIZE,
+                color: Color.FG,
+            },
+            ifFalse: {
+                type: 'BOXED_TEXT',
+                text: dispChar,
+                boxW: CONTROL_SIZE,
+                boxH: CONTROL_SIZE,
+                fontSize: CONTROL_SIZE,
+                color: Color.BG_MILD,
+            }
         }
     };
 }

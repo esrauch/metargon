@@ -1,6 +1,6 @@
 import { linearInterp } from "../../util/interp.js";
 import { Pos, VWIDTH } from "../../coords/coords.js";
-import { COLOR } from "../../gfx/gfx.js";
+import { Color } from "../../gfx/gfx.js";
 import { ChessColor } from "../../payloads/chess_payload.js";
 import { genericPayloadTable } from "../generic_payload_table.js";
 export class ChessRenderable {
@@ -42,11 +42,11 @@ export class ChessRenderable {
         const centerY = linearInterp(boardT, boardB, j / boardSquaresH) + h / 2;
         const center = new Pos(centerX, centerY);
         if (!isDarkSquare) {
-            gfx.fillrect(center, w, h, COLOR.BG_MILD);
+            gfx.fillrect(center, w, h, Color.BG_MILD);
         }
         const piece = boardValue.board[i][j];
         if (piece) {
-            const color = piece.color == ChessColor.BLACK ? COLOR.FIRE : COLOR.FG;
+            const color = piece.color == ChessColor.BLACK ? Color.FIRE : Color.FG;
             gfx.text(center, piece.type, { size: w, color: color });
         }
     }

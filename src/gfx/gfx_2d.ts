@@ -1,7 +1,7 @@
 import { camera } from "../coords/camera.js";
 import { Positions, Pos, add, Vec } from "../coords/coords.js";
 import { assert } from "../util/assert.js";
-import { COLOR, Gfx, LINE_WIDTH } from "./gfx.js";
+import { Color, Gfx, LINE_WIDTH } from "./gfx.js";
 
 const DEFAULT_FONT_FAMILY = 'Helvetica, Arial, Sans-Serif';
 const DEFAULT_FONT_SIZE = 100;
@@ -18,7 +18,7 @@ export class Gfx2d implements Gfx {
     private fillStyle?: string;
     private strokeStyle?: string;
     private globalOpacity = 1;
-    private forcedFgColor?: COLOR = undefined;
+    private forcedFgColor?: Color = undefined;
 
     constructor(private canvas: HTMLCanvasElement) {
         this.ctx = assert(canvas.getContext('2d'));
@@ -29,7 +29,7 @@ export class Gfx2d implements Gfx {
         this.globalOpacity = opacity;
     }
 
-    forceForegroundColor(color?: COLOR) {
+    forceForegroundColor(color?: Color) {
         this.forcedFgColor = color;
     }
 
@@ -39,7 +39,7 @@ export class Gfx2d implements Gfx {
             this.fillStyle = color;
             return;
         }
-        const style = this.forcedFgColor || color || COLOR.FG;
+        const style = this.forcedFgColor || color || Color.FG;
         if (style !== this.fillStyle) {
             this.ctx.fillStyle = style;
             this.fillStyle = style;
@@ -52,7 +52,7 @@ export class Gfx2d implements Gfx {
             this.strokeStyle = color;
             return;
         }
-        const style = this.forcedFgColor || color || COLOR.FG;
+        const style = this.forcedFgColor || color || Color.FG;
         if (style !== this.strokeStyle) {
             this.ctx.strokeStyle = style;
             this.strokeStyle = style;
@@ -63,8 +63,8 @@ export class Gfx2d implements Gfx {
         this.w = this.canvas.width;
         this.h = this.canvas.height;
         this.ctx.font = toFont();
-        this.setFillStyle(COLOR.FG, { force: true });
-        this.setStrokeStyle(COLOR.FG, { force: true });
+        this.setFillStyle(Color.FG, { force: true });
+        this.setStrokeStyle(Color.FG, { force: true });
         this.ctx.lineWidth = LINE_WIDTH;
     }
 
@@ -76,7 +76,7 @@ export class Gfx2d implements Gfx {
         
         this.ctx.globalAlpha = 1;
         this.ctx.clearRect(0, 0, this.w, this.h);
-        this.setFillStyle(COLOR.BG, { force: true} );
+        this.setFillStyle(Color.BG, { force: true} );
         this.ctx.fillRect(0, 0, this.w, this.h);
         this.setFillStyle('#00f');
 

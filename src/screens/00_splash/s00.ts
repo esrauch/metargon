@@ -3,6 +3,7 @@ import { makeEntity } from "../../events/make_entity_helper.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { ActiveScreen } from '../screen.js';
 import { Win } from "../../events/win_loss_events.js";
+import { Color } from "../../gfx/gfx.js";
 
 export class S00 implements ActiveScreen {
     constructor() { }
@@ -17,6 +18,7 @@ export class S00 implements ActiveScreen {
                     text: 'å',
                     size: VHEIGHT / 2,
                     font: 'Monoton',
+                    color: Color.GRASS,
                 }
             });
         });

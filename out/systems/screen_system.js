@@ -2,7 +2,7 @@
 import { makeFadeScreenAnimation } from "../anim/screen_fade.js";
 import { bus } from "../bus/bus.js";
 import { ResetAllSystems } from "../events/reset_all_systems_event.js";
-import { COLOR } from "../gfx/gfx.js";
+import { Color } from "../gfx/gfx.js";
 import { getScreenNumber } from "../screens/screen.js";
 export var FadeSpeed;
 (function (FadeSpeed) {
@@ -18,10 +18,10 @@ export class ScreenSystem {
         var _a, _b;
         switch (ev.type) {
             case 'WIN':
-                this.crossFadeScreen(((_a = this.activeScreenNumber) !== null && _a !== void 0 ? _a : 0) + 1, COLOR.GRASS);
+                this.crossFadeScreen(((_a = this.activeScreenNumber) !== null && _a !== void 0 ? _a : 0) + 1, Color.GRASS);
                 break;
             case 'LOSE':
-                this.crossFadeScreen(((_b = this.activeScreenNumber) !== null && _b !== void 0 ? _b : 0), COLOR.FIRE);
+                this.crossFadeScreen(((_b = this.activeScreenNumber) !== null && _b !== void 0 ? _b : 0), Color.FIRE);
                 break;
         }
     }

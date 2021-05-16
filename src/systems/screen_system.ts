@@ -3,7 +3,7 @@
 import { makeFadeScreenAnimation } from "../anim/screen_fade.js";
 import { bus, BusEvent, BusListener } from "../bus/bus.js";
 import { ResetAllSystems } from "../events/reset_all_systems_event.js";
-import { COLOR } from "../gfx/gfx.js";
+import { Color } from "../gfx/gfx.js";
 import { ActiveScreen, getScreenNumber } from "../screens/screen.js";
 
 export enum FadeSpeed {
@@ -27,10 +27,10 @@ export class ScreenSystem implements BusListener {
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
             case 'WIN':
-                this.crossFadeScreen((this.activeScreenNumber ?? 0) + 1, COLOR.GRASS);
+                this.crossFadeScreen((this.activeScreenNumber ?? 0) + 1, Color.GRASS);
                 break;
             case 'LOSE':
-                this.crossFadeScreen((this.activeScreenNumber ?? 0), COLOR.FIRE);
+                this.crossFadeScreen((this.activeScreenNumber ?? 0), Color.FIRE);
                 break;
         }
     }
@@ -41,7 +41,7 @@ export class ScreenSystem implements BusListener {
 
     private crossFadeScreen(
         nextScreenNumber: number,
-        temporaryForegroundColor?: COLOR,
+        temporaryForegroundColor?: Color,
         fadeSpeed: FadeSpeed = FadeSpeed.DEFAULT) {
 
         const next = getScreenNumber(nextScreenNumber);

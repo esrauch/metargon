@@ -24,7 +24,7 @@ export class ControlsSystem implements BusListener {
     }
 
     getActiveControl(): Control | undefined { return this.activeControl; }
-    getActiveContrtolName(): ControlName | undefined { return this.activeControlName; }
+    getActiveControlName(): ControlName | undefined { return this.activeControlName; }
 
     private activateNullControl() {
         this.activeControl?.disable();

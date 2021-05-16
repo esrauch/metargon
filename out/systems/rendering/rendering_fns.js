@@ -7,9 +7,18 @@ export function makeRenderingFn(value) {
             return (gfx, id, pos) => value.obj.draw(gfx, id, pos);
         case 'COMPOUND':
             return makeCompoundRenderingFn(value.prims);
+        case 'CONDITIONAL':
+            return makeConditionalRenderingFn(value);
         default:
             return makeCompoundRenderingFn([value]);
     }
+}
+function makeConditionalRenderingFn(value) {
+    const ifTrueFn = makeRenderingFn(value.ifTrue);
+    const ifFalsefn = makeRenderingFn(value.ifFalse);
+    return (gfx, id, pos) => {
+        value.cond() ? ifTrueFn(gfx, id, pos) : ifFalsefn(gfx, id, pos);
+    };
 }
 function makeCompoundRenderingFn(prims) {
     return (gfx, id, pos) => {

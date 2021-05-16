@@ -1,21 +1,31 @@
 import { Pos, add } from "../../coords/coords.js";
-import { COLOR, Gfx } from "../../gfx/gfx.js";
+import { Color, Gfx } from "../../gfx/gfx.js";
 import { Id } from "../../payloads/entity_id.js";
-import { RenderingPayload, Primitive, } from "../../payloads/rendering_payload.js";
+import { RenderingPayload, Primitive, ConditionalRenderingOption, } from "../../payloads/rendering_payload.js";
 
 export type DrawFn = (gfx: Gfx, id: Id, pos: Pos) => void;
 
 export function makeRenderingFn(value: RenderingPayload): DrawFn {
-    switch(value.type) {
+    switch (value.type) {
         case 'FUNCTION':
             return value.fn;
         case 'CUSTOM':
             return (gfx, id, pos) => value.obj.draw(gfx, id, pos);
         case 'COMPOUND':
             return makeCompoundRenderingFn(value.prims);
+        case 'CONDITIONAL':
+            return makeConditionalRenderingFn(value);
         default:
             return makeCompoundRenderingFn([value]);
     }
+}
+
+function makeConditionalRenderingFn(value: ConditionalRenderingOption): DrawFn {
+    const ifTrueFn = makeRenderingFn(value.ifTrue);
+    const ifFalsefn = makeRenderingFn(value.ifFalse);
+    return (gfx: Gfx, id: Id, pos: Pos) => {
+        value.cond() ? ifTrueFn(gfx, id, pos) : ifFalsefn(gfx, id, pos);
+    };
 }
 
 function makeCompoundRenderingFn(prims: Primitive[]): DrawFn {

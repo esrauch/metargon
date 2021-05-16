@@ -15,7 +15,7 @@ export class ControlsSystem {
         }
     }
     getActiveControl() { return this.activeControl; }
-    getActiveContrtolName() { return this.activeControlName; }
+    getActiveControlName() { return this.activeControlName; }
     activateNullControl() {
         var _a;
         (_a = this.activeControl) === null || _a === void 0 ? void 0 : _a.disable();

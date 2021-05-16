@@ -5,14 +5,16 @@ import { PositionedRect, Rect } from "../coords/rect.js";
 import { ActivateControl } from "../events/activate_control_events.js";
 import { makeEntity } from "../events/make_entity_helper.js";
 import { Lose } from "../events/win_loss_events.js";
+import { Color } from "../gfx/gfx.js";
 import { PLAYER } from "../payloads/entity_id.js";
 import { RenderingTypedPayload } from "../payloads/rendering_payload.js";
+import { controlsSystem } from "../systems/controls_system.js";
 import { getRotation } from "../systems/getters.js";
 import { makeWorldBoundsEntity } from "../util/world_bounds_entity.js";
 
 export function initSensor(r: PositionedRect,
-                           callback: ()=>void,
-                           color?: string) {
+    callback: () => void,
+    color?: string) {
     return makeEntity({
         label: 'sensor',
         initialPos: r.center,
@@ -42,7 +44,7 @@ export function initPlayerEntity(pos?: Pos) {
             type: 'FUNCTION',
             fn: (gfx, id, center) => {
                 gfx.fillcircle(center, 50);
-                const angle = getRotation(id)||0;
+                const angle = getRotation(id) || 0;
                 const eye =
                     new Pos(
                         center.x + Math.cos(angle) * 20,
@@ -114,11 +116,24 @@ function makeBoxedTextForControl(control: ControlName): RenderingTypedPayload {
     return {
         type: 'RENDERING',
         payload: {
-            type: 'BOXED_TEXT',
-            text: dispChar,
-            boxW: CONTROL_SIZE,
-            boxH: CONTROL_SIZE,
-            fontSize: CONTROL_SIZE,
+            type: 'CONDITIONAL',
+            cond: () => controlsSystem.getActiveControlName() === control,
+            ifTrue: {
+                type: 'BOXED_TEXT',
+                text: dispChar,
+                boxW: CONTROL_SIZE,
+                boxH: CONTROL_SIZE,
+                fontSize: CONTROL_SIZE,
+                color: Color.FG,
+            },
+            ifFalse:{
+                type: 'BOXED_TEXT',
+                text: dispChar,
+                boxW: CONTROL_SIZE,
+                boxH: CONTROL_SIZE,
+                fontSize: CONTROL_SIZE,
+                color: Color.BG_MILD,
+            }
         }
     }
 }
@@ -167,7 +182,7 @@ export function initControlsWidget() {
         {
             type: 'HITTEST',
             payload: {
-                w:CONTROL_SIZE, h:CONTROL_SIZE,
+                w: CONTROL_SIZE, h: CONTROL_SIZE,
                 callback: () => bus.dispatch(new Lose()),
             }
         });
