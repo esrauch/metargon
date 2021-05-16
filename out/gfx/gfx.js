@@ -8,3 +8,4 @@ export var COLOR;
     COLOR["GRASS"] = "#AFB";
     COLOR["WATER"] = "#9CF";
 })(COLOR || (COLOR = {}));
+export const LINE_WIDTH = 10;

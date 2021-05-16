@@ -32,7 +32,16 @@ export type Primitive =
         readonly color?: string,
         readonly size?: number,
         readonly font?: string,
-    };
+    } |
+    {
+        readonly type: 'BOXED_TEXT',
+        readonly text: string,
+        readonly boxW: number,
+        readonly boxH: number,
+        readonly fontSize: number,
+        readonly color?: string,
+
+    }
 
 export interface CompoundRenderingOption {
     readonly type: 'COMPOUND';

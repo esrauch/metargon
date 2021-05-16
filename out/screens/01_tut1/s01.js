@@ -15,15 +15,31 @@ export class S01 {
         }, {
             type: 'RENDERING',
             payload: {
-                type: "CONTROL_BUTTON",
-                w: CONTROL_SIZE,
-                controlName: 'BALL',
+                type: 'BOXED_TEXT',
+                boxW: CONTROL_SIZE,
+                boxH: CONTROL_SIZE,
+                text: 'X',
+                fontSize: CONTROL_SIZE,
             }
         }, {
             type: 'HITTEST',
             payload: {
                 w: CONTROL_SIZE, h: CONTROL_SIZE,
                 callback: () => this.fail(),
+            }
+        });
+        const helpTextBox = PositionedRect.fromBounds(0, VWIDTH, VHEIGHT, VWIDTH * 2 / 3);
+        makeEntity({
+            label: 'helptext',
+            initialPos: helpTextBox.center,
+        }, {
+            type: 'RENDERING',
+            payload: {
+                type: 'BOXED_TEXT',
+                text: 'HOLD HERE',
+                boxW: helpTextBox.w,
+                boxH: helpTextBox.h,
+                fontSize: 75,
             }
         });
         initSensor(PositionedRect.fromBounds(VHEIGHT - 250, 250, VHEIGHT, 0), () => this.succeed(), COLOR.GRASS);

@@ -1,13 +1,14 @@
 import { camera } from "../coords/camera.js";
 import { Positions, Pos, add, Vec } from "../coords/coords.js";
 import { assert } from "../util/assert.js";
-import { COLOR, Gfx } from "./gfx.js";
+import { COLOR, Gfx, LINE_WIDTH } from "./gfx.js";
 
-const DEFAULT_FONT = '100px sans-serif';
+const DEFAULT_FONT_FAMILY = 'Helvetica, Arial, Sans-Serif';
+const DEFAULT_FONT_SIZE = 100;
 
-function toFont(size?: number, font?: string): string {
-    if (!size) return DEFAULT_FONT;
-    return `${size}px '${font || 'sans-serif'}`;
+function toFont(size: number = DEFAULT_FONT_SIZE,
+                font: string = DEFAULT_FONT_FAMILY): string {
+    return `${size}px ${font}`;
 }
 
 export class Gfx2d implements Gfx {
@@ -61,11 +62,10 @@ export class Gfx2d implements Gfx {
     onViewportSizeChange() {
         this.w = this.canvas.width;
         this.h = this.canvas.height;
-        // This px size is in virt coords.
-        this.ctx.font = '100px sans-serif';
+        this.ctx.font = toFont();
         this.setFillStyle(COLOR.FG, { force: true });
         this.setStrokeStyle(COLOR.FG, { force: true });
-        this.ctx.lineWidth = 10;
+        this.ctx.lineWidth = LINE_WIDTH;
     }
 
     private framecount = 0;

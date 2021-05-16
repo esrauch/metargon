@@ -10,6 +10,8 @@ export enum COLOR {
     WATER = '#9CF',
 }
 
+export const LINE_WIDTH = 10;
+
 export interface Gfx {
     onViewportSizeChange(): void;
 

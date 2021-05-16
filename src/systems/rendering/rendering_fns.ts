@@ -46,6 +46,13 @@ function makeCompoundRenderingFn(prims: Primitive[]): DrawFn {
                         font: p.font,
                     });
                     break;
+                case 'BOXED_TEXT':
+                    gfx.strokerect(pos, p.boxW, p.boxH, p.color);
+                    gfx.text(pos, p.text, {
+                        color: p.color,
+                        size: p.fontSize,
+                    })
+                    break;
                 default:
                     throw Error(`unhandled prim ${p}`);
             }

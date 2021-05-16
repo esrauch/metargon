@@ -2,6 +2,7 @@ import { ControlName, activateControlNamed } from "../controls/controls.js";
 import { Pos, VWIDTH, VHEIGHT } from "../coords/coords.js";
 import { PositionedRect, Rect } from "../coords/rect.js";
 import { makeEntity } from "../events/make_entity_helper.js";
+import { LINE_WIDTH } from "../gfx/gfx.js";
 import { Id, PLAYER } from "../payloads/entity_id.js";
 import { getRotation } from "../systems/getters.js";
 import { makeWorldBoundsEntity } from "../util/world_bounds_entity.js";
