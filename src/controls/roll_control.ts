@@ -1,6 +1,6 @@
 import { bus, BusEvent, BusListener } from "../bus/bus.js";
 import { Pos, VWIDTH } from "../coords/coords.js";
-import { RollMove } from "../events/physics.js";
+import { RollMove } from "../events/physics_events.js";
 import { PLAYER } from "../payloads/entity_id.js";
 import { Control } from "./control.js";
 

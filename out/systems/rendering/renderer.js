@@ -11,9 +11,11 @@ export class Renderer {
         };
         this.renderingFns = new Map();
     }
-    reset() { this.renderingFns.clear(); }
     onEvent(ev) {
         switch (ev.type) {
+            case 'RESET_ALL_SYSTEMS':
+                this.renderingFns.clear();
+                break;
             case 'SET_PAYLOAD':
                 this.maybeSetPayload(ev);
                 break;

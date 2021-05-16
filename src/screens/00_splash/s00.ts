@@ -1,10 +1,8 @@
 import { bus } from "../../bus/bus.js";
-import { DestroyEntity } from "../../events/core_entity_events.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
-import { Id } from "../../payloads/entity_id.js";
-import { ActiveScreen, crossFadeScreen } from '../screen.js';
-import { getScreenNumber } from "../screens.js";
+import { ActiveScreen } from '../screen.js';
+import { Win } from "../../events/win_loss_events.js";
 
 export class S00 implements ActiveScreen {
     constructor() { }
@@ -25,7 +23,7 @@ export class S00 implements ActiveScreen {
     }
 
     fullyShown() {
-        crossFadeScreen(getScreenNumber(1));
+        bus.dispatch(new Win());
     }
 
 }

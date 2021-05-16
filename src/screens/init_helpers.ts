@@ -1,9 +1,12 @@
-import { ControlName, activateControlNamed } from "../controls/controls.js";
+import { bus } from "../bus/bus.js";
+import { ControlName } from "../controls/controls.js";
 import { Pos, VWIDTH, VHEIGHT } from "../coords/coords.js";
 import { PositionedRect, Rect } from "../coords/rect.js";
+import { ActivateControl } from "../events/activate_control_events.js";
 import { makeEntity } from "../events/make_entity_helper.js";
-import { LINE_WIDTH } from "../gfx/gfx.js";
-import { Id, PLAYER } from "../payloads/entity_id.js";
+import { Lose } from "../events/win_loss_events.js";
+import { PLAYER } from "../payloads/entity_id.js";
+import { RenderingTypedPayload } from "../payloads/rendering_payload.js";
 import { getRotation } from "../systems/getters.js";
 import { makeWorldBoundsEntity } from "../util/world_bounds_entity.js";
 
@@ -28,8 +31,6 @@ export function initSensor(r: PositionedRect,
         }
     });
 }
-
-export function initLoseSensor(r: Rect) {}
 
 
 export function initPlayerEntity(pos?: Pos) {
@@ -101,6 +102,27 @@ export function initWorldBounds() {
     makeWorldBoundsEntity();
 }
 
+function makeBoxedTextForControl(control: ControlName): RenderingTypedPayload {
+    let dispChar = '?';
+    switch (control) {
+        case 'BALL': dispChar = 'O'; break;
+        case 'FLAPPY': dispChar = 'F'; break;
+        case 'GOLF_FORCE': dispChar = 'G'; break;
+        case 'GOLF_VELOCITY': dispChar = 'V'; break;
+        case 'ROLL': dispChar = 'R'; break;
+    }
+    return {
+        type: 'RENDERING',
+        payload: {
+            type: 'BOXED_TEXT',
+            text: dispChar,
+            boxW: CONTROL_SIZE,
+            boxH: CONTROL_SIZE,
+            fontSize: CONTROL_SIZE,
+        }
+    }
+}
+
 export const CONTROL_SIZE = 200;
 export function initControlsWidget() {
     const w = CONTROL_SIZE;
@@ -111,26 +133,42 @@ export function initControlsWidget() {
             label: 'controls_widget',
             initialPos: new Pos(x, h / 2)
         },
-            {
-                type: 'RENDERING',
-                payload: {
-                    type: "CONTROL_BUTTON",
-                    w,
-                    controlName: control,
-                }
-            },
+            makeBoxedTextForControl(control),
             {
                 type: 'HITTEST',
                 payload: {
                     w, h,
-                    callback: () => activateControlNamed(control)
+                    callback: () => bus.dispatch(new ActivateControl(control)),
                 }
             }
-            )
+        );
     }
     makeControlsWidget('GOLF_FORCE', VWIDTH / 2 - w * 2)
     makeControlsWidget('GOLF_VELOCITY', VWIDTH / 2 - w)
     makeControlsWidget('FLAPPY', VWIDTH / 2 + w)
     makeControlsWidget('BALL', VWIDTH / 2 + w * 2)
     makeControlsWidget('ROLL', VWIDTH / 2);
+
+    const resetBtnRect = PositionedRect.fromBounds(0, CONTROL_SIZE, CONTROL_SIZE, 0);
+    makeEntity({
+        label: 'controls_widget',
+        initialPos: resetBtnRect.center,
+    },
+        {
+            type: 'RENDERING',
+            payload: {
+                type: 'BOXED_TEXT',
+                boxW: CONTROL_SIZE,
+                boxH: CONTROL_SIZE,
+                text: 'X',
+                fontSize: CONTROL_SIZE,
+            }
+        },
+        {
+            type: 'HITTEST',
+            payload: {
+                w:CONTROL_SIZE, h:CONTROL_SIZE,
+                callback: () => bus.dispatch(new Lose()),
+            }
+        });
 }

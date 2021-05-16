@@ -1,12 +1,11 @@
 import { bus } from "../bus/bus.js";
-import { ClearPayload } from "../events/payload_events.js";
+import { ClearPayloadEvent } from "../events/payload_events.js";
 import { CacheMap } from "../util/cache_map.js";
 import { rectContains } from "../util/intersect.js";
 import { genericPayloadTable } from "./generic_payload_table.js";
 import { getCenterPosition } from "./getters.js";
 export class SensorSystem {
     constructor() { }
-    reset() { }
     onEvent(ev) {
         if (ev.type == 'TICK') {
             const sensorPayloads = genericPayloadTable.getPayloads('SENSOR');
@@ -17,7 +16,7 @@ export class SensorSystem {
                 const targetId = sensorTypedPayload.payload.target;
                 const targetPos = cachedPos.get(targetId, () => getCenterPosition(targetId));
                 if (rectContains(sensorPos, sensorRect.w, sensorRect.h, targetPos)) {
-                    bus.dispatch(new ClearPayload(id, 'SENSOR'));
+                    bus.dispatch(new ClearPayloadEvent(id, 'SENSOR'));
                     sensorTypedPayload.payload.callback(targetId);
                 }
             }

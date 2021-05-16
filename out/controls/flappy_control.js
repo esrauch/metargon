@@ -1,4 +1,4 @@
-import { ApplyForce } from "../events/physics.js";
+import { ApplyForce } from "../events/physics_events.js";
 import { bus } from "../bus/bus.js";
 import { Vec } from "../coords/coords.js";
 import { PLAYER } from "../payloads/entity_id.js";

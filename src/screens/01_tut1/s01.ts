@@ -1,9 +1,11 @@
+import { bus } from "../../bus/bus.js";
 import { Pos, VHEIGHT, VWIDTH } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
+import { Lose, Win } from "../../events/win_loss_events.js";
 import { COLOR } from "../../gfx/gfx.js";
-import { CONTROL_SIZE, initControlsWidget, initPlayerEntity, initSensor, initWorldBounds } from "../init_helpers.js";
-import { ActiveScreen, crossFadeScreen, FadeSpeed } from "../screen.js";
+import { initControlsWidget, initPlayerEntity, initSensor, initWorldBounds } from "../init_helpers.js";
+import { ActiveScreen } from "../screen.js";
 
 
 export class S01 implements ActiveScreen {
@@ -11,27 +13,6 @@ export class S01 implements ActiveScreen {
         initPlayerEntity(new Pos(VWIDTH / 2, 100));
         initWorldBounds();
         initControlsWidget();
-        makeEntity({
-            label: 'controls_widget',
-            initialPos: new Pos(0, 100)
-        },
-            {
-                type: 'RENDERING',
-                payload: {
-                    type: 'BOXED_TEXT',
-                    boxW: CONTROL_SIZE,
-                    boxH: CONTROL_SIZE,
-                    text: 'X',
-                    fontSize: CONTROL_SIZE,
-                }
-            },
-            {
-                type: 'HITTEST',
-                payload: {
-                    w:CONTROL_SIZE, h:CONTROL_SIZE,
-                    callback: () => this.fail(),
-                }
-            });
         
         const helpTextBox = PositionedRect.fromBounds(
             0,
@@ -56,21 +37,21 @@ export class S01 implements ActiveScreen {
 
         initSensor(
             PositionedRect.fromBounds(VHEIGHT - 250, 250, VHEIGHT, 0),
-            () => this.succeed(),
+            () => bus.dispatch(new Win()),
             COLOR.GRASS);
         initSensor(
             PositionedRect.fromBounds(VHEIGHT - 250, VWIDTH, VHEIGHT, VWIDTH - 250),
-            () => this.fail(),
+            () => bus.dispatch(new Lose()),
             COLOR.FIRE);
     }
 
-    private fail(): void {
-        crossFadeScreen(new S01(), FadeSpeed.DEFAULT, COLOR.FIRE);
-    }
+    // private fail(): void {
+    //     crossFadeScreen(new S01(), FadeSpeed.DEFAULT, COLOR.FIRE);
+    // }
 
-    private succeed(): void {
-        crossFadeScreen(new S01(), FadeSpeed.DEFAULT, COLOR.GRASS);
-    }
+    // private succeed(): void {
+    //     crossFadeScreen(new S01(), FadeSpeed.DEFAULT, COLOR.GRASS);
+    // }
 
     deactivate(): void {}
     fullyShown(): void {}

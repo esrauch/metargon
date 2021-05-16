@@ -1,6 +1,4 @@
-import { getActiveControlName } from "../../controls/controls.js";
 import { add } from "../../coords/coords.js";
-import { COLOR } from "../../gfx/gfx.js";
 export function makeRenderingFn(value) {
     switch (value.type) {
         case 'FUNCTION':
@@ -9,8 +7,6 @@ export function makeRenderingFn(value) {
             return (gfx, id, pos) => value.obj.draw(gfx, id, pos);
         case 'COMPOUND':
             return makeCompoundRenderingFn(value.prims);
-        case 'CONTROL_BUTTON':
-            return makeControlButtonRenderingFn(value);
         default:
             return makeCompoundRenderingFn([value]);
     }
@@ -51,24 +47,5 @@ function makeCompoundRenderingFn(prims) {
                     throw Error(`unhandled prim ${p}`);
             }
         }
-    };
-}
-function dispCharacterForControl(control) {
-    switch (control) {
-        case 'BALL': return 'O';
-        case 'FLAPPY': return 'F';
-        case 'GOLF_FORCE': return 'G';
-        case 'GOLF_VELOCITY': return 'V';
-        case 'ROLL': return 'R';
-    }
-}
-function makeControlButtonRenderingFn(value) {
-    const control = value.controlName;
-    return (gfx, id, pos) => {
-        const color = control == getActiveControlName()
-            ? COLOR.WATER : COLOR.BG_MILD;
-        gfx.strokerect(pos, value.w, value.w, color);
-        const dispChar = dispCharacterForControl(control);
-        gfx.text(pos, dispChar, { size: value.w, color });
     };
 }

@@ -10,13 +10,12 @@ export class GenericPayloadTable {
         this.allIds = new Set();
         this.table = new Map();
     }
-    reset() {
-        this.allIds.clear();
-        this.table.clear();
-    }
     onEvent(ev) {
         var _a;
         switch (ev.type) {
+            case 'RESET_ALL_SYSTEMS':
+                this.reset();
+                break;
             case 'CREATE_ENTITY':
                 this.allIds.add(ev.entityId);
                 this.handleSetPayload(ev.entityId, ev.corePayload);
@@ -47,6 +46,10 @@ export class GenericPayloadTable {
         if (!isPayloadType(payload, type))
             throw Error('Wrong payload type put into table');
         return payload;
+    }
+    reset() {
+        this.allIds.clear();
+        this.table.clear();
     }
     handleSetPayload(id, typedPayload) {
         if (!this.allIds.has(id)) {

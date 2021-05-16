@@ -17,10 +17,6 @@ export class Physics {
             }
         });
     }
-    reset() {
-        M.Engine.clear(this.engine);
-        M.Composite.clear(this.engine.world, false, true);
-    }
     getBody(id) {
         return M.Composite.get(this.engine.world, id, 'body');
     }
@@ -32,6 +28,9 @@ export class Physics {
     }
     onEvent(ev) {
         switch (ev.type) {
+            case 'RESET_ALL_SYSTEMS':
+                this.reset();
+                break;
             case 'TICK':
                 this.tick();
                 break;
@@ -59,6 +58,10 @@ export class Physics {
                 this.destroyEntity(ev.entityId);
                 break;
         }
+    }
+    reset() {
+        M.Engine.clear(this.engine);
+        M.Composite.clear(this.engine.world, false, true);
     }
     tick() {
         M.Engine.update(this.engine, STEP);

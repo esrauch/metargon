@@ -1,5 +1,5 @@
 import { BusEvent, BusListener } from "../bus/bus.js";
-import { SetPayload } from "../events/payload_events.js";
+import { SetPayloadEvent } from "../events/payload_events.js";
 import { Id } from "../payloads/entity_id.js";
 import { isPayloadType, PayloadType, SomeTypedPayload, SpecificTypedPayload } from "../payloads/payload.js";
 
@@ -16,13 +16,11 @@ export class GenericPayloadTable implements BusListener {
     private constructor() {}
     static singleton = new GenericPayloadTable();
 
-    reset() {
-        this.allIds.clear();
-        this.table.clear();
-    }
-
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
+            case 'RESET_ALL_SYSTEMS':
+                this.reset();
+                break;
             case 'CREATE_ENTITY':
                 this.allIds.add(ev.entityId);
                 this.handleSetPayload(ev.entityId, ev.corePayload);
@@ -51,6 +49,11 @@ export class GenericPayloadTable implements BusListener {
         if (!payload) return undefined;
         if (!isPayloadType(payload, type)) throw Error('Wrong payload type put into table');
         return payload as any;
+    }
+
+    private reset() {
+        this.allIds.clear();
+        this.table.clear();
     }
 
     private handleSetPayload(id: Id, typedPayload: SomeTypedPayload) {

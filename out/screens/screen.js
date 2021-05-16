@@ -1,41 +1,11 @@
-import { makeFadeScreenAnimation } from "../anim/screen_fade.js";
-import { activateNullControl } from "../controls/controls.js";
-import { resetAllSystems } from "../systems/all_systems.js";
-export var FadeSpeed;
-(function (FadeSpeed) {
-    FadeSpeed[FadeSpeed["INSTANT"] = 0] = "INSTANT";
-    //SLOW = 200/60,
-    //SLOW = 0,
-    FadeSpeed[FadeSpeed["SLOW"] = 0.5] = "SLOW";
-    FadeSpeed[FadeSpeed["DEFAULT"] = 0.5] = "DEFAULT";
-})(FadeSpeed || (FadeSpeed = {}));
-let activeScreen;
-let activeAnimation;
-export function crossFadeScreen(next, fadeSpeed = FadeSpeed.DEFAULT, temporaryForegroundColor) {
-    if (activeAnimation) {
-        console.error('cannot start a new anim until last one is done');
-        return;
+import { S00 } from "./00_splash/s00.js";
+import { S01 } from "./01_tut1/s01.js";
+export function getScreenNumber(n) {
+    switch (n) {
+        case 0:
+            return new S00();
+        case 1:
+        default:
+            return new S01();
     }
-    // First time we try to crossfade force the "fade-out" to be instant to 
-    // immediately start fading in the new screen. Otherwise respect the provided
-    // FadeSpeed.
-    activeAnimation = makeFadeScreenAnimation('OUT', activeScreen ? fadeSpeed : FadeSpeed.INSTANT, temporaryForegroundColor);
-    activeAnimation.then(() => {
-        instantSwapInScreen(next);
-        activeAnimation = makeFadeScreenAnimation('IN', fadeSpeed);
-        return activeAnimation;
-    }).then(() => {
-        var _a;
-        activeAnimation = undefined;
-        (_a = activeScreen === null || activeScreen === void 0 ? void 0 : activeScreen.fullyShown) === null || _a === void 0 ? void 0 : _a.call(activeScreen);
-    });
-}
-function instantSwapInScreen(a) {
-    var _a;
-    if (activeScreen)
-        (_a = activeScreen.deactivate) === null || _a === void 0 ? void 0 : _a.call(activeScreen);
-    resetAllSystems();
-    activateNullControl();
-    activeScreen = a;
-    a.activate();
 }

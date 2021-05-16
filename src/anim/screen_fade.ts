@@ -1,5 +1,5 @@
 import { bus, BusEvent, BusListener } from "../bus/bus.js";
-import { Tick } from "../events/tick.js";
+import { Tick } from "../events/tick_event.js";
 import { COLOR } from "../gfx/gfx.js";
 import { linearInterp } from '../util/interp.js';
 

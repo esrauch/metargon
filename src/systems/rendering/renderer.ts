@@ -2,7 +2,7 @@ import { BusEvent, BusListener } from "../../bus/bus.js";
 import { Draw } from "../../events/draw.js";
 import { COLOR } from "../../gfx/gfx.js";
 import { Id } from "../../payloads/entity_id.js";
-import { SetPayload } from "../../events/payload_events.js";
+import { SetPayloadEvent } from "../../events/payload_events.js";
 import { getCenterPosition, getLabel } from "../getters.js";
 import { DrawFn, makeRenderingFn } from "./rendering_fns.js";
 import { genericPayloadTable } from "../generic_payload_table.js";
@@ -19,10 +19,11 @@ export class Renderer implements BusListener {
     static singleton = new Renderer();
     readonly renderingFns = new Map<Id, DrawFn>();
 
-    reset() { this.renderingFns.clear(); }
-
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
+            case 'RESET_ALL_SYSTEMS':
+                this.renderingFns.clear();
+                break;
             case 'SET_PAYLOAD':
                 this.maybeSetPayload(ev);
                 break;
@@ -39,7 +40,7 @@ export class Renderer implements BusListener {
         }
     }
 
-    maybeSetPayload(ev: SetPayload) {
+    maybeSetPayload(ev: SetPayloadEvent) {
         const id = ev.entityId;
         const payload = ev.typedPayload;
         if (payload.type === 'RENDERING') {

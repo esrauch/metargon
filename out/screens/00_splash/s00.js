@@ -1,7 +1,7 @@
+import { bus } from "../../bus/bus.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
-import { crossFadeScreen } from '../screen.js';
-import { getScreenNumber } from "../screens.js";
+import { Win } from "../../events/win_loss_events.js";
 export class S00 {
     constructor() { }
     activate() {
@@ -19,6 +19,6 @@ export class S00 {
         });
     }
     fullyShown() {
-        crossFadeScreen(getScreenNumber(1));
+        bus.dispatch(new Win());
     }
 }

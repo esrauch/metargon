@@ -1,6 +1,6 @@
 import { bus, BusEvent, BusListener } from "../bus/bus.js";
 import { Pos } from "../coords/coords.js";
-import { ClearPayload } from "../events/payload_events.js";
+import { ClearPayloadEvent } from "../events/payload_events.js";
 import { Id } from "../payloads/entity_id.js";
 import { CacheMap } from "../util/cache_map.js";
 import { rectContains } from "../util/intersect.js";
@@ -10,8 +10,6 @@ import { getCenterPosition } from "./getters.js";
 export class SensorSystem implements BusListener {
     private constructor() { }
     static singleton = new SensorSystem();
-
-    reset(): void {}
 
     onEvent(ev: BusEvent): void {
         if (ev.type == 'TICK') {
@@ -27,7 +25,7 @@ export class SensorSystem implements BusListener {
                     sensorRect.w,
                     sensorRect.h,
                     targetPos)) {
-                    bus.dispatch(new ClearPayload(id, 'SENSOR'));
+                    bus.dispatch(new ClearPayloadEvent(id, 'SENSOR'));
                     sensorTypedPayload.payload.callback(targetId);
                 }
             }

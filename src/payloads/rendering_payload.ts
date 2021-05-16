@@ -62,17 +62,10 @@ export interface CustomObjRenderingOption {
     readonly obj: CustomRenderable,
 }
 
-export interface ControlButtonRenderingOption {
-    readonly type: 'CONTROL_BUTTON',
-    readonly controlName: ControlName,
-    readonly w: number,
-}
-
 export type RenderingPayload = Primitive |
 CompoundRenderingOption |
 CustomFnRenderingOption |
-CustomObjRenderingOption |
-ControlButtonRenderingOption;
+CustomObjRenderingOption;
     
 
 export interface RenderingTypedPayload extends TypedPayload<RenderingPayload> {

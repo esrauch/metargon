@@ -1,6 +1,6 @@
 /// <reference types="./matter" />
 
-import { ApplyForce, RollMove, SetVelocity } from "../../events/physics.js";
+import { ApplyForce, RollMove, SetVelocity } from "../../events/physics_events.js";
 import { BusEvent, BusListener } from "../../bus/bus.js";
 import { Pos, VHEIGHT, Positions } from "../../coords/coords.js";
 import { Draw } from "../../events/draw.js";
@@ -32,11 +32,6 @@ export class Physics implements BusListener {
         });
     }
 
-    reset() {
-        M.Engine.clear(this.engine);
-        M.Composite.clear(this.engine.world, false, true);
-    }
-
     getBody(id: Id): Matter.Body | undefined {
         return M.Composite.get(this.engine.world, id, 'body') as Matter.Body | undefined;
     }
@@ -49,6 +44,9 @@ export class Physics implements BusListener {
 
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
+            case 'RESET_ALL_SYSTEMS':
+                this.reset();
+                break;
             case 'TICK':
                 this.tick();
                 break;
@@ -76,6 +74,11 @@ export class Physics implements BusListener {
                 this.destroyEntity(ev.entityId);
                 break;
         }
+    }
+
+    private reset() {
+        M.Engine.clear(this.engine);
+        M.Composite.clear(this.engine.world, false, true);
     }
 
     private tick() {

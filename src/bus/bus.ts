@@ -1,11 +1,14 @@
 // The Bus is a single global point where everything flows through.
 // At least for now, all possible event types are centrally defined here.
 
-import { ApplyForce, RollMove, SetVelocity } from "../events/physics.js";
+import { ApplyForce, RollMove, SetVelocity } from "../events/physics_events.js";
 import { CreateEntity, DestroyEntity } from "../events/core_entity_events.js";
 import { Draw } from "../events/draw.js";
-import { Tick } from "../events/tick.js";
-import { ClearPayload, SetPayload } from "../events/payload_events.js";
+import { Tick } from "../events/tick_event.js";
+import { ClearPayloadEvent, SetPayloadEvent } from "../events/payload_events.js";
+import { ActivateControl } from "../events/activate_control_events.js";
+import { Lose, Win } from "../events/win_loss_events.js";
+import { ResetAllSystems } from "../events/reset_all_systems_event.js";
 
 // Core idea is that we should be able to record + replay events for
 // deterministic behavior.
@@ -18,17 +21,18 @@ export type BusEvent =
     Draw |
     CreateEntity |
     DestroyEntity |
-    SetPayload |
-    ClearPayload;
+    SetPayloadEvent |
+    ClearPayloadEvent |
+    ActivateControl |
+    Win |
+    Lose |
+    ResetAllSystems;
 
 export interface BusListener {
     onEvent(ev: BusEvent): void;
 }
 
 export class Bus {
-    dispatchEvent(arg0: ClearPayload) {
-        throw new Error("Method not implemented.");
-    }
     // Listeners are an _ordered_ list (both ticks and draws might be heavily
     // ordered dependent).
     private readonly listeners: BusListener[] = [];
