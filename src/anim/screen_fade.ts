@@ -29,7 +29,7 @@ class ScreenFadeAnimation implements BusListener {
         readonly doneCallback: () => void,
         readonly inOut: 'IN'|'OUT',
         seconds: number = 200 / 60,
-        readonly temporaryForegroundColor ?: string) {
+        readonly temporaryForegroundColor?: string) {
         this.tickDuration = seconds * 60;
         if (inOut == 'IN') {
             this.startAlpha = 0;
@@ -41,7 +41,7 @@ class ScreenFadeAnimation implements BusListener {
         bus.addListener(this);
     }
 
-    end(ev: Tick) {
+    private end(ev: Tick) {
         if (this.temporaryForegroundColor) ev.gfx.forceForegroundColor(undefined);
         ev.gfx.setGlobalOpacity(this.endAlpha);
         bus.removeListener(this);

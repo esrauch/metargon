@@ -3,14 +3,14 @@
 import { makeFadeScreenAnimation } from "../anim/screen_fade.js";
 import { bus, BusEvent, BusListener } from "../bus/bus.js";
 import { ResetAllSystems } from "../events/reset_all_systems_event.js";
+import { ScreenFullyShown } from "../events/screen_fully_shown_event.js";
 import { Color } from "../gfx/gfx.js";
 import { ActiveScreen, getScreenNumber } from "../screens/screen.js";
 
 export enum FadeSpeed {
     INSTANT = 0,
-    //SLOW = 200/60,
-    //SLOW = 0,
-    SLOW = 0.5,
+    FAST = 0.75,
+    SLOW = 2,
 
     DEFAULT = SLOW,
 }
@@ -30,7 +30,7 @@ export class ScreenSystem implements BusListener {
                 this.crossFadeScreen((this.activeScreenNumber ?? 0) + 1, Color.GRASS);
                 break;
             case 'LOSE':
-                this.crossFadeScreen((this.activeScreenNumber ?? 0), Color.FIRE);
+                this.crossFadeScreen((this.activeScreenNumber ?? 0), Color.FIRE, FadeSpeed.FAST);
                 break;
         }
     }
@@ -65,13 +65,13 @@ export class ScreenSystem implements BusListener {
             return this.activeAnimation;
         }).then(() => {
             this.activeAnimation = undefined;
-            this.activeScreen?.fullyShown?.();
+            bus.dispatch(new ScreenFullyShown());
         })
     }
 
 
     private instantSwapInScreen(num: number, a: ActiveScreen) {
-        if (this.activeScreen) this.activeScreen.deactivate?.();
+        if (this.activeScreen) this.activeScreen.deactivate();
         bus.dispatch(new ResetAllSystems());
         this.activeScreenNumber = num;
         this.activeScreen = a;

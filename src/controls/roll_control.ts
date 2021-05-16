@@ -2,6 +2,7 @@ import { bus, BusEvent, BusListener } from "../bus/bus.js";
 import { Pos, VWIDTH } from "../coords/coords.js";
 import { RollMove } from "../events/physics_events.js";
 import { PLAYER } from "../payloads/entity_id.js";
+import { getCenterPosition } from "../systems/getters.js";
 import { Control } from "./control.js";
 
 enum Dir {
@@ -11,42 +12,49 @@ enum Dir {
 }
 
 export class RollControl extends Control implements BusListener {
-    private dir = Dir.NO;
+    private pos?: Pos;
+    private dispatchedDir?: Dir;
 
     enable() {
-        this.dir = Dir.NO;
+        this.pos = undefined;
+        this.dispatchedDir = undefined;
         bus.addListener(this);
     }
 
     disable() {
-        this.dir = Dir.NO;
+        this.pos = undefined;
+        this.dispatchedDir = undefined;
         bus.removeListener(this);
     }
 
     onEvent(ev: BusEvent): void {
-        if (ev.type === 'TICK' && this.dir != Dir.NO)
-            bus.dispatch(new RollMove(PLAYER, this.dir));
-    }
+        if (ev.type === 'TICK' && this.pos) {
+            const playerPos = getCenterPosition(PLAYER);
+            const dir = Math.sign(this.pos.x - playerPos.x);
+            if (!this.dispatchedDir) this.dispatchedDir = dir;
 
-    updateDir(pos: Pos) {
-        if (pos.x > VWIDTH * 2/3) this.dir = Dir.RIGHT;
-        else if (pos.x < VWIDTH * 1/3) this.dir = Dir.LEFT;
-        else this.dir = Dir.NO;
+            // The user has to let go and press again if they want to change direction.
+            // This experience could use some polish...
+            if (this.dispatchedDir === dir)
+                bus.dispatch(new RollMove(PLAYER, dir));
+        }
     }
 
     onDown(pos: Pos) {
-        this.updateDir(pos);
+        this.pos = pos;
     }
 
     onMove(pos: Pos) {
-        this.updateDir(pos);
+        this.pos = pos;
     }
 
     onUp(pos: Pos) {
-        this.dir = Dir.NO;
+        this.pos = undefined;
+        this.dispatchedDir = undefined;
     }
 
     onCancel() {
-        this.dir = Dir.NO;
+        this.pos = undefined;
+        this.dispatchedDir = undefined;
     }
 }

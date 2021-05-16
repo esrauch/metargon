@@ -12,15 +12,25 @@ import { controlsSystem } from "../systems/controls_system.js";
 import { getRotation } from "../systems/getters.js";
 import { assertUnreachable } from "../util/assert.js";
 export function initSensor(r, callback, opts) {
-    return makeEntity({
-        label: 'sensor',
-        initialPos: r.center,
-        rendering: {
+    const renderingPayload = (opts === null || opts === void 0 ? void 0 : opts.text) ?
+        {
+            type: 'BOXED_TEXT',
+            text: opts.text.value,
+            boxW: r.w,
+            boxH: r.h,
+            fontSize: opts.text.fontSize,
+            color: opts === null || opts === void 0 ? void 0 : opts.color,
+        } :
+        {
             type: 'RECT',
             width: r.w,
             height: r.h,
             color: opts === null || opts === void 0 ? void 0 : opts.color,
-        },
+        };
+    return makeEntity({
+        label: 'sensor',
+        initialPos: r.center,
+        rendering: renderingPayload,
     }, {
         type: 'SENSOR',
         payload: {
@@ -53,7 +63,7 @@ export function initPlayerEntity(pos) {
         }
     });
 }
-export function initWorldBounds() {
+export function initWorldBounds(showBounds = true) {
     // Build 4 walls around.
     function makeStaticBlock(label, x1, y1, x2, y2) {
         // Matter rectangle() does x/y based on _center_ for some reason
@@ -85,28 +95,31 @@ export function initWorldBounds() {
     makeStaticBlock("right", R, T - D, R + D, B + D);
     makeStaticBlock("top", L - D, T - D, R + D, T);
     makeStaticBlock("bottom", L - D, B, R + D, B + D);
-    makeWorldBoundsEntity();
+    makeWorldBoundsEntity(showBounds);
 }
-export function makeWorldBoundsEntity() {
+export function makeWorldBoundsEntity(showBounds) {
     // Because we really want the box to be "outside" of the contained world, we have to
     // offset points by the line width.
     const hlw = LINE_WIDTH;
-    const [T, R, B, L] = [-hlw, VWIDTH + hlw, VHEIGHT + hlw, -hlw];
-    /*
-    return makeEntity({
-        label: 'worldbounds',
-        initialPos: new Pos(0, 0),
-        rendering: {
-            type: 'LINELOOP',
-            pts: new Positions([
-                [L, T],
-                [R, T],
-                [R, B],
-                [L, B]
-            ])
+    const rect = PositionedRect.fromBounds(-hlw, VWIDTH + hlw, VHEIGHT + hlw, -hlw);
+    const rendering = {
+        type: 'RECT',
+        width: rect.w,
+        height: rect.h,
+    };
+    makeEntity({
+        initialPos: rect.center,
+        label: 'world',
+        rendering: showBounds ? rendering : undefined
+    }, {
+        type: 'SENSOR',
+        payload: {
+            target: PLAYER,
+            rect: new Rect(rect.w, rect.h),
+            callback: () => bus.dispatch(new Lose()),
+            triggerOnOutside: true,
         }
-    });*/
-    initSensor(PositionedRect.fromBounds(-hlw, VWIDTH + hlw, VHEIGHT + hlw, -hlw), () => bus.dispatch(new Lose()), { triggerOnOutside: true });
+    });
 }
 export const CONTROL_SIZE = 200;
 function makeBoxedTextForControl(control) {
@@ -197,6 +210,8 @@ export function initControlsWidget(controls = allControls, initialActive) {
         makeControlsWidget(controls[i], x);
     }
     bus.dispatch(new ActivateControl(initialActive));
+}
+export function initResetButton() {
     const resetBtnRect = PositionedRect.fromBounds(0, CONTROL_SIZE, CONTROL_SIZE, 0);
     makeEntity({
         label: 'controls_widget',

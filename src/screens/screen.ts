@@ -4,10 +4,7 @@ import { S99 } from "./99_credits/s99.js";
 
 export interface ActiveScreen {
     activate: () => void;
-    deactivate?: () => void;
-
-    // Called when fade in animation is done.
-    fullyShown?: () => void;
+    deactivate: () => void;
 }
 
 export function getScreenNumber(n: number): ActiveScreen {

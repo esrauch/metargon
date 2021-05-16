@@ -4,44 +4,50 @@ import { PositionedRect } from "../../coords/rect.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { Lose, Win } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
-import { Icon } from "../../payloads/rendering_payload.js";
 import { initControlsWidget, initPlayerEntity, initSensor, initWorldBounds } from "../init_helpers.js";
 import { ActiveScreen } from "../screen.js";
 
 
 export class S01 implements ActiveScreen {
     activate(): void {
-        initPlayerEntity(new Pos(VWIDTH / 2, 100));
-        initWorldBounds();
+        initPlayerEntity(new Pos(VWIDTH / 4, VHEIGHT/4));
+        initWorldBounds(/* showWorldBounds */ false);
         initControlsWidget(['ROLL'], 'ROLL');
         
         const helpTextBox = PositionedRect.fromBounds(
-            0,
+            VHEIGHT/2,
             VWIDTH,
-            VHEIGHT,
-            VWIDTH * 2/3,
+            VHEIGHT/2 + 750,
+            0,
         )
         makeEntity({
             label: 'helptext',
             initialPos: helpTextBox.center,
-        }, {
-            type: 'RENDERING',
-            payload: {
+            rendering: {
                 type: 'BOXED_TEXT',
-                text: 'HOLD HERE',
+                text: 'THE POWER TO ROLL',
                 boxW: helpTextBox.w,
                 boxH: helpTextBox.h,
                 fontSize: 75,
+            },
+            physics: {
+                hull: {
+                    type: 'RECT',
+                    width: helpTextBox.w,
+                    height: helpTextBox.h,
+                },
+                isStatic: true
             }
         });
 
         initSensor(
-            PositionedRect.fromBounds(VHEIGHT - 250, 250, VHEIGHT, 0),
+            PositionedRect.fromBounds(VHEIGHT/2 - 250, VWIDTH, VHEIGHT/2, VWIDTH - 250),
             () => bus.dispatch(new Win()),
-            {color: Color.GRASS});
-        initSensor(
-            PositionedRect.fromBounds(VHEIGHT - 250, VWIDTH, VHEIGHT, VWIDTH - 250),
-            () => bus.dispatch(new Lose()),
-            {color: Color.FIRE});
+            {
+                text: {value: 'WIN', fontSize: 50},
+                color: Color.GRASS,
+            });
     }
+
+    deactivate() {}
 }

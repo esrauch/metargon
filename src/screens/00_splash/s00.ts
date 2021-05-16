@@ -1,14 +1,16 @@
-import { bus } from "../../bus/bus.js";
+import { bus, BusEvent, BusListener } from "../../bus/bus.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { ActiveScreen } from '../screen.js';
 import { Win } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
 
-export class S00 implements ActiveScreen {
+export class S00 implements ActiveScreen, BusListener {
     constructor() { }
 
     activate() {
+        bus.addListener(this);
+
         (document as any).fonts.load('10px Monoton').then(() => {
             makeEntity({
                 label: 'splash',
@@ -23,9 +25,13 @@ export class S00 implements ActiveScreen {
             });
         });
     }
-
-    fullyShown() {
-        bus.dispatch(new Win());
+    
+    deactivate() {
+        bus.removeListener(this);
     }
 
+    onEvent(ev: BusEvent): void {
+        if (ev.type === 'SCREEN_FULLY_SHOWN') 
+            bus.dispatch(new Win());
+    }
 }

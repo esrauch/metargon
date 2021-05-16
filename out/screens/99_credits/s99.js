@@ -25,4 +25,5 @@ export class S99 {
             }
         });
     }
+    deactivate() { }
 }

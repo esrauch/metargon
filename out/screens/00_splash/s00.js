@@ -6,6 +6,7 @@ import { Color } from "../../gfx/gfx.js";
 export class S00 {
     constructor() { }
     activate() {
+        bus.addListener(this);
         document.fonts.load('10px Monoton').then(() => {
             makeEntity({
                 label: 'splash',
@@ -20,7 +21,11 @@ export class S00 {
             });
         });
     }
-    fullyShown() {
-        bus.dispatch(new Win());
+    deactivate() {
+        bus.removeListener(this);
+    }
+    onEvent(ev) {
+        if (ev.type === 'SCREEN_FULLY_SHOWN')
+            bus.dispatch(new Win());
     }
 }

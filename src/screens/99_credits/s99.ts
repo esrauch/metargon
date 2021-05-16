@@ -28,4 +28,6 @@ export class S99 implements ActiveScreen {
             }
         });
     }
+
+    deactivate() {}
 }

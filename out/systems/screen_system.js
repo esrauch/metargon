@@ -2,15 +2,15 @@
 import { makeFadeScreenAnimation } from "../anim/screen_fade.js";
 import { bus } from "../bus/bus.js";
 import { ResetAllSystems } from "../events/reset_all_systems_event.js";
+import { ScreenFullyShown } from "../events/screen_fully_shown_event.js";
 import { Color } from "../gfx/gfx.js";
 import { getScreenNumber } from "../screens/screen.js";
 export var FadeSpeed;
 (function (FadeSpeed) {
     FadeSpeed[FadeSpeed["INSTANT"] = 0] = "INSTANT";
-    //SLOW = 200/60,
-    //SLOW = 0,
-    FadeSpeed[FadeSpeed["SLOW"] = 0.5] = "SLOW";
-    FadeSpeed[FadeSpeed["DEFAULT"] = 0.5] = "DEFAULT";
+    FadeSpeed[FadeSpeed["FAST"] = 0.75] = "FAST";
+    FadeSpeed[FadeSpeed["SLOW"] = 2] = "SLOW";
+    FadeSpeed[FadeSpeed["DEFAULT"] = 2] = "DEFAULT";
 })(FadeSpeed || (FadeSpeed = {}));
 export class ScreenSystem {
     constructor() { }
@@ -21,7 +21,7 @@ export class ScreenSystem {
                 this.crossFadeScreen(((_a = this.activeScreenNumber) !== null && _a !== void 0 ? _a : 0) + 1, Color.GRASS);
                 break;
             case 'LOSE':
-                this.crossFadeScreen(((_b = this.activeScreenNumber) !== null && _b !== void 0 ? _b : 0), Color.FIRE);
+                this.crossFadeScreen(((_b = this.activeScreenNumber) !== null && _b !== void 0 ? _b : 0), Color.FIRE, FadeSpeed.FAST);
                 break;
         }
     }
@@ -43,15 +43,13 @@ export class ScreenSystem {
             this.activeAnimation = makeFadeScreenAnimation('IN', fadeSpeed);
             return this.activeAnimation;
         }).then(() => {
-            var _a, _b;
             this.activeAnimation = undefined;
-            (_b = (_a = this.activeScreen) === null || _a === void 0 ? void 0 : _a.fullyShown) === null || _b === void 0 ? void 0 : _b.call(_a);
+            bus.dispatch(new ScreenFullyShown());
         });
     }
     instantSwapInScreen(num, a) {
-        var _a, _b;
         if (this.activeScreen)
-            (_b = (_a = this.activeScreen).deactivate) === null || _b === void 0 ? void 0 : _b.call(_a);
+            this.activeScreen.deactivate();
         bus.dispatch(new ResetAllSystems());
         this.activeScreenNumber = num;
         this.activeScreen = a;
