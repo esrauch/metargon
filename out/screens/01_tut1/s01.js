@@ -9,7 +9,7 @@ export class S01 {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 2, 100));
         initWorldBounds();
-        initControlsWidget();
+        initControlsWidget(['ROLL'], 'ROLL');
         const helpTextBox = PositionedRect.fromBounds(0, VWIDTH, VHEIGHT, VWIDTH * 2 / 3);
         makeEntity({
             label: 'helptext',

@@ -4,6 +4,7 @@ import { PositionedRect } from "../../coords/rect.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { Lose, Win } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
+import { Icon } from "../../payloads/rendering_payload.js";
 import { initControlsWidget, initPlayerEntity, initSensor, initWorldBounds } from "../init_helpers.js";
 import { ActiveScreen } from "../screen.js";
 
@@ -12,7 +13,7 @@ export class S01 implements ActiveScreen {
     activate(): void {
         initPlayerEntity(new Pos(VWIDTH / 2, 100));
         initWorldBounds();
-        initControlsWidget();
+        initControlsWidget(['ROLL'], 'ROLL');
         
         const helpTextBox = PositionedRect.fromBounds(
             0,

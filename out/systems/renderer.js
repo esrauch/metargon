@@ -14,6 +14,7 @@ function makeRenderingFn(value) {
         default:
             return makeCompoundRenderingFn([value]);
     }
+    return assertUnreachable(value.type);
 }
 function makeWidgetRenderingFn(id, payload) {
     const widgetRenderer = getWidgetRenderer(payload.widgetData.type);

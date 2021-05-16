@@ -3,3 +3,6 @@ export function assert(x) {
         throw new Error();
     return x;
 }
+export function assertUnreachable(x) {
+    throw new Error('Hit "unreachable" path!');
+}

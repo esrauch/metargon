@@ -112,7 +112,7 @@ export class Physics {
                 M.Composite.add(this.engine.world, rect);
                 break;
             default:
-                throw Error('Unknown hull type!');
+                return assertUnreachable(hull.type);
         }
     }
     destroyEntity(ev) {

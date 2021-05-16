@@ -2,6 +2,7 @@ import { camera } from "../coords/camera.js";
 import { Positions, add } from "../coords/coords.js";
 import { assert } from "../util/assert.js";
 import { Color, LINE_WIDTH } from "./gfx.js";
+import { drawIcon } from "./gfx_2d_icons.js";
 const DEFAULT_FONT_FAMILY = 'Helvetica, Arial, Sans-Serif';
 const DEFAULT_FONT_SIZE = 100;
 function toFont(size = DEFAULT_FONT_SIZE, font = DEFAULT_FONT_FAMILY) {
@@ -171,5 +172,10 @@ export class Gfx2d {
             return metrics;
         }
         return cachedMetrics;
+    }
+    icon(icon, pos, w, color) {
+        this.setStrokeStyle(color);
+        this.setFillStyle(color);
+        drawIcon(this.ctx, icon, pos, w);
     }
 }

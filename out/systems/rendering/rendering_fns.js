@@ -52,6 +52,9 @@ function makeCompoundRenderingFn(prims) {
                         size: p.fontSize,
                     });
                     break;
+                case 'ICON':
+                    gfx.icon(p.icon, pos, p.w, p.color);
+                    break;
                 default:
                     throw Error(`unhandled prim ${p}`);
             }

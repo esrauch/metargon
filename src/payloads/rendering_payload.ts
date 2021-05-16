@@ -4,6 +4,10 @@ import { Gfx } from "../gfx/gfx.js";
 import { Id } from "./entity_id.js";
 import { TypedPayload } from "./payload.js";
 
+export enum Icon {
+    SPIN = 'SPIN',
+}
+
 export type Primitive =
     {
         readonly type: 'CIRCLE',
@@ -40,8 +44,13 @@ export type Primitive =
         readonly boxH: number,
         readonly fontSize: number,
         readonly color?: string,
-
-    }
+    } |
+    {
+        readonly type: 'ICON',
+        readonly icon: Icon,
+        readonly w: number,
+        readonly color?: string,
+    };
 
 export interface CompoundRenderingOption {
     readonly type: 'COMPOUND';

@@ -1,7 +1,7 @@
 import { Pos, add } from "../../coords/coords.js";
-import { Color, Gfx } from "../../gfx/gfx.js";
+import { Gfx } from "../../gfx/gfx.js";
 import { Id } from "../../payloads/entity_id.js";
-import { RenderingPayload, Primitive, ConditionalRenderingOption, } from "../../payloads/rendering_payload.js";
+import { RenderingPayload, Primitive, ConditionalRenderingOption, Icon, } from "../../payloads/rendering_payload.js";
 
 export type DrawFn = (gfx: Gfx, id: Id, pos: Pos) => void;
 
@@ -60,11 +60,13 @@ function makeCompoundRenderingFn(prims: Primitive[]): DrawFn {
                         size: p.fontSize,
                     })
                     break;
+                case 'ICON':
+                    gfx.icon(p.icon, pos, p.w, p.color);
+                    break;
                 default:
                     throw Error(`unhandled prim ${p}`);
             }
         }
     };
 }
-
 

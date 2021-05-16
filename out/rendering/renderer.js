@@ -50,7 +50,7 @@ function makeCompoundRenderingFn(prims) {
                     });
                     break;
                 default:
-                    throw Error(`unhandled prim ${p}`);
+                    return assertUnreachable(p.type);
             }
         }
     };

@@ -1,4 +1,5 @@
 import { bus } from "../bus/bus.js";
+import { allControls } from "../controls/controls.js";
 import { Pos, VWIDTH, VHEIGHT } from "../coords/coords.js";
 import { PositionedRect, Rect } from "../coords/rect.js";
 import { ActivateControl } from "../events/activate_control_events.js";
@@ -6,8 +7,10 @@ import { makeEntity } from "../events/make_entity_helper.js";
 import { Lose } from "../events/win_loss_events.js";
 import { Color, LINE_WIDTH } from "../gfx/gfx.js";
 import { PLAYER } from "../payloads/entity_id.js";
+import { Icon } from "../payloads/rendering_payload.js";
 import { controlsSystem } from "../systems/controls_system.js";
 import { getRotation } from "../systems/getters.js";
+import { assertUnreachable } from "../util/assert.js";
 export function initSensor(r, callback, opts) {
     return makeEntity({
         label: 'sensor',
@@ -105,8 +108,10 @@ export function makeWorldBoundsEntity() {
     });*/
     initSensor(PositionedRect.fromBounds(-hlw, VWIDTH + hlw, VHEIGHT + hlw, -hlw), () => bus.dispatch(new Lose()), { triggerOnOutside: true });
 }
+export const CONTROL_SIZE = 200;
 function makeBoxedTextForControl(control) {
-    let dispChar = '?';
+    let icon = undefined;
+    let dispChar = undefined;
     switch (control) {
         case 'BALL':
             dispChar = 'O';
@@ -121,40 +126,63 @@ function makeBoxedTextForControl(control) {
             dispChar = 'V';
             break;
         case 'ROLL':
-            dispChar = 'R';
+            icon = Icon.SPIN;
             break;
+        default: return assertUnreachable(control);
     }
-    return {
-        type: 'RENDERING',
-        payload: {
-            type: 'CONDITIONAL',
-            cond: () => controlsSystem.getActiveControlName() === control,
-            ifTrue: {
-                type: 'BOXED_TEXT',
-                text: dispChar,
-                boxW: CONTROL_SIZE,
-                boxH: CONTROL_SIZE,
-                fontSize: CONTROL_SIZE,
-                color: Color.FG,
-            },
-            ifFalse: {
-                type: 'BOXED_TEXT',
-                text: dispChar,
-                boxW: CONTROL_SIZE,
-                boxH: CONTROL_SIZE,
-                fontSize: CONTROL_SIZE,
-                color: Color.BG_MILD,
+    if (icon) {
+        return {
+            type: 'RENDERING',
+            payload: {
+                type: 'CONDITIONAL',
+                cond: () => controlsSystem.getActiveControlName() === control,
+                ifTrue: {
+                    type: 'ICON',
+                    icon: Icon.SPIN,
+                    w: CONTROL_SIZE,
+                    color: Color.FG,
+                },
+                ifFalse: {
+                    type: 'ICON',
+                    icon: Icon.SPIN,
+                    w: CONTROL_SIZE,
+                    color: Color.BG_MILD,
+                }
             }
-        }
-    };
+        };
+    }
+    else {
+        return {
+            type: 'RENDERING',
+            payload: {
+                type: 'CONDITIONAL',
+                cond: () => controlsSystem.getActiveControlName() === control,
+                ifTrue: {
+                    type: 'BOXED_TEXT',
+                    text: dispChar !== null && dispChar !== void 0 ? dispChar : '?',
+                    boxW: CONTROL_SIZE,
+                    boxH: CONTROL_SIZE,
+                    fontSize: CONTROL_SIZE,
+                    color: Color.FG,
+                },
+                ifFalse: {
+                    type: 'BOXED_TEXT',
+                    text: dispChar !== null && dispChar !== void 0 ? dispChar : '?',
+                    boxW: CONTROL_SIZE,
+                    boxH: CONTROL_SIZE,
+                    fontSize: CONTROL_SIZE,
+                    color: Color.BG_MILD,
+                }
+            }
+        };
+    }
 }
-export const CONTROL_SIZE = 200;
-export function initControlsWidget() {
+export function initControlsWidget(controls = allControls, initialActive) {
     const w = CONTROL_SIZE;
     const h = CONTROL_SIZE;
     function makeControlsWidget(control, x) {
         makeEntity({
-            label: 'controls_widget',
+            label: 'controls_widget_' + control,
             initialPos: new Pos(x, h / 2)
         }, makeBoxedTextForControl(control), {
             type: 'HITTEST',
@@ -164,11 +192,11 @@ export function initControlsWidget() {
             }
         });
     }
-    makeControlsWidget('GOLF_FORCE', VWIDTH / 2 - w * 2);
-    makeControlsWidget('GOLF_VELOCITY', VWIDTH / 2 - w);
-    makeControlsWidget('FLAPPY', VWIDTH / 2 + w);
-    makeControlsWidget('BALL', VWIDTH / 2 + w * 2);
-    makeControlsWidget('ROLL', VWIDTH / 2);
+    for (let i = 0; i < controls.length; ++i) {
+        const x = VWIDTH / 2 + ((i + 0.5) - controls.length / 2) * CONTROL_SIZE;
+        makeControlsWidget(controls[i], x);
+    }
+    bus.dispatch(new ActivateControl(initialActive));
     const resetBtnRect = PositionedRect.fromBounds(0, CONTROL_SIZE, CONTROL_SIZE, 0);
     makeEntity({
         label: 'controls_widget',

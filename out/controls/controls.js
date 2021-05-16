@@ -9,4 +9,7 @@ const controls = new Map([
     ['BALL', new CreateBallControl()],
     ['ROLL', new RollControl()]
 ]);
-export { controls };
+const allControls = [
+    'ROLL', 'GOLF_FORCE', 'GOLF_VELOCITY', 'FLAPPY', 'BALL',
+];
+export { controls, allControls };

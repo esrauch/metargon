@@ -1,11 +1,12 @@
 import { S00 } from "./00_splash/s00.js";
 import { S01 } from "./01_tut1/s01.js";
+import { S99 } from "./99_credits/s99.js";
 
 export interface ActiveScreen {
     activate: () => void;
     deactivate?: () => void;
 
-    // Called when any fade in animations are done.
+    // Called when fade in animation is done.
     fullyShown?: () => void;
 }
 
@@ -14,7 +15,8 @@ export function getScreenNumber(n: number): ActiveScreen {
         case 0:
             return new S00();
         case 1:
-        default:
             return new S01();
+        default:
+            return new S99();
     }
 }

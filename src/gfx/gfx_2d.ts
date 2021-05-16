@@ -1,7 +1,9 @@
 import { camera } from "../coords/camera.js";
 import { Positions, Pos, add, Vec } from "../coords/coords.js";
+import { Icon } from "../payloads/rendering_payload.js";
 import { assert } from "../util/assert.js";
 import { Color, Gfx, LINE_WIDTH } from "./gfx.js";
+import { drawIcon } from "./gfx_2d_icons.js";
 
 const DEFAULT_FONT_FAMILY = 'Helvetica, Arial, Sans-Serif';
 const DEFAULT_FONT_SIZE = 100;
@@ -207,5 +209,11 @@ export class Gfx2d implements Gfx {
             return metrics;
         }
         return cachedMetrics;
+    }
+
+    icon(icon: Icon, pos: Pos, w: number, color?: string): void {
+        this.setStrokeStyle(color);
+        this.setFillStyle(color);
+        drawIcon(this.ctx, icon, pos, w);
     }
 }

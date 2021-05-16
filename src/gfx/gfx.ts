@@ -1,4 +1,5 @@
 import { Pos, Vec, Positions } from "../coords/coords.js";
+import { Icon } from "../payloads/rendering_payload.js";
 
 export enum Color {
     DEBUG = '#F00',
@@ -44,4 +45,6 @@ export interface Gfx {
         size?: number,
         font?: string,
     }): void;
+
+    icon(icon: Icon, pos: Pos, w: number, color?: string): void;
 }

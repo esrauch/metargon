@@ -8,6 +8,7 @@ import { DestroyEntity } from "../../events/core_entity_events.js";
 import { Id } from "../../payloads/entity_id.js";
 import { getCenterPosition, getLabel } from "../getters.js";
 import { PhysicsTypedPayload } from "../../payloads/physics_payload.js";
+import { assertUnreachable } from "../../util/assert.js";
 
 // Importing a js module with ts typings is incredibly difficult for some reason.
 // Matter should be loaded as a module, but instead we just
@@ -183,7 +184,7 @@ export class Physics implements BusListener {
                 M.Composite.add(this.engine.world, rect);
                 break;
             default:
-                throw Error('Unknown hull type!')
+                return assertUnreachable(hull);
         }
     }
 
