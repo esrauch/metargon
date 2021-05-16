@@ -8,6 +8,9 @@ export interface SensorPayload {
     readonly rect: Rect;
     readonly target: Id;
     readonly callback: (hitEntity: Id) => void;
+
+    // If true, triggers if the entity is _outside_ of the box instead of when its inside the box.
+    readonly triggerOnOutside?: boolean;
 }
 
 export interface SensorTypedPayload extends TypedPayload<SensorPayload> {

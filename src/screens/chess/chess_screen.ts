@@ -1,3 +1,5 @@
+/** DEFUNCT
+
 import { bus } from "../../bus/bus.js";
 import { DestroyEntity } from "../../events/core_entity_events.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
@@ -40,3 +42,5 @@ export class ChessScreen implements ActiveScreen {
 
 
 }
+
+ */

@@ -15,7 +15,8 @@ export class SensorSystem {
                 const sensorRect = sensorTypedPayload.payload.rect;
                 const targetId = sensorTypedPayload.payload.target;
                 const targetPos = cachedPos.get(targetId, () => getCenterPosition(targetId));
-                if (rectContains(sensorPos, sensorRect.w, sensorRect.h, targetPos)) {
+                const triggerOnOutside = !!sensorTypedPayload.payload.triggerOnOutside;
+                if (rectContains(sensorPos, sensorRect.w, sensorRect.h, targetPos) !== triggerOnOutside) {
                     bus.dispatch(new ClearPayloadEvent(id, 'SENSOR'));
                     sensorTypedPayload.payload.callback(targetId);
                 }

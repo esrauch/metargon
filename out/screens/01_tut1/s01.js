@@ -24,7 +24,7 @@ export class S01 {
                 fontSize: 75,
             }
         });
-        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, 250, VHEIGHT, 0), () => bus.dispatch(new Win()), Color.GRASS);
-        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, VWIDTH, VHEIGHT, VWIDTH - 250), () => bus.dispatch(new Lose()), Color.FIRE);
+        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, 250, VHEIGHT, 0), () => bus.dispatch(new Win()), { color: Color.GRASS });
+        initSensor(PositionedRect.fromBounds(VHEIGHT - 250, VWIDTH, VHEIGHT, VWIDTH - 250), () => bus.dispatch(new Lose()), { color: Color.FIRE });
     }
 }

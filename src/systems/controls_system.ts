@@ -5,10 +5,11 @@ import { input } from "../input/input.js";
 
 
 export class ControlsSystem implements BusListener {
+    private contstructor() {}
     static singleton = new ControlsSystem();
 
-    private activeControl: Control | undefined;
-    private activeControlName: ControlName | undefined;
+    private activeControl?: Control;
+    private activeControlName?: ControlName;
 
     onEvent(ev: BusEvent) {
         switch (ev.type) {

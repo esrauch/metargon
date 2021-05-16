@@ -1,6 +1,7 @@
 import { controls } from "../controls/controls.js";
 import { input } from "../input/input.js";
 export class ControlsSystem {
+    contstructor() { }
     onEvent(ev) {
         switch (ev.type) {
             case 'ACTIVATE_CONTROL':

@@ -4,12 +4,11 @@ import { PositionedRect, Rect } from "../coords/rect.js";
 import { ActivateControl } from "../events/activate_control_events.js";
 import { makeEntity } from "../events/make_entity_helper.js";
 import { Lose } from "../events/win_loss_events.js";
-import { Color } from "../gfx/gfx.js";
+import { Color, LINE_WIDTH } from "../gfx/gfx.js";
 import { PLAYER } from "../payloads/entity_id.js";
 import { controlsSystem } from "../systems/controls_system.js";
 import { getRotation } from "../systems/getters.js";
-import { makeWorldBoundsEntity } from "../util/world_bounds_entity.js";
-export function initSensor(r, callback, color) {
+export function initSensor(r, callback, opts) {
     return makeEntity({
         label: 'sensor',
         initialPos: r.center,
@@ -17,14 +16,15 @@ export function initSensor(r, callback, color) {
             type: 'RECT',
             width: r.w,
             height: r.h,
-            color
+            color: opts === null || opts === void 0 ? void 0 : opts.color,
         },
     }, {
         type: 'SENSOR',
         payload: {
             target: PLAYER,
             rect: new Rect(r.w, r.h),
-            callback
+            callback,
+            triggerOnOutside: opts === null || opts === void 0 ? void 0 : opts.triggerOnOutside,
         }
     });
 }
@@ -83,6 +83,27 @@ export function initWorldBounds() {
     makeStaticBlock("top", L - D, T - D, R + D, T);
     makeStaticBlock("bottom", L - D, B, R + D, B + D);
     makeWorldBoundsEntity();
+}
+export function makeWorldBoundsEntity() {
+    // Because we really want the box to be "outside" of the contained world, we have to
+    // offset points by the line width.
+    const hlw = LINE_WIDTH;
+    const [T, R, B, L] = [-hlw, VWIDTH + hlw, VHEIGHT + hlw, -hlw];
+    /*
+    return makeEntity({
+        label: 'worldbounds',
+        initialPos: new Pos(0, 0),
+        rendering: {
+            type: 'LINELOOP',
+            pts: new Positions([
+                [L, T],
+                [R, T],
+                [R, B],
+                [L, B]
+            ])
+        }
+    });*/
+    initSensor(PositionedRect.fromBounds(-hlw, VWIDTH + hlw, VHEIGHT + hlw, -hlw), () => bus.dispatch(new Lose()), { triggerOnOutside: true });
 }
 function makeBoxedTextForControl(control) {
     let dispChar = '?';

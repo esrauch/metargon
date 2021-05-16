@@ -32,24 +32,15 @@ export class S01 implements ActiveScreen {
                 boxH: helpTextBox.h,
                 fontSize: 75,
             }
-        }
-        );
+        });
 
         initSensor(
             PositionedRect.fromBounds(VHEIGHT - 250, 250, VHEIGHT, 0),
             () => bus.dispatch(new Win()),
-            Color.GRASS);
+            {color: Color.GRASS});
         initSensor(
             PositionedRect.fromBounds(VHEIGHT - 250, VWIDTH, VHEIGHT, VWIDTH - 250),
             () => bus.dispatch(new Lose()),
-            Color.FIRE);
+            {color: Color.FIRE});
     }
-
-    // private fail(): void {
-    //     crossFadeScreen(new S01(), FadeSpeed.DEFAULT, COLOR.FIRE);
-    // }
-
-    // private succeed(): void {
-    //     crossFadeScreen(new S01(), FadeSpeed.DEFAULT, COLOR.GRASS);
-    // }
 }
