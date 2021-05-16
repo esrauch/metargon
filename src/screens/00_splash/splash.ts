@@ -5,7 +5,7 @@ import { ActiveScreen } from '../screen.js';
 import { Win } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
 
-export class S00 implements ActiveScreen, BusListener {
+export class SplashScreen implements ActiveScreen, BusListener {
     constructor() { }
 
     activate() {

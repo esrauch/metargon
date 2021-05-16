@@ -4,7 +4,7 @@ import { Color } from "../../gfx/gfx.js";
 import { ActiveScreen } from "../screen.js";
 
 
-export class S99 implements ActiveScreen {
+export class FinScreen implements ActiveScreen {
     activate() {
         makeEntity({
             label: 'credits1',

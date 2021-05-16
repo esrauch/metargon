@@ -2,13 +2,13 @@ import { bus } from "../../bus/bus.js";
 import { Pos, VHEIGHT, VWIDTH } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
-import { Lose, Win } from "../../events/win_loss_events.js";
+import { Win } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
 import { initControlsWidget, initPlayerEntity, initSensor, initWorldBounds } from "../init_helpers.js";
 import { ActiveScreen } from "../screen.js";
 
-
-export class S01 implements ActiveScreen {
+// A screen where you just have to move right to win.
+export class Rolling01 implements ActiveScreen {
     activate(): void {
         initPlayerEntity(new Pos(VWIDTH / 4, VHEIGHT/4));
         initWorldBounds(/* showWorldBounds */ false);
@@ -25,7 +25,7 @@ export class S01 implements ActiveScreen {
             initialPos: helpTextBox.center,
             rendering: {
                 type: 'BOXED_TEXT',
-                text: 'THE POWER TO ROLL',
+                text: 'PLEASE ROLL',
                 boxW: helpTextBox.w,
                 boxH: helpTextBox.h,
                 fontSize: 75,

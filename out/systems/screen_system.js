@@ -8,9 +8,9 @@ import { getScreenNumber } from "../screens/screen.js";
 export var FadeSpeed;
 (function (FadeSpeed) {
     FadeSpeed[FadeSpeed["INSTANT"] = 0] = "INSTANT";
-    FadeSpeed[FadeSpeed["FAST"] = 0.75] = "FAST";
-    FadeSpeed[FadeSpeed["SLOW"] = 2] = "SLOW";
-    FadeSpeed[FadeSpeed["DEFAULT"] = 2] = "DEFAULT";
+    FadeSpeed[FadeSpeed["FAST"] = 0.5] = "FAST";
+    FadeSpeed[FadeSpeed["SLOW"] = 1] = "SLOW";
+    FadeSpeed[FadeSpeed["DEFAULT"] = 1] = "DEFAULT";
 })(FadeSpeed || (FadeSpeed = {}));
 export class ScreenSystem {
     constructor() { }

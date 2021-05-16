@@ -9,8 +9,8 @@ import { ActiveScreen, getScreenNumber } from "../screens/screen.js";
 
 export enum FadeSpeed {
     INSTANT = 0,
-    FAST = 0.75,
-    SLOW = 2,
+    FAST = 0.5,
+    SLOW = 1,
 
     DEFAULT = SLOW,
 }
