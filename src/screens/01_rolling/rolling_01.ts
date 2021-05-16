@@ -15,7 +15,7 @@ export class Rolling01 implements ActiveScreen {
             VWIDTH,
             VHEIGHT/2 + 750,
             0,
-        ), 'PLEASE ROLL');
+        ), 'HOLD ON RIGHT ONE-THIRD OF THE SCREEN');
 
         initWinSensor(PositionedRect.fromBounds(VHEIGHT/2 - 250, VWIDTH, VHEIGHT/2, VWIDTH - 250));
     }

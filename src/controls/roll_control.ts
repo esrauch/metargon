@@ -29,14 +29,16 @@ export class RollControl extends Control implements BusListener {
 
     onEvent(ev: BusEvent): void {
         if (ev.type === 'TICK' && this.pos) {
-            const playerPos = getCenterPosition(PLAYER);
-            const dir = Math.sign(this.pos.x - playerPos.x);
-            if (!this.dispatchedDir) this.dispatchedDir = dir;
-
+            // const playerPos = getCenterPosition(PLAYER);
+            // const dir = Math.sign(this.pos.x - playerPos.x);
+            // if (!this.dispatchedDir) this.dispatchedDir = dir;
             // The user has to let go and press again if they want to change direction.
             // This experience could use some polish...
-            if (this.dispatchedDir === dir)
-                bus.dispatch(new RollMove(PLAYER, dir));
+            // if (this.dispatchedDir === dir)
+            //     bus.dispatch(new RollMove(PLAYER, dir));
+
+            if (this.pos.x < VWIDTH / 3) bus.dispatch(new RollMove(PLAYER, Dir.LEFT));
+            if (this.pos.x > VWIDTH * 2 / 3) bus.dispatch(new RollMove(PLAYER, Dir.RIGHT));
         }
     }
 

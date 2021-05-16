@@ -7,7 +7,6 @@ import { ActiveScreen } from "../screen.js";
 
 export class FinScreen implements ActiveScreen {
     activate() {
-        const timeAchieved = Math.round((performance.now() - (statsSystem.startTime||0)) / 100) / 10;
         makeEntity({
             label: 'credits1',
             initialPos: new Pos(VWIDTH / 2, VHEIGHT / 3),
@@ -29,6 +28,8 @@ export class FinScreen implements ActiveScreen {
                 color: Color.GRASS,
             }
         });
+
+        const timeAchieved = Math.round((performance.now() - (statsSystem.startTime||0)) / 1000);
         makeEntity({
             label: 'credits3',
             initialPos: new Pos(VWIDTH / 2, 2000),
