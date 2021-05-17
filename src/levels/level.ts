@@ -24,7 +24,7 @@ const screens: (new() => Level)[] = [
 ]
 
 export function getLevelNumber(n: number): Level {
-    // return new PlaygroundScreen();
+    return new PlaygroundScreen();
     let screenCtor = screens[n];
     return screenCtor ? new screenCtor() : new BrokenScreen();
 }

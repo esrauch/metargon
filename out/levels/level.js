@@ -6,6 +6,7 @@ import { Rolling04 } from "./01_rolling/rolling_04.js";
 import { Rolling05 } from "./01_rolling/rolling_05.js";
 import { BrokenScreen } from "./99_nonlevels/broken.js";
 import { FinScreen } from "./99_nonlevels/fin.js";
+import { PlaygroundScreen } from "./99_nonlevels/playground.js";
 const screens = [
     SplashScreen,
     Rolling01,
@@ -16,7 +17,7 @@ const screens = [
     FinScreen,
 ];
 export function getLevelNumber(n) {
-    // return new PlaygroundScreen();
+    return new PlaygroundScreen();
     let screenCtor = screens[n];
     return screenCtor ? new screenCtor() : new BrokenScreen();
 }
