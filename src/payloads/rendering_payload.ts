@@ -1,4 +1,3 @@
-import { ControlName } from "../controls/controls.js";
 import { Vec, Positions, Pos } from "../coords/coords.js";
 import { Gfx } from "../gfx/gfx.js";
 import { Id } from "./entity_id.js";

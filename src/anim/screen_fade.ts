@@ -20,6 +20,9 @@ export function makeFadeScreenAnimation(
     })
 }
 
+// TODO: Change this to be like CyclicMoveAnimation and have
+// the ticks are explicit from ScreenSystem instead of via BusListener
+// and promises (also to let us cancel this)
 class ScreenFadeAnimation implements BusListener {
     private tickCount = 0;
     private readonly tickDuration: number;

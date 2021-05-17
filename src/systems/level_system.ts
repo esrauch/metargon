@@ -5,7 +5,7 @@ import { bus, BusEvent, BusListener } from "../bus/bus.js";
 import { ResetAllSystems } from "../events/reset_all_systems_event.js";
 import { ScreenFullyShown } from "../events/screen_fully_shown_event.js";
 import { Color } from "../gfx/gfx.js";
-import { ActiveScreen, getScreenNumber } from "../screens/screen.js";
+import { Level, getLevelNumber } from "../levels/level.js";
 
 export enum FadeSpeed {
     INSTANT = 0,
@@ -15,36 +15,36 @@ export enum FadeSpeed {
     DEFAULT = SLOW,
 }
 
-export class ScreenSystem implements BusListener {
+export class LevelSystem implements BusListener {
     private constructor() { }
-    static singleton = new ScreenSystem();
+    static singleton = new LevelSystem();
 
-    private activeScreenNumber?: number;
-    private activeScreen?: ActiveScreen;
+    private activeLevelNumber?: number;
+    private activeLevel?: Level;
 
     private activeAnimation?: Promise<void>;
 
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
             case 'WIN':
-                this.crossFadeScreen((this.activeScreenNumber ?? 0) + 1, Color.GRASS);
+                this.crossFadeLevel((this.activeLevelNumber ?? 0) + 1, Color.GRASS);
                 break;
             case 'LOSE':
-                this.crossFadeScreen((this.activeScreenNumber ?? 0), Color.FIRE, FadeSpeed.FAST);
+                this.crossFadeLevel((this.activeLevelNumber ?? 0), Color.FIRE, FadeSpeed.FAST);
                 break;
         }
     }
 
-    startFirstScreen() {
-        this.crossFadeScreen(0);
+    startFirstLevel() {
+        this.crossFadeLevel(0);
     }
 
-    private crossFadeScreen(
-        nextScreenNumber: number,
+    private crossFadeLevel(
+        nextLevelNumber: number,
         temporaryForegroundColor?: Color,
         fadeSpeed: FadeSpeed = FadeSpeed.DEFAULT) {
 
-        const next = getScreenNumber(nextScreenNumber);
+        const next = getLevelNumber(nextLevelNumber);
 
         if (this.activeAnimation) {
             console.error('cannot start a new anim until last one is done');
@@ -56,11 +56,11 @@ export class ScreenSystem implements BusListener {
         // FadeSpeed.
         this.activeAnimation = makeFadeScreenAnimation(
             'OUT',
-            this.activeScreen ? fadeSpeed : FadeSpeed.INSTANT,
+            this.activeLevel ? fadeSpeed : FadeSpeed.INSTANT,
             temporaryForegroundColor);
 
         this.activeAnimation.then(() => {
-            this.instantSwapInScreen(nextScreenNumber, next);
+            this.instantSwapInLevel(nextLevelNumber, next);
             this.activeAnimation = makeFadeScreenAnimation('IN', fadeSpeed);
             return this.activeAnimation;
         }).then(() => {
@@ -70,14 +70,14 @@ export class ScreenSystem implements BusListener {
     }
 
 
-    private instantSwapInScreen(num: number, a: ActiveScreen) {
-        if (this.activeScreen) this.activeScreen.deactivate();
+    private instantSwapInLevel(num: number, a: Level) {
+        if (this.activeLevel) this.activeLevel.deactivate();
         bus.dispatch(new ResetAllSystems());
-        this.activeScreenNumber = num;
-        this.activeScreen = a;
+        this.activeLevelNumber = num;
+        this.activeLevel = a;
         a.activate();
     }
 }
 
-const screenSystem = ScreenSystem.singleton;
-export { screenSystem };
+const levelSystem = LevelSystem.singleton;
+export { levelSystem };

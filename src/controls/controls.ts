@@ -5,18 +5,17 @@ import { GolfControl } from "./golf_control.js";
 import { RollControl } from "./roll_control.js";
 
 export type ControlName =
-    'ROLL' | 'GOLF_FORCE' | 'GOLF_VELOCITY' | 'FLAPPY' | 'BALL';
+    'ROLL' | 'GOLF' | 'FLAPPY' | 'BALL';
 
 const controls = new Map<ControlName, Control>([
-    ['GOLF_FORCE', new GolfControl('FORCE')],
-    ['GOLF_VELOCITY', new GolfControl('VELOCITY')],
+    ['GOLF', new GolfControl()],
     ['FLAPPY', new FlappyControl()],
     ['BALL', new CreateBallControl()],
     ['ROLL', new RollControl()]
 ]);
 
 const allControls: ControlName[] = [
-    'ROLL', 'GOLF_FORCE', 'GOLF_VELOCITY', 'FLAPPY', 'BALL',
+    'ROLL', 'GOLF', 'FLAPPY', 'BALL',
 ];
 
 export { controls, allControls };

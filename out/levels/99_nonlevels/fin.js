@@ -2,10 +2,7 @@ import { Pos, VHEIGHT, VWIDTH } from "../../coords/coords.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { Color } from "../../gfx/gfx.js";
 import { statsSystem } from "../../systems/stats_system.js";
-import { ActiveScreen } from "../screen.js";
-
-
-export class FinScreen implements ActiveScreen {
+export class FinScreen {
     activate() {
         makeEntity({
             label: 'credits1',
@@ -28,8 +25,7 @@ export class FinScreen implements ActiveScreen {
                 color: Color.GRASS,
             }
         });
-
-        const timeAchieved = Math.round((performance.now() - (statsSystem.startTime||0)) / 1000);
+        const timeAchieved = Math.round((performance.now() - (statsSystem.startTime || 0)) / 1000);
         makeEntity({
             label: 'credits3',
             initialPos: new Pos(VWIDTH / 2, 2000),
@@ -51,6 +47,5 @@ export class FinScreen implements ActiveScreen {
             }
         });
     }
-
-    deactivate() {}
+    deactivate() { }
 }

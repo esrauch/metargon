@@ -1,4 +1,4 @@
-import { Pos, SPos } from "../coords/coords.js";
+import { Pos } from "../coords/coords.js";
 import { makeEntity } from "../events/make_entity_helper.js";
 import { Control } from "./control.js";
 

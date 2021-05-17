@@ -1,4 +1,3 @@
-import { Pos } from "../coords/coords.js";
 import { CoreTypedPayload } from "../payloads/core_payload.js";
 import { Id, makeEntityId } from "../payloads/entity_id.js";
 

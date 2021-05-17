@@ -189,8 +189,7 @@ function makeBoxedTextForControl(control: ControlName): RenderingTypedPayload {
     switch (control) {
         case 'BALL': dispChar = 'O'; break;
         case 'FLAPPY': dispChar = 'F'; break;
-        case 'GOLF_FORCE': dispChar = 'G'; break;
-        case 'GOLF_VELOCITY': dispChar = 'V'; break;
+        case 'GOLF': dispChar = 'G'; break;
         case 'ROLL': icon = Icon.SPIN; break;
         default: return assertUnreachable(control);
     }

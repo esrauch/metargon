@@ -10,16 +10,11 @@ import { ClearPayloadEvent, SetPayloadEvent } from "../events/payload_events.js"
 export class GolfControl extends VectorControl {
     private displayEntity?: Id;
 
-    constructor(private type: 'FORCE' | 'VELOCITY' = 'VELOCITY') {
-        super();
-    }
-
     enable(): void {
         // When we enable, create a new element that will represent our line.
         // We'll destroy it when we disable.
         if (!this.displayEntity) {
-            const createEvt = new CreateEntity(
-                "golf_indicator_" + this.type);
+            const createEvt = new CreateEntity('golf_indicator');
             this.displayEntity = createEvt.entityId;
             bus.dispatch(createEvt);
             bus.dispatch(new SetPayloadEvent(this.displayEntity, {
@@ -57,10 +52,7 @@ export class GolfControl extends VectorControl {
     }
 
     onVectorRelease(_pos: Pos, vec: Vec): void {
-        if (this.type == 'FORCE')
-            bus.dispatch(new ApplyForce(PLAYER, vec));
-        else
-            bus.dispatch(new SetVelocity(PLAYER, vec));
+        bus.dispatch(new SetVelocity(PLAYER, vec));
         this.hideDisplayEntity();
     }
 

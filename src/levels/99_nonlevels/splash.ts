@@ -1,11 +1,11 @@
 import { bus, BusEvent, BusListener } from "../../bus/bus.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
-import { ActiveScreen } from '../screen.js';
+import { Level } from '../level.js';
 import { Win } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
 
-export class SplashScreen implements ActiveScreen, BusListener {
+export class SplashScreen implements Level, BusListener {
     constructor() { }
 
     activate() {

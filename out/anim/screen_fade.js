@@ -5,6 +5,9 @@ export function makeFadeScreenAnimation(dir, seconds, temporaryForegroundColor) 
         new ScreenFadeAnimation(resolve, dir, seconds, temporaryForegroundColor);
     });
 }
+// TODO: Change this to be like CyclicMoveAnimation and have
+// the ticks are explicit from ScreenSystem instead of via BusListener
+// and promises (also to let us cancel this)
 class ScreenFadeAnimation {
     constructor(doneCallback, inOut, seconds = 200 / 60, temporaryForegroundColor) {
         this.doneCallback = doneCallback;

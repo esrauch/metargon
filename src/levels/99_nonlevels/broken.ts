@@ -1,10 +1,10 @@
 import { Pos, VHEIGHT, VWIDTH } from "../../coords/coords.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { Color } from "../../gfx/gfx.js";
-import { ActiveScreen } from "../screen.js";
+import { Level } from "../level.js";
 
 
-export class BrokenScreen implements ActiveScreen {
+export class BrokenScreen implements Level {
     activate() {
         makeEntity({
             label: 'logo',

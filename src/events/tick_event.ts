@@ -1,4 +1,3 @@
-import { Gfx } from "../gfx/gfx.js";
 
 
 // Tick exposes solely the global opacity part of Gfx.
