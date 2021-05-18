@@ -7,6 +7,8 @@ import { CreateEntity, DestroyEntity } from "../events/core_entity_events.js";
 import { SetPayloadEvent, ClearPayloadEvent } from "../events/payload_events.js";
 import { PLAYER } from "../payloads/entity_id.js";
 import { Control } from "./control.js";
+const minVecLength = 50;
+const maxVecLength = 500;
 export class VectorControl extends Control {
     constructor() {
         super();
@@ -19,13 +21,17 @@ export class VectorControl extends Control {
     onMove(pos) {
         if (!this.startPosition)
             return;
-        this.vector = delta(this.startPosition, pos);
+        this.vector = delta(this.startPosition, pos).normalizeIfLongerThan(maxVecLength);
         this.onVectorUpdate(this.startPosition, this.vector);
     }
     onUp(pos) {
-        if (this.startPosition && this.vector) {
+        if (!this.startPosition)
+            return;
+        this.vector = delta(this.startPosition, pos).normalizeIfLongerThan(maxVecLength);
+        if (this.vector.length() < minVecLength)
+            this.onVectorCancel();
+        else
             this.onVectorRelease(this.startPosition, this.vector);
-        }
         this.reset();
     }
     onCancel() {
@@ -70,7 +76,7 @@ export class VisibleVectorContol extends VectorControl {
                 type: 'LINE',
                 vec
             }
-        }));
+        }), /*spammy*/ true);
     }
     hideDisplayEntity() {
         if (this.displayEntity)

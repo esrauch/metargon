@@ -24,7 +24,7 @@ export class SensorSystem implements BusListener {
             case 'SCREEN_FULLY_SHOWN':
                 this.sensorsTriggering = true;
                 break;
-            case 'RESET_ALL_SYSTEMS':
+            case 'LEVEL_CHANGED':
                 this.sensorsTriggering = false;
                 break;
         }

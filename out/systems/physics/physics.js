@@ -29,7 +29,7 @@ export class Physics {
     }
     onEvent(ev) {
         switch (ev.type) {
-            case 'RESET_ALL_SYSTEMS':
+            case 'LEVEL_CHANGED':
                 this.reset();
                 break;
             case 'TICK':
@@ -50,6 +50,8 @@ export class Physics {
             case 'SET_PAYLOAD':
                 if (ev.typedPayload.type == 'PHYSICS')
                     this.setPhysicsPayload(ev.entityId, ev.typedPayload);
+                if (ev.typedPayload.type == 'POSITION')
+                    this.maybeSetPosition(ev.entityId, ev.typedPayload);
                 break;
             case 'CLEAR_PAYLOAD':
                 if (ev.payloadType == 'PHYSICS')
@@ -151,6 +153,12 @@ export class Physics {
             default:
                 return assertUnreachable(hull);
         }
+    }
+    maybeSetPosition(id, typedPayload) {
+        const body = this.getBody(id);
+        if (!body)
+            return;
+        M.Body.setPosition(body, M.Vector.create(typedPayload.payload.x, typedPayload.payload.y));
     }
     destroyEntity(id) {
         const body = this.getBody(id);

@@ -18,7 +18,7 @@ export class GenericPayloadTable implements BusListener {
 
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
-            case 'RESET_ALL_SYSTEMS':
+            case 'LEVEL_CHANGED':
                 this.reset();
                 break;
             case 'CREATE_ENTITY':

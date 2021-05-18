@@ -1,5 +1,5 @@
-export class ResetAllSystems {
+export class LevelChanged {
     constructor() {
-        this.type = 'RESET_ALL_SYSTEMS';
+        this.type = 'LEVEL_CHANGED';
     }
 }

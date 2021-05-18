@@ -1,4 +1,4 @@
-import { SPos, SVec, VHEIGHT, Pos, Vec, VWIDTH } from "./coords.js";
+import { SPos, VHEIGHT, Pos, VWIDTH } from "./coords.js";
 export class Camera {
     // The mapping from VirtualPos to Screen
     constructor(mult, vleftoff, vtopoff) {
@@ -36,17 +36,17 @@ export class Camera {
     toScreenPos(vpos) {
         return new SPos((vpos.x + this.vleftoff) * this.mult, (vpos.y + this.vtopoff) * this.mult);
     }
-    toScreenVec(vpos) {
-        return new SVec(vpos.dx * this.mult, vpos.dy * this.mult);
-    }
+    // toScreenVec(vpos: Vec): SVec {
+    //     return new SVec(
+    //         vpos.dx * this.mult,
+    //         vpos.dy * this.mult
+    //     );
+    // }
     toVirtualPos(spos) {
         return new Pos((spos.x / this.mult) - this.vleftoff, (spos.y / this.mult) - this.vtopoff);
     }
     toVirtualPosXy(sx, sy) {
         return new Pos((sx / this.mult) - this.vleftoff, (sy / this.mult) - this.vtopoff);
-    }
-    toVirtualVec(spos) {
-        return new Vec((spos.dx / this.mult), (spos.dy / this.mult));
     }
 }
 // We have a global singleton Camera.

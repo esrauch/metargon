@@ -13,7 +13,7 @@ export class GenericPayloadTable {
     onEvent(ev) {
         var _a;
         switch (ev.type) {
-            case 'RESET_ALL_SYSTEMS':
+            case 'LEVEL_CHANGED':
                 this.reset();
                 break;
             case 'CREATE_ENTITY':

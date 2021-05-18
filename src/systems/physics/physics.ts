@@ -4,11 +4,11 @@ import { ApplyForce, RollMove, SetVelocity } from "../../events/physics_events.j
 import { BusEvent, BusListener } from "../../bus/bus.js";
 import { Pos, VHEIGHT, Positions } from "../../coords/coords.js";
 import { Draw } from "../../events/draw.js";
-import { DestroyEntity } from "../../events/core_entity_events.js";
 import { Id } from "../../payloads/entity_id.js";
 import { getCenterPosition, getLabel } from "../getters.js";
 import { PhysicsTypedPayload } from "../../payloads/physics_payload.js";
 import { assertUnreachable } from "../../util/assert.js";
+import { PositionTypedPayload } from "../../payloads/fixed_position_payload.js";
 
 // Importing a js module with ts typings is incredibly difficult for some reason.
 // Matter should be loaded as a module, but instead we just
@@ -45,7 +45,7 @@ export class Physics implements BusListener {
 
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
-            case 'RESET_ALL_SYSTEMS':
+            case 'LEVEL_CHANGED':
                 this.reset();
                 break;
             case 'TICK':
@@ -66,6 +66,8 @@ export class Physics implements BusListener {
             case 'SET_PAYLOAD':
                 if (ev.typedPayload.type == 'PHYSICS')
                     this.setPhysicsPayload(ev.entityId, ev.typedPayload);
+                if (ev.typedPayload.type == 'POSITION')
+                    this.maybeSetPosition(ev.entityId, ev.typedPayload);
                 break;
             case 'CLEAR_PAYLOAD':
                 if (ev.payloadType == 'PHYSICS')
@@ -186,6 +188,13 @@ export class Physics implements BusListener {
             default:
                 return assertUnreachable(hull);
         }
+    }
+
+    maybeSetPosition(id: Id, typedPayload: PositionTypedPayload) {
+        const body = this.getBody(id);
+        if (!body) return;
+        M.Body.setPosition(body,
+            M.Vector.create(typedPayload.payload.x, typedPayload.payload.y));
     }
 
     destroyEntity(id: Id) {

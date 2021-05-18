@@ -1,36 +1,30 @@
 export const VWIDTH = 2000;
 export const VHEIGHT = 3000;
 export function delta(a, b) {
-    if (a.type !== b.type)
-        throw new Error('subtract requires same-type positions');
-    return {
-        dx: a.x - b.x,
-        dy: a.y - b.y,
-        type: a.type
-    };
+    return new Vec(a.x - b.x, a.y - b.y);
 }
 export function add(a, b) {
-    if (a.type !== b.type)
-        throw new Error('add requires same-type positions and vec');
-    return {
-        x: a.x + b.dx,
-        y: a.y + b.dy,
-        type: a.type
-    };
-}
-// Tagged enum classes.
-export class SVec {
-    constructor(dx, dy) {
-        this.dx = dx;
-        this.dy = dy;
-        this.type = 'SCREEN';
-    }
+    return new Pos(a.x + b.dx, a.y + b.dy);
 }
 export class Vec {
     constructor(dx, dy) {
         this.dx = dx;
         this.dy = dy;
-        this.type = 'VIRTUAL';
+    }
+    length() {
+        return Math.sqrt(this.dx * this.dx + this.dy * this.dy);
+    }
+    normalize(newLen) {
+        const len = this.length();
+        if (len === 0)
+            return this;
+        const mult = newLen / len;
+        return new Vec(this.dx * mult, this.dy * mult);
+    }
+    normalizeIfLongerThan(newLen) {
+        if (this.length() > newLen)
+            return this.normalize(newLen);
+        return this;
     }
 }
 export class SPos {

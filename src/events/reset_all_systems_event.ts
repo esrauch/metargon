@@ -1,4 +1,4 @@
 
-export class ResetAllSystems {
-    readonly type = 'RESET_ALL_SYSTEMS';
+export class LevelChanged {
+    readonly type = 'LEVEL_CHANGED';
 }

@@ -1,7 +1,7 @@
 // Manages the currently active Screen.
 import { makeFadeScreenAnimation } from "../anim/screen_fade.js";
 import { bus } from "../bus/bus.js";
-import { ResetAllSystems } from "../events/reset_all_systems_event.js";
+import { LevelChanged } from "../events/reset_all_systems_event.js";
 import { ScreenFullyShown } from "../events/screen_fully_shown_event.js";
 import { Color } from "../gfx/gfx.js";
 import { getLevelNumber } from "../levels/level.js";
@@ -50,7 +50,7 @@ export class LevelSystem {
     instantSwapInLevel(num, a) {
         if (this.activeLevel)
             this.activeLevel.deactivate();
-        bus.dispatch(new ResetAllSystems());
+        bus.dispatch(new LevelChanged());
         this.activeLevelNumber = num;
         this.activeLevel = a;
         a.activate();

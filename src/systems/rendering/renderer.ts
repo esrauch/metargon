@@ -21,7 +21,7 @@ export class Renderer implements BusListener {
 
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
-            case 'RESET_ALL_SYSTEMS':
+            case 'LEVEL_CHANGED':
                 this.renderingFns.clear();
                 break;
             case 'SET_PAYLOAD':

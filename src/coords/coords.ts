@@ -28,42 +28,36 @@ export interface PositionsBase {
     readonly type: CoordType;
 }
 
-export interface VecBase {
-    readonly dx: number;
-    readonly dy: number;
-    readonly type: CoordType;
+export function delta(a: Pos, b: Pos): Vec {
+    return new Vec(
+        a.x - b.x,
+        a.y - b.y);
 }
 
-export function delta(a: SPos, b: SPos): SVec;
-export function delta(a: Pos, b: Pos): Vec;
-export function delta<T extends PosBase>(a: T, b: T): VecBase {
-    if (a.type !== b.type) throw new Error('subtract requires same-type positions');
-    return {
-        dx: a.x - b.x,
-        dy: a.y - b.y,
-        type: a.type
-    };
+export function add(a: Pos, b: Vec): Pos {
+    return new Pos(
+        a.x + b.dx,
+        a.y + b.dy);
 }
 
-export function add(a: SPos, b: SVec): SPos;
-export function add(a: Pos, b: Vec): Pos;
-export function add(a: PosBase, b: VecBase): PosBase {
-    if (a.type !== b.type) throw new Error('add requires same-type positions and vec');
-    return {
-        x: a.x + b.dx,
-        y: a.y + b.dy,
-        type: a.type
-    };
-}
-
-// Tagged enum classes.
-export class SVec implements VecBase {
-    readonly type = 'SCREEN';
+export class Vec {
     constructor(readonly dx: number, readonly dy: number) { }
-}
-export class Vec implements VecBase {
-    readonly type = 'VIRTUAL';
-    constructor(readonly dx: number, readonly dy: number) { }
+
+    length() {
+        return Math.sqrt(this.dx*this.dx + this.dy*this.dy);
+    }
+
+    normalize(newLen: number): Vec {
+        const len = this.length();
+        if (len === 0) return this;
+        const mult = newLen / len;
+        return new Vec(this.dx * mult, this.dy * mult)
+    }
+
+    normalizeIfLongerThan(newLen: number): Vec {
+        if (this.length() > newLen) return this.normalize(newLen);
+        return this;
+    }
 }
 
 export class SPos implements PosBase {

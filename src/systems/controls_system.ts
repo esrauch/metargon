@@ -5,7 +5,7 @@ import { input } from "../input/input.js";
 
 
 export class ControlsSystem implements BusListener {
-    private contstructor() {}
+    private constructor() {}
     static singleton = new ControlsSystem();
 
     private activeControl?: Control;
@@ -17,7 +17,7 @@ export class ControlsSystem implements BusListener {
                 if (ev.toActivate) this.activateControlNamed(ev.toActivate)
                 else this.activateNullControl();
                 break;
-            case 'RESET_ALL_SYSTEMS':
+            case 'LEVEL_CHANGED':
                 this.activateNullControl();
                 break;
         }

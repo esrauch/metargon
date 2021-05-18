@@ -1,4 +1,4 @@
-import { SPos, SVec, VHEIGHT, Pos, Vec, VWIDTH } from "./coords.js";
+import { SPos, VHEIGHT, Pos, Vec, VWIDTH } from "./coords.js";
 
 export class Camera {
     // We have a global singleton Camera.
@@ -48,12 +48,12 @@ export class Camera {
         );
     }
 
-    toScreenVec(vpos: Vec): SVec {
-        return new SVec(
-            vpos.dx * this.mult,
-            vpos.dy * this.mult
-        );
-    }
+    // toScreenVec(vpos: Vec): SVec {
+    //     return new SVec(
+    //         vpos.dx * this.mult,
+    //         vpos.dy * this.mult
+    //     );
+    // }
 
     toVirtualPos(spos: SPos): Pos {
         return new Pos(
@@ -68,14 +68,6 @@ export class Camera {
             (sy / this.mult) - this.vtopoff
         );
     }
-
-    toVirtualVec(spos: SVec): Vec {
-        return new Vec(
-            (spos.dx / this.mult),
-            (spos.dy / this.mult)
-        );
-    }
-
 }
 
 const camera = Camera.singleton;

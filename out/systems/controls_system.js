@@ -1,7 +1,7 @@
 import { controls } from "../controls/controls.js";
 import { input } from "../input/input.js";
 export class ControlsSystem {
-    contstructor() { }
+    constructor() { }
     onEvent(ev) {
         switch (ev.type) {
             case 'ACTIVATE_CONTROL':
@@ -10,7 +10,7 @@ export class ControlsSystem {
                 else
                     this.activateNullControl();
                 break;
-            case 'RESET_ALL_SYSTEMS':
+            case 'LEVEL_CHANGED':
                 this.activateNullControl();
                 break;
         }

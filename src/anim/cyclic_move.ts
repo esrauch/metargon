@@ -23,6 +23,11 @@ export class CyclicMoveAnimation {
         return new CyclicMoveAnimation(entityId, currentPos, add(currentPos, offset), durationS);
     }
 
+    static to(entityId: Id, to: Pos, durationS: number): CyclicMoveAnimation {
+        const currentPos = getCenterPosition(entityId);
+        return new CyclicMoveAnimation(entityId, currentPos, to, durationS);
+    }
+
     tick() {
         bus.dispatch(new SetPayloadEvent(this.entityId, {
             type: 'POSITION',

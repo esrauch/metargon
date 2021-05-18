@@ -2,7 +2,7 @@
 
 import { makeFadeScreenAnimation } from "../anim/screen_fade.js";
 import { bus, BusEvent, BusListener } from "../bus/bus.js";
-import { ResetAllSystems } from "../events/reset_all_systems_event.js";
+import { LevelChanged } from "../events/reset_all_systems_event.js";
 import { ScreenFullyShown } from "../events/screen_fully_shown_event.js";
 import { Color } from "../gfx/gfx.js";
 import { Level, getLevelNumber } from "../levels/level.js";
@@ -72,7 +72,7 @@ export class LevelSystem implements BusListener {
 
     private instantSwapInLevel(num: number, a: Level) {
         if (this.activeLevel) this.activeLevel.deactivate();
-        bus.dispatch(new ResetAllSystems());
+        bus.dispatch(new LevelChanged());
         this.activeLevelNumber = num;
         this.activeLevel = a;
         a.activate();

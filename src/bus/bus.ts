@@ -8,8 +8,9 @@ import { Tick } from "../events/tick_event.js";
 import { ClearPayloadEvent, SetPayloadEvent } from "../events/payload_events.js";
 import { ActivateControl } from "../events/activate_control_events.js";
 import { Lose, Win } from "../events/win_loss_events.js";
-import { ResetAllSystems } from "../events/reset_all_systems_event.js";
+import { LevelChanged } from "../events/reset_all_systems_event.js";
 import { ScreenFullyShown } from "../events/screen_fully_shown_event.js";
+import { ShootArrow } from "../events/shoot_arrow.js";
 
 // Core idea is that we should be able to record + replay events for
 // deterministic behavior.
@@ -27,8 +28,9 @@ export type BusEvent =
     ActivateControl |
     Win |
     Lose |
-    ResetAllSystems |
-    ScreenFullyShown;
+    LevelChanged |
+    ScreenFullyShown |
+    ShootArrow;
 
 export interface BusListener {
     onEvent(ev: BusEvent): void;

@@ -7,10 +7,12 @@ import { bus } from "../bus/bus.js";
 import { delta, Pos, Vec } from "../coords/coords.js";
 import { CreateEntity, DestroyEntity } from "../events/core_entity_events.js";
 import { SetPayloadEvent, ClearPayloadEvent } from "../events/payload_events.js";
-import { SetVelocity } from "../events/physics_events.js";
 import { Id, PLAYER } from "../payloads/entity_id.js";
 import { Control } from "./control.js";
 
+
+const minVecLength = 50;
+const maxVecLength = 500;
 
 export abstract class VectorControl extends Control {
     startPosition?: Pos;
@@ -28,14 +30,18 @@ export abstract class VectorControl extends Control {
 
     onMove(pos: Pos): void {
         if (!this.startPosition) return;
-        this.vector = delta(this.startPosition, pos);
+        this.vector = delta(this.startPosition, pos).normalizeIfLongerThan(maxVecLength);
         this.onVectorUpdate(this.startPosition, this.vector);
     }
 
     onUp(pos: Pos): void {
-        if (this.startPosition && this.vector) {
+        if (!this.startPosition) return;
+        this.vector = delta(this.startPosition, pos).normalizeIfLongerThan(maxVecLength);
+        
+        if (this.vector.length() < minVecLength)
+            this.onVectorCancel();
+        else
             this.onVectorRelease(this.startPosition, this.vector);
-        }
         this.reset();
     }
 
@@ -94,7 +100,7 @@ export abstract class VisibleVectorContol extends VectorControl {
                     type: 'LINE',
                     vec
                 }
-            }));
+            }), /*spammy*/ true);
     }
 
     private hideDisplayEntity() {

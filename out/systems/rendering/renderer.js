@@ -13,7 +13,7 @@ export class Renderer {
     }
     onEvent(ev) {
         switch (ev.type) {
-            case 'RESET_ALL_SYSTEMS':
+            case 'LEVEL_CHANGED':
                 this.renderingFns.clear();
                 break;
             case 'SET_PAYLOAD':
