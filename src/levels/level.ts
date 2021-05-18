@@ -10,6 +10,7 @@ import { PlaygroundScreen } from "./99_nonlevels/playground.js";
 import { Flapping01 } from "./02_flapping/flapping_01.js";
 import { Flapping02 } from "./02_flapping/flapping_02.js";
 import { Flapping03 } from "./02_flapping/flapping_03.js";
+import { Flapping04 } from "./02_flapping/flapping_04.js";
 
 export interface Level {
     activate: () => void;
@@ -26,11 +27,12 @@ const screens: (new() => Level)[] = [
     Flapping01,
     Flapping02,
     Flapping03,
+    Flapping04,
     FinScreen,
 ]
 
 export function getLevelNumber(n: number): Level {
-    // return new Flapping03();
+    // return new Flapping04();
     let screenCtor = screens[n];
     return screenCtor ? new screenCtor() : new BrokenScreen();
 }

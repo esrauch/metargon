@@ -8,7 +8,7 @@ export class Rolling02 {
         initWorldBounds(/* showWorldBounds */ false);
         initControlsWidget(['ROLL'], 'ROLL');
         
-        initStaticBox(PositionedRect.fromBounds(
+        initStaticBox(PositionedRect.trbl(
             VHEIGHT/2,
             VWIDTH-250,
             VHEIGHT/2 + 750,
@@ -16,7 +16,7 @@ export class Rolling02 {
         ), 'LOSE = RESET');
 
         initLoseSensor(
-            PositionedRect.fromBounds(VHEIGHT/2 - 250, VWIDTH, VHEIGHT/2, VWIDTH - 250));
+            PositionedRect.trbl(VHEIGHT/2 - 250, VWIDTH, VHEIGHT/2, VWIDTH - 250));
 
         initWinSensor(
             new PositionedRect(new Pos(VWIDTH - 125, VHEIGHT - 125), 250, 250));

@@ -10,14 +10,14 @@ export class Rolling01 implements Level {
         initWorldBounds(/* showWorldBounds */ false);
         initControlsWidget(['ROLL'], 'ROLL');
 
-        initStaticBox(PositionedRect.fromBounds(
+        initStaticBox(PositionedRect.trbl(
             VHEIGHT/2,
             VWIDTH,
             VHEIGHT/2 + 750,
             0,
         ), 'HOLD ON RIGHT ONE-THIRD OF THE SCREEN');
 
-        initWinSensor(PositionedRect.fromBounds(VHEIGHT/2 - 250, VWIDTH, VHEIGHT/2, VWIDTH - 250));
+        initWinSensor(PositionedRect.trbl(VHEIGHT/2 - 250, VWIDTH, VHEIGHT/2, VWIDTH - 250));
     }
 
     deactivate() {}

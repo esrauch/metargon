@@ -13,7 +13,7 @@ export class Flapping03 implements Level, BusListener {
         initControlsWidget(['FLAPPY'], 'FLAPPY');
         initResetButton();
 
-        initStaticBox(PositionedRect.fromBounds(
+        initStaticBox(PositionedRect.trbl(
             VHEIGHT - 200,
             VWIDTH,
             VHEIGHT,
@@ -26,13 +26,14 @@ export class Flapping03 implements Level, BusListener {
 
         initLoseSensor(new PositionedRect(new Pos(1500, 1500), 250, 750));
 
-        const pusher = initStaticBox(PositionedRect.fromBounds(1000, 250, 2000, 0));
-        this.pusherAnim = CyclicMoveAnimation.to(pusher, new Pos(VWIDTH - 125, VHEIGHT/2), 8)
+        const pusher = initStaticBox(PositionedRect.trbl(1000, 250, 2000, 0));
+        this.pusherAnim = CyclicMoveAnimation.to(pusher, new Pos(VWIDTH - 125, VHEIGHT/2), 5)
 
         bus.addListener(this);
     }
 
     deactivate(){
+        this.pusherAnim = undefined;
         bus.removeListener(this);
     }
 

@@ -160,7 +160,7 @@ export function makeWorldBoundsEntity(showBounds: boolean) {
     // Because we really want the box to be "outside" of the contained world, we have to
     // offset points by the line width.
     const hlw = LINE_WIDTH;
-    const rect = PositionedRect.fromBounds(-hlw, VWIDTH+hlw, VHEIGHT+hlw, -hlw)
+    const rect = PositionedRect.trbl(-hlw, VWIDTH+hlw, VHEIGHT+hlw, -hlw)
     const rendering: RenderingPayload = {
         type: 'RECT',
         width: rect.w,
@@ -272,7 +272,7 @@ export function initControlsWidget(
 }
 
 export function initResetButton(): Id {
-    const resetBtnRect = PositionedRect.fromBounds(0, CONTROL_SIZE, CONTROL_SIZE, 0);
+    const resetBtnRect = PositionedRect.trbl(0, CONTROL_SIZE, CONTROL_SIZE, 0);
     return makeEntity({
         label: 'controls_widget',
         initialPos: resetBtnRect.center,

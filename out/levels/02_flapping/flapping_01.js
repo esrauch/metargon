@@ -7,7 +7,7 @@ export class Flapping01 {
         initWorldBounds(/* showWorldBounds */ false);
         initControlsWidget(['FLAPPY'], 'FLAPPY');
         initResetButton();
-        initStaticBox(PositionedRect.fromBounds(VHEIGHT / 2, VWIDTH, VHEIGHT / 2 + 750, 0), 'TAP TO FLAP');
+        initStaticBox(PositionedRect.trbl(VHEIGHT / 2, VWIDTH, VHEIGHT / 2 + 750, 0), 'TAP TO FLAP');
         initWinSensor(new PositionedRect(new Pos(VWIDTH / 2, 500), 250, 250));
     }
     deactivate() { }

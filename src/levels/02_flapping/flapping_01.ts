@@ -10,7 +10,7 @@ export class Flapping01 implements Level {
         initControlsWidget(['FLAPPY'], 'FLAPPY');
         initResetButton();
 
-        initStaticBox(PositionedRect.fromBounds(
+        initStaticBox(PositionedRect.trbl(
             VHEIGHT/2,
             VWIDTH,
             VHEIGHT/2 + 750,

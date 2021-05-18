@@ -10,9 +10,9 @@ export class Rolling04 {
         initControlsWidget(['ROLL'], 'ROLL');
         initResetButton();
         
-        initStaticBox(PositionedRect.fromBounds(1750, VWIDTH / 2, 1750 + 250, 0), 'TAP X TO RESET');
+        initStaticBox(PositionedRect.trbl(1750, VWIDTH / 2, 1750 + 250, 0), 'TAP X TO RESET');
 
-        initWinSensor(PositionedRect.fromBounds(1750-250, 250, 1750, 0));
+        initWinSensor(PositionedRect.trbl(1750-250, 250, 1750, 0));
     }
 
     deactivate() {}

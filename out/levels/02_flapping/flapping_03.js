@@ -9,16 +9,17 @@ export class Flapping03 {
         initWorldBounds(/* showWorldBounds */ false);
         initControlsWidget(['FLAPPY'], 'FLAPPY');
         initResetButton();
-        initStaticBox(PositionedRect.fromBounds(VHEIGHT - 200, VWIDTH, VHEIGHT, 0), 'BECOME PUSHED');
+        initStaticBox(PositionedRect.trbl(VHEIGHT - 200, VWIDTH, VHEIGHT, 0), 'BECOME PUSHED');
         initLoseSensor(new PositionedRect(new Pos(500, 1250), 250, 250));
         initWinSensor(new PositionedRect(new Pos(500, 1500), 250, 250));
         initLoseSensor(new PositionedRect(new Pos(500, 1750), 250, 250));
         initLoseSensor(new PositionedRect(new Pos(1500, 1500), 250, 750));
-        const pusher = initStaticBox(PositionedRect.fromBounds(1000, 250, 2000, 0));
-        this.pusherAnim = CyclicMoveAnimation.to(pusher, new Pos(VWIDTH - 125, VHEIGHT / 2), 8);
+        const pusher = initStaticBox(PositionedRect.trbl(1000, 250, 2000, 0));
+        this.pusherAnim = CyclicMoveAnimation.to(pusher, new Pos(VWIDTH - 125, VHEIGHT / 2), 5);
         bus.addListener(this);
     }
     deactivate() {
+        this.pusherAnim = undefined;
         bus.removeListener(this);
     }
     onEvent(ev) {

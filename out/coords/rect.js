@@ -5,7 +5,7 @@ export class PositionedRect {
         this.w = w;
         this.h = h;
     }
-    static fromBounds(t, r, b, l) {
+    static trbl(t, r, b, l) {
         if (r <= l)
             throw new Error('Rect must be r<=l');
         if (b <= t)
