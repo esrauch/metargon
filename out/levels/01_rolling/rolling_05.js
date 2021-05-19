@@ -6,7 +6,6 @@ import { initPlayerEntity, initWorldBounds, initControlsWidget, initWinSensor, i
 const level = 'TIME IT';
 export class Rolling05 {
     constructor() {
-        this.animDir = 1;
         this.moveAnimations = [];
     }
     activate() {

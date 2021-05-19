@@ -8,9 +8,7 @@ import { initPlayerEntity, initWorldBounds, initControlsWidget, initWinSensor, i
 const level = 'TIME IT';
 
 export class Rolling05 {
-    loseSensor?: Id;
-    animDir = 1;
-    moveAnimations: CyclicMoveAnimation[] = [];
+    private moveAnimations: CyclicMoveAnimation[] = [];
 
     activate(): void {
         bus.addListener(this);
