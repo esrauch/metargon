@@ -26,7 +26,7 @@ const screens = [
     FinScreen,
 ];
 export function getLevelNumber(n) {
-    // return new Flapping05();
+    return new Flapping05();
     let screenCtor = screens[n];
     return screenCtor ? new screenCtor() : new BrokenScreen();
 }

@@ -160,19 +160,19 @@ function makeBoxedTextForControl(control) {
     let dispChar = undefined;
     switch (control) {
         case 'BALL':
-            dispChar = 'O';
+            dispChar = 'BALL';
             break;
         case 'FLAPPY':
-            dispChar = 'F';
+            dispChar = 'FLAP';
             break;
         case 'GOLF':
-            dispChar = 'G';
+            dispChar = 'GOLF';
             break;
         case 'ROLL':
-            icon = Icon.SPIN;
+            dispChar = 'ROLL';
             break;
         case 'ARROW':
-            dispChar = 'A';
+            dispChar = 'SHOT';
             break;
         default: return assertUnreachable(control);
     }
@@ -208,7 +208,7 @@ function makeBoxedTextForControl(control) {
                     text: dispChar !== null && dispChar !== void 0 ? dispChar : '?',
                     boxW: CONTROL_SIZE,
                     boxH: CONTROL_SIZE,
-                    fontSize: CONTROL_SIZE,
+                    fontSize: 65,
                     color: Color.FG,
                 },
                 ifFalse: {
@@ -216,7 +216,7 @@ function makeBoxedTextForControl(control) {
                     text: dispChar !== null && dispChar !== void 0 ? dispChar : '?',
                     boxW: CONTROL_SIZE,
                     boxH: CONTROL_SIZE,
-                    fontSize: CONTROL_SIZE,
+                    fontSize: 65,
                     color: Color.BG_MILD,
                 }
             }

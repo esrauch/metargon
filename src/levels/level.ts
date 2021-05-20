@@ -34,7 +34,7 @@ const screens: (new() => Level)[] = [
 ]
 
 export function getLevelNumber(n: number): Level {
-    // return new Flapping05();
+    return new Flapping05();
     let screenCtor = screens[n];
     return screenCtor ? new screenCtor() : new BrokenScreen();
 }

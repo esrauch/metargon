@@ -187,11 +187,11 @@ function makeBoxedTextForControl(control: ControlName): RenderingTypedPayload {
     let icon: Icon|undefined = undefined;
     let dispChar: string|undefined = undefined;
     switch (control) {
-        case 'BALL': dispChar = 'O'; break;
-        case 'FLAPPY': dispChar = 'F'; break;
-        case 'GOLF': dispChar = 'G'; break;
-        case 'ROLL': icon = Icon.SPIN; break;
-        case 'ARROW': dispChar = 'A'; break;
+        case 'BALL': dispChar = 'BALL'; break;
+        case 'FLAPPY': dispChar = 'FLAP'; break;
+        case 'GOLF': dispChar = 'GOLF'; break;
+        case 'ROLL': dispChar = 'ROLL'; break;
+        case 'ARROW': dispChar = 'SHOT'; break;
         default: return assertUnreachable(control);
     }
     if (icon) {
@@ -225,7 +225,7 @@ function makeBoxedTextForControl(control: ControlName): RenderingTypedPayload {
                     text: dispChar ?? '?',
                     boxW: CONTROL_SIZE,
                     boxH: CONTROL_SIZE,
-                    fontSize: CONTROL_SIZE,
+                    fontSize: 65,
                     color: Color.FG,
                 },
                 ifFalse:{
@@ -233,7 +233,7 @@ function makeBoxedTextForControl(control: ControlName): RenderingTypedPayload {
                     text: dispChar ?? '?',
                     boxW: CONTROL_SIZE,
                     boxH: CONTROL_SIZE,
-                    fontSize: CONTROL_SIZE,
+                    fontSize: 65,
                     color: Color.BG_MILD,
                 }
             }
