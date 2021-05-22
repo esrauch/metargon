@@ -23,6 +23,7 @@ export type Primitive =
         readonly width: number,
         readonly height: number,
         readonly color?: string,
+        readonly filled?: boolean,
     } |
     {
         readonly type: 'LINELOOP',

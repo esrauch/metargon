@@ -35,13 +35,11 @@ export function initStaticBox(rect, text = '') {
 export function initWinSensor(r) {
     return initSensor(r, () => bus.dispatch(new Win()), {
         color: Color.GRASS,
-        text: { value: 'WIN', fontSize: 50 },
     });
 }
 export function initLoseSensor(r) {
     return initSensor(r, () => bus.dispatch(new Lose()), {
         color: Color.FIRE,
-        text: { value: 'LOSE', fontSize: 50 },
     });
 }
 export function initSensor(r, callback, opts) {
@@ -59,6 +57,7 @@ export function initSensor(r, callback, opts) {
             width: r.w,
             height: r.h,
             color: opts === null || opts === void 0 ? void 0 : opts.color,
+            filled: true,
         };
     return makeEntity({
         label: 'sensor',

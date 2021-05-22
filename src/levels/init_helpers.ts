@@ -38,14 +38,14 @@ export function initStaticBox(rect: PositionedRect, text: string = ''): Id {
 export function initWinSensor(r: PositionedRect): Id {
     return initSensor(r, () => bus.dispatch(new Win()), {
         color: Color.GRASS,
-        text: {value: 'WIN', fontSize: 50},
+        //text: {value: 'WIN', fontSize: 50},
     })
 }
 
 export function initLoseSensor(r: PositionedRect): Id {
     return initSensor(r, () => bus.dispatch(new Lose()), {
         color: Color.FIRE,
-        text: {value: 'LOSE', fontSize: 50},
+        //text: {value: 'LOSE', fontSize: 50},
     })
 }
 
@@ -69,6 +69,7 @@ export function initSensor(r: PositionedRect,
             width: r.w,
             height: r.h,
             color: opts?.color,
+            filled: true,
         };
 
     return makeEntity({

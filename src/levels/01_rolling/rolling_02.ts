@@ -13,7 +13,7 @@ export class Rolling02 {
             VWIDTH-250,
             VHEIGHT/2 + 750,
             250,
-        ), 'LOSE = RESET');
+        ), 'RED = RESET');
 
         initLoseSensor(
             PositionedRect.trbl(VHEIGHT/2 - 250, VWIDTH, VHEIGHT/2, VWIDTH - 250));

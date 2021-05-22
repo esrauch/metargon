@@ -44,7 +44,11 @@ function makeCompoundRenderingFn(prims: Primitive[]): DrawFn {
                     gfx.lineloop(p.pts, p.color);
                     break;
                 case 'RECT':
-                    gfx.strokerect(pos, p.width, p.height, p.color);
+                    if (p.filled) {
+                        gfx.fillrect(pos, p.width, p.height, p.color);
+                    } else {
+                        gfx.strokerect(pos, p.width, p.height, p.color);
+                    }
                     break;
                 case 'TEXT':
                     gfx.text(pos, p.text, {
