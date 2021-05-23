@@ -6,4 +6,5 @@ export var PhysicsEntityCategory;
     PhysicsEntityCategory[PhysicsEntityCategory["NORMAL"] = 4] = "NORMAL";
     PhysicsEntityCategory[PhysicsEntityCategory["MAGNETIC"] = 4] = "MAGNETIC";
     PhysicsEntityCategory[PhysicsEntityCategory["NO_COLLIDE_WITH_PLAYER"] = 8] = "NO_COLLIDE_WITH_PLAYER";
+    PhysicsEntityCategory[PhysicsEntityCategory["COLLIDE_ONLY_WITH_PLAYER"] = 16] = "COLLIDE_ONLY_WITH_PLAYER";
 })(PhysicsEntityCategory || (PhysicsEntityCategory = {}));

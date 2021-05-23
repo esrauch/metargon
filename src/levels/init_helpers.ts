@@ -35,28 +35,42 @@ export function initNonRotatingBox(rect: PositionedRect, color?: Color): Id {
     });    
 }
 
-export function initStaticBox(rect: PositionedRect, text?: string): Id {
-    return makeEntity({
-        label: 'box',
-        initialPos: rect.center,
-        rendering: text ? {
+export function initStaticBox(rect: PositionedRect, opts?: {
+    text?: string
+    rotation?: number,
+}): Id {
+    const text = opts?.text;
+    let rendering: RenderingPayload;
+    if (text) {
+        rendering = {
             type: 'BOXED_TEXT',
             text,
             boxW: rect.w,
             boxH: rect.h,
             fontSize: 75,
-        } : {
+        };
+    } else if (opts?.rotation) {
+        rendering = {type: 'PHYSICS_HULL'};
+    } else {
+        rendering = {
             type: 'RECT',
             width: rect.w,
             height: rect.h,
             filled: true,
-        },
+        }
+    }
+
+    return makeEntity({
+        label: 'box',
+        initialPos: rect.center,
+        rendering,
         physics: {
             hull: {
                 type: 'RECT',
                 width: rect.w,
                 height: rect.h,
             },
+            rotation: opts?.rotation,
             isStatic: true
         }
     });
@@ -106,7 +120,7 @@ export function initSensor(r: PositionedRect,
     }, {
         type: 'SENSOR',
         payload: {
-            target: PLAYER,
+            target: opts?.triggerOnAny ? undefined : PLAYER,
             rect: new Rect(r.w, r.h),
             callback,
             triggerOnOutside: opts?.triggerOnOutside,

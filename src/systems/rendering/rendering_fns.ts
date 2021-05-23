@@ -1,7 +1,9 @@
-import { Pos, add } from "../../coords/coords.js";
+import { Pos, add, Positions } from "../../coords/coords.js";
 import { Gfx } from "../../gfx/gfx.js";
 import { Id } from "../../payloads/entity_id.js";
 import { RenderingPayload, Primitive, ConditionalRenderingOption, Icon, } from "../../payloads/rendering_payload.js";
+import { assertUnreachable } from "../../util/assert.js";
+import { physics } from "../physics/physics.js";
 
 export type DrawFn = (gfx: Gfx, id: Id, pos: Pos) => void;
 
@@ -67,8 +69,12 @@ function makeCompoundRenderingFn(prims: Primitive[]): DrawFn {
                 case 'ICON':
                     gfx.icon(p.icon, pos, p.w, p.color);
                     break;
+                case 'PHYSICS_HULL':
+                    const poly = physics.getHullPoly(id);
+                    if (poly) gfx.filledpoly(poly, p.color);
+                    break;
                 default:
-                    throw Error(`unhandled prim ${p}`);
+                    assertUnreachable(p);
             }
         }
     };

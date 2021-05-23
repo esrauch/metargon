@@ -20,6 +20,7 @@ export enum PhysicsEntityCategory {
     NORMAL = 1<<2,
     MAGNETIC = 1<<2,
     NO_COLLIDE_WITH_PLAYER = 1<<3,
+    COLLIDE_ONLY_WITH_PLAYER = 1<<4,
 }
 
 export interface PhysicsPayload {
@@ -28,6 +29,7 @@ export interface PhysicsPayload {
     readonly restitution?: number,  // How "elastic" it is (default 0.8)
     readonly entityCategory?: PhysicsEntityCategory,
     readonly nonRotating?: boolean,
+    readonly rotation?: number,
 }
 
 export interface PhysicsTypedPayload extends TypedPayload<PhysicsPayload> {

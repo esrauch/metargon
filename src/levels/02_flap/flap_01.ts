@@ -14,7 +14,7 @@ export class Flapping01 implements Level {
             VWIDTH,
             VHEIGHT/2 + 750,
             0,
-        ), 'FLAP = TAP');
+        ), {text: 'FLAP = TAP'});
 
         initWinSensor(new PositionedRect(new Pos(VWIDTH/2, 500), 250, 250));
     }

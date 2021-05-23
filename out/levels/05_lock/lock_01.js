@@ -19,7 +19,9 @@ export class Lock01 {
         });
         initWorldBounds(/* showWorldBounds */ false);
         initControlsWidget(['LOCK'], 'LOCK');
-        initStaticBox(PositionedRect.trbl(VHEIGHT - 100, VWIDTH, VHEIGHT, 0), 'LOCK ANY BLUE');
+        initStaticBox(PositionedRect.trbl(VHEIGHT - 100, VWIDTH, VHEIGHT, 0), {
+            text: 'LOCK ANY BLUE'
+        });
         bus.dispatch(new ChangePhysicsEntityCategory(PLAYER, PhysicsEntityCategory.MAGNETIC));
         const winSensor = initWinSensor(new PositionedRect(new Pos(VWIDTH / 2, 1000), 250, 250));
         this.animations.push(CyclicMoveAnimation.to(PLAYER, new Pos(1900, VHEIGHT / 2), 2));

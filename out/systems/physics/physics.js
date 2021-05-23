@@ -36,6 +36,12 @@ export class Physics {
             return undefined;
         return new Pos(body.position.x, body.position.y);
     }
+    getHullPoly(id) {
+        const b = this.getBody(id);
+        if (!b)
+            return undefined;
+        return b.vertices;
+    }
     onEvent(ev) {
         switch (ev.type) {
             case 'LEVEL_CHANGED':
@@ -62,7 +68,7 @@ export class Physics {
                 if (ev.typedPayload.type == 'POSITION')
                     this.maybeSetPosition(ev.entityId, ev.typedPayload);
                 if (ev.typedPayload.type == 'LOCKED')
-                    if (ev.typedPayload.payload)
+                    if (ev.typedPayload.payload.isLocked)
                         this.lock(ev.entityId);
                     else
                         this.unlock(ev.entityId);
@@ -175,6 +181,7 @@ export class Physics {
             isStatic: physicsOptions.isStatic,
             friction: 0.3,
             inertia: physicsOptions.nonRotating ? Infinity : undefined,
+            angle: physicsOptions.rotation || 0,
         };
         switch (hull.type) {
             case 'CIRCLE':
@@ -202,8 +209,12 @@ export class Physics {
             case PhysicsEntityCategory.PLAYER:
                 b.collisionFilter.mask = ~PhysicsEntityCategory.NO_COLLIDE_WITH_PLAYER;
                 break;
-            default:
+            case PhysicsEntityCategory.COLLIDE_ONLY_WITH_PLAYER:
+                b.collisionFilter.mask = PhysicsEntityCategory.PLAYER;
+                break;
+            case PhysicsEntityCategory.NORMAL:
                 b.collisionFilter.mask = ~0;
+                break;
         }
     }
     maybeSetPosition(id, typedPayload) {
@@ -211,6 +222,7 @@ export class Physics {
         if (!body)
             return;
         M.Body.setPosition(body, M.Vector.create(typedPayload.payload.x, typedPayload.payload.y));
+        M.Body.setVelocity(body, M.Vector.create(0, 0));
     }
     destroyEntity(id) {
         const body = this.getBody(id);
@@ -273,8 +285,9 @@ export class Physics {
         this.pendingUnlocks.set(id, targetUnlockTick);
     }
     unlock(id) {
+        var _a;
         this.pendingUnlocks.delete(id);
-        const wasStatic = genericPayloadTable.getPayload('LOCKED', id);
+        const wasStatic = (_a = genericPayloadTable.getPayload('LOCKED', id)) === null || _a === void 0 ? void 0 : _a.payload.wasStatic;
         if (wasStatic)
             return;
         const b = this.getBody(id);

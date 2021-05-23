@@ -8,7 +8,7 @@ export class Rolling03 {
         initWorldBounds();
         initControlsWidget(['ROLL'], 'ROLL');
         
-        initStaticBox(PositionedRect.trbl(350, VWIDTH - 100, 350 + 200, 0), 'AIR BUD');
+        initStaticBox(PositionedRect.trbl(350, VWIDTH - 100, 350 + 200, 0), {text: 'AIR BUD'});
        
         initLoseSensor(
             PositionedRect.trbl(VHEIGHT/2 - 250, VWIDTH, VHEIGHT/2, VWIDTH - 250));

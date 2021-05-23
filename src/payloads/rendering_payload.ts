@@ -50,7 +50,11 @@ export type Primitive =
         readonly icon: Icon,
         readonly w: number,
         readonly color?: string,
-    };
+    } |
+    {
+        readonly type: 'PHYSICS_HULL',
+        readonly color?: string,
+    }
 
 export interface CompoundRenderingOption {
     readonly type: 'COMPOUND';

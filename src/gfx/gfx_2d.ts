@@ -2,7 +2,7 @@ import { camera } from "../coords/camera.js";
 import { Positions, Pos, add, Vec } from "../coords/coords.js";
 import { Icon } from "../payloads/rendering_payload.js";
 import { assert } from "../util/assert.js";
-import { Color, Gfx, LINE_WIDTH } from "./gfx.js";
+import { Color, FlexiblePositions, Gfx, LINE_WIDTH } from "./gfx.js";
 import { drawIcon } from "./gfx_2d_icons.js";
 
 const DEFAULT_FONT_FAMILY = 'Helvetica, Arial, Sans-Serif';
@@ -88,9 +88,15 @@ export class Gfx2d implements Gfx {
         this.ctx.globalAlpha = this.globalOpacity;
     }
 
-    private poly(c: Positions) {
-        for (const p of c.pts) {
-            this.ctx.lineTo(p[0], p[1]);
+    private poly(c: FlexiblePositions) {
+        if (c instanceof Positions) {
+            for (const p of c.pts) {
+                this.ctx.lineTo(p[0], p[1]);
+            }
+        } else {
+            for (const p of c) {
+                this.ctx.lineTo(p.x, p.y);
+            }
         }
     }
 
@@ -108,11 +114,11 @@ export class Gfx2d implements Gfx {
     }
 
     circle(center: Pos, radius: number, color?: string): void {
-        this.setStrokeStyle(color);
+        this.setFillStyle(color);
         const ctx = this.ctx;
         ctx.beginPath();
         ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
-        ctx.stroke()
+        ctx.fill()
     }
 
     fillcircle(center: Pos, radius: number, color?: string): void {
@@ -140,7 +146,7 @@ export class Gfx2d implements Gfx {
         ctx.stroke();
     }
 
-    filledpoly(c: Positions, color?: string) {
+    filledpoly(c: FlexiblePositions, color?: string) {
         this.setFillStyle(color);
         const ctx = this.ctx;
         ctx.beginPath();

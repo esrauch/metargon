@@ -18,6 +18,10 @@ export class PositionedRect {
     get b() { return this.center.y + this.h / 2 }
     get l() { return this.center.x - this.w / 2 }
 
+    get unpositionedRect() {
+        return new Rect(this.w, this.h);
+    }
+
     contains(test: Pos): boolean {
         return this.l <= test.x && test.x <= this.r &&
             this.t <= test.y && test.y <= this.b;

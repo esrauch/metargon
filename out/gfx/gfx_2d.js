@@ -69,8 +69,15 @@ export class Gfx2d {
         this.ctx.globalAlpha = this.globalOpacity;
     }
     poly(c) {
-        for (const p of c.pts) {
-            this.ctx.lineTo(p[0], p[1]);
+        if (c instanceof Positions) {
+            for (const p of c.pts) {
+                this.ctx.lineTo(p[0], p[1]);
+            }
+        }
+        else {
+            for (const p of c) {
+                this.ctx.lineTo(p.x, p.y);
+            }
         }
     }
     line(from, to, color) {
@@ -85,11 +92,11 @@ export class Gfx2d {
         this.line(from, add(from, vec), color);
     }
     circle(center, radius, color) {
-        this.setStrokeStyle(color);
+        this.setFillStyle(color);
         const ctx = this.ctx;
         ctx.beginPath();
         ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
-        ctx.stroke();
+        ctx.fill();
     }
     fillcircle(center, radius, color) {
         this.setFillStyle(color);

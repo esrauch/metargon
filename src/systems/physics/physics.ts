@@ -52,6 +52,12 @@ export class Physics implements BusListener {
         return new Pos(body.position.x, body.position.y);
     }
 
+    getHullPoly(id: Id): Array<{x: number, y: number}> | undefined {
+        const b = this.getBody(id);
+        if (!b) return undefined;
+        return b.vertices;
+    }
+
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
             case 'LEVEL_CHANGED':
@@ -78,7 +84,7 @@ export class Physics implements BusListener {
                 if (ev.typedPayload.type == 'POSITION')
                     this.maybeSetPosition(ev.entityId, ev.typedPayload);
                 if (ev.typedPayload.type == 'LOCKED')
-                    if (ev.typedPayload.payload) this.lock(ev.entityId);
+                    if (ev.typedPayload.payload.isLocked) this.lock(ev.entityId);
                     else this.unlock(ev.entityId);
                 break;
             case 'CLEAR_PAYLOAD':
@@ -205,6 +211,7 @@ export class Physics implements BusListener {
             isStatic: physicsOptions.isStatic,
             friction: 0.3,
             inertia: physicsOptions.nonRotating ? Infinity : undefined,
+            angle: physicsOptions.rotation || 0,
         };
 
         switch (hull.type) {
@@ -236,8 +243,12 @@ export class Physics implements BusListener {
             case PhysicsEntityCategory.PLAYER:
                 b.collisionFilter.mask = ~PhysicsEntityCategory.NO_COLLIDE_WITH_PLAYER;
                 break;
-            default:
+            case PhysicsEntityCategory.COLLIDE_ONLY_WITH_PLAYER:
+                b.collisionFilter.mask = PhysicsEntityCategory.PLAYER;
+                break;
+            case PhysicsEntityCategory.NORMAL:
                 b.collisionFilter.mask = ~0;
+                break;
         }
     }
 
@@ -246,6 +257,7 @@ export class Physics implements BusListener {
         if (!body) return;
         M.Body.setPosition(body,
             M.Vector.create(typedPayload.payload.x, typedPayload.payload.y));
+        M.Body.setVelocity(body, M.Vector.create(0,0));
     }
 
     destroyEntity(id: Id) {
@@ -311,7 +323,7 @@ export class Physics implements BusListener {
 
     unlock(id: Id) {
         this.pendingUnlocks.delete(id);
-        const wasStatic = genericPayloadTable.getPayload('LOCKED', id);
+        const wasStatic = genericPayloadTable.getPayload('LOCKED', id)?.payload.wasStatic;
         if (wasStatic) return;
         const b = this.getBody(id);
         if (!b) return;

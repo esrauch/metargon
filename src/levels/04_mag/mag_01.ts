@@ -22,7 +22,7 @@ export class Mag01 implements Level {
             VWIDTH,
             VHEIGHT/2 + 750,
             0,
-        ), 'MAG = DRAG BLUE');
+        ), {text: 'MAG = DRAG BLUE'});
 
         initWinSensor(new PositionedRect(new Pos(VWIDTH/2, 500), 250, 250));
     }

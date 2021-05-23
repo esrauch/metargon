@@ -13,6 +13,8 @@ export enum Color {
 
 export const LINE_WIDTH = 10;
 
+export type FlexiblePositions = Positions | Array<{x:number, y:number}>;
+
 export interface Gfx {
     onViewportSizeChange(): void;
 
@@ -34,7 +36,7 @@ export interface Gfx {
 
     lineloop(c: Positions, color?: string): void;
 
-    filledpoly(c: Positions, color?: string): void;
+    filledpoly(c: FlexiblePositions, color?: string): void;
 
     strokerect(center: Pos, w: number, h: number, color?: string): void;
 

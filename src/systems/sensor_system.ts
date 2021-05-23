@@ -19,7 +19,7 @@ export class SensorSystem implements BusListener {
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
             case 'TICK':
-                if (this.sensorsTriggering) this.tick(ev);
+                this.tick(ev);
                 break;
             case 'SCREEN_FULLY_SHOWN':
                 this.sensorsTriggering = true;
@@ -31,17 +31,30 @@ export class SensorSystem implements BusListener {
     }
 
     private tick(ev: Tick) {
-        const sensorPayloads = genericPayloadTable.getPayloads('SENSOR');
+        const sensorTypedPayloads = genericPayloadTable.getPayloads('SENSOR');
         const cachedPos = new CacheMap<Id, Pos>();
-        for (const [id, sensorTypedPayload] of sensorPayloads) {
-            const sensorPos = getCenterPosition(id);
-            const sensorRect = sensorTypedPayload.payload.rect;
-            const targetId = sensorTypedPayload.payload.target;
-            const targetPos = cachedPos.get(targetId, () => getCenterPosition(targetId));
-            const triggerOnOutside = !!sensorTypedPayload.payload.triggerOnOutside;
-            if (rectContains(sensorPos, sensorRect.w, sensorRect.h, targetPos) !== triggerOnOutside) {
-                bus.dispatch(new ClearPayloadEvent(id, 'SENSOR'));
-                sensorTypedPayload.payload.callback(targetId);
+        for (const [sensorId, sensorTypedPayload] of sensorTypedPayloads) {
+            const sensorPos = getCenterPosition(sensorId);
+            const sensorPayload = sensorTypedPayload.payload;
+
+            if (!this.sensorsTriggering && !sensorPayload.instantActivate) continue;
+
+            const sensorRect = sensorPayload.rect;
+            const targetId = sensorPayload.target;
+            const targets = targetId !== undefined ?
+                    [targetId] : genericPayloadTable.allIds;
+            const triggerOnOutside = !!sensorPayload.triggerOnOutside;
+
+            for (const t of targets) {
+                if (t === sensorId) continue;
+                const targetPos = cachedPos.get(t, () => getCenterPosition(t));
+                if (rectContains(sensorPos, sensorRect.w, sensorRect.h, targetPos) !== triggerOnOutside) {
+                    sensorPayload.callback(t);
+                    if (!sensorPayload.triggerMultipleTimes) {
+                        bus.dispatch(new ClearPayloadEvent(sensorId, 'SENSOR'));
+                        break;
+                    }
+                }
             }
         }
     }

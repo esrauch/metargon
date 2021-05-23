@@ -18,6 +18,8 @@ import { Shot03 } from "./03_shot/shot_03.js";
 import { Mag01 } from "./04_mag/mag_01.js";
 import { Mag02 } from "./04_mag/mag_02.js";
 import { Lock01 } from "./05_lock/lock_01.js";
+import { Lock02 } from "./05_lock/lock_02.js";
+import { Lock03 } from "./05_lock/lock_03.js";
 const screens = [
     SplashScreen,
     Rolling01,
@@ -37,10 +39,11 @@ const screens = [
     Mag01,
     Mag02,
     Lock01,
+    Lock02,
+    Lock03,
     FinScreen,
 ];
 export function getLevelNumber(n) {
-    return new Lock01();
     let screenCtor = screens[n];
     return screenCtor ? new screenCtor() : new BrokenScreen();
 }

@@ -23,9 +23,8 @@ export class Lock01 implements Level, BusListener {
         initControlsWidget(['LOCK'], 'LOCK');
 
         initStaticBox(
-            PositionedRect.trbl(VHEIGHT-100,VWIDTH,VHEIGHT,0),
-            'LOCK ANY BLUE'
-        );
+            PositionedRect.trbl(VHEIGHT-100,VWIDTH,VHEIGHT,0), {
+                text: 'LOCK ANY BLUE'});
     
         bus.dispatch(new ChangePhysicsEntityCategory(PLAYER, PhysicsEntityCategory.MAGNETIC));
 

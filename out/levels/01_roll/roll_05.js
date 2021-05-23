@@ -3,7 +3,7 @@ import { bus } from "../../bus/bus.js";
 import { Pos, VWIDTH, VHEIGHT, Vec } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { initPlayerEntity, initWorldBounds, initControlsWidget, initWinSensor, initStaticBox, initLoseSensor } from "../init_helpers.js";
-const level = 'TIME IT';
+const level = { text: 'TIME IT' };
 export class Rolling05 {
     constructor() {
         this.moveAnimations = [];

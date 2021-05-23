@@ -31,28 +31,40 @@ export function initNonRotatingBox(rect, color) {
         }
     });
 }
-export function initStaticBox(rect, text) {
-    return makeEntity({
-        label: 'box',
-        initialPos: rect.center,
-        rendering: text ? {
+export function initStaticBox(rect, opts) {
+    const text = opts === null || opts === void 0 ? void 0 : opts.text;
+    let rendering;
+    if (text) {
+        rendering = {
             type: 'BOXED_TEXT',
             text,
             boxW: rect.w,
             boxH: rect.h,
             fontSize: 75,
-        } : {
+        };
+    }
+    else if (opts === null || opts === void 0 ? void 0 : opts.rotation) {
+        rendering = { type: 'PHYSICS_HULL' };
+    }
+    else {
+        rendering = {
             type: 'RECT',
             width: rect.w,
             height: rect.h,
             filled: true,
-        },
+        };
+    }
+    return makeEntity({
+        label: 'box',
+        initialPos: rect.center,
+        rendering,
         physics: {
             hull: {
                 type: 'RECT',
                 width: rect.w,
                 height: rect.h,
             },
+            rotation: opts === null || opts === void 0 ? void 0 : opts.rotation,
             isStatic: true
         }
     });
@@ -91,7 +103,7 @@ export function initSensor(r, callback, opts) {
     }, {
         type: 'SENSOR',
         payload: {
-            target: PLAYER,
+            target: (opts === null || opts === void 0 ? void 0 : opts.triggerOnAny) ? undefined : PLAYER,
             rect: new Rect(r.w, r.h),
             callback,
             triggerOnOutside: opts === null || opts === void 0 ? void 0 : opts.triggerOnOutside,

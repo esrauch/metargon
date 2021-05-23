@@ -6,7 +6,7 @@ export class Rolling02 {
         initPlayerEntity(new Pos(VWIDTH / 4, VHEIGHT / 4));
         initWorldBounds(/* showWorldBounds */ false);
         initControlsWidget(['ROLL'], 'ROLL');
-        initStaticBox(PositionedRect.trbl(VHEIGHT / 2, VWIDTH - 250, VHEIGHT / 2 + 750, 250), 'RED = RESET');
+        initStaticBox(PositionedRect.trbl(VHEIGHT / 2, VWIDTH - 250, VHEIGHT / 2 + 750, 250), { text: 'RED = RESET' });
         initLoseSensor(PositionedRect.trbl(VHEIGHT / 2 - 250, VWIDTH, VHEIGHT / 2, VWIDTH - 250));
         initWinSensor(new PositionedRect(new Pos(VWIDTH - 125, VHEIGHT - 125), 250, 250));
     }

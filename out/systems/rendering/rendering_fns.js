@@ -1,4 +1,6 @@
 import { add } from "../../coords/coords.js";
+import { assertUnreachable } from "../../util/assert.js";
+import { physics } from "../physics/physics.js";
 export function makeRenderingFn(value) {
     switch (value.type) {
         case 'FUNCTION':
@@ -60,8 +62,13 @@ function makeCompoundRenderingFn(prims) {
                 case 'ICON':
                     gfx.icon(p.icon, pos, p.w, p.color);
                     break;
+                case 'PHYSICS_HULL':
+                    const poly = physics.getHullPoly(id);
+                    if (poly)
+                        gfx.filledpoly(poly, p.color);
+                    break;
                 default:
-                    throw Error(`unhandled prim ${p}`);
+                    assertUnreachable(p);
             }
         }
     };

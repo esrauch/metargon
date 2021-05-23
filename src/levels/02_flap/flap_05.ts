@@ -3,7 +3,7 @@ import { PositionedRect } from "../../coords/rect.js";
 import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor, initResetButton } from "../init_helpers.js";
 import { Level } from "../level.js";
 
-const level = 'USE TOP CONTROLS';
+const level = {text: 'USE TOP CONTROLS'};
 export class Flapping05 implements Level {
     activate(): void {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT - 250));

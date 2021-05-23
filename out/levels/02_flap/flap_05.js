@@ -1,7 +1,7 @@
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor } from "../init_helpers.js";
-const level = 'USE TOP CONTROLS';
+const level = { text: 'USE TOP CONTROLS' };
 export class Flapping05 {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT - 250));

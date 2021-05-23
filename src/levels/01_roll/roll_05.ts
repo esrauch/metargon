@@ -5,7 +5,7 @@ import { PositionedRect } from "../../coords/rect.js";
 import { Id } from "../../payloads/entity_id.js";
 import { initPlayerEntity, initWorldBounds, initControlsWidget, initWinSensor, initResetButton, initStaticBox, initLoseSensor } from "../init_helpers.js";
 
-const level = 'TIME IT';
+const level = {text: 'TIME IT'};
 
 export class Rolling05 {
     private moveAnimations: CyclicMoveAnimation[] = [];

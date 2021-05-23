@@ -17,7 +17,7 @@ export class Shot03_old implements Level {
             VWIDTH,
             VHEIGHT/2 + 750,
             0,
-        ), 'ROLL YOURSELF');
+        ), {text: 'ROLL YOURSELF'});
 
         initWinSensor(
             PositionedRect.trbl(
