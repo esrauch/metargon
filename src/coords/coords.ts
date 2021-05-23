@@ -74,6 +74,11 @@ export class Pos implements PosBase {
         return x >= 0 && y >= 0 && x <= VWIDTH && y <= VHEIGHT;
     }
 }
+
+export function pos(x: number, y: number): Pos {
+    return new Pos(x, y);
+}
+
 export class SPositions implements PositionsBase {
     readonly type = 'SCREEN';
     constructor(readonly pts: untypedVec2[]) { }

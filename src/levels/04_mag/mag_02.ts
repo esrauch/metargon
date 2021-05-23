@@ -4,9 +4,8 @@ import { PositionedRect } from "../../coords/rect.js";
 import { SetPayloadEvent } from "../../events/payload_events.js";
 import { ChangePhysicsEntityCategory } from "../../events/physics_events.js";
 import { Color } from "../../gfx/gfx.js";
-import { PLAYER } from "../../payloads/entity_id.js";
 import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor, initResetButton, initNonRotatingBox, initLoseSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor, initResetButton, initNonRotatingBox } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 export class Mag02 implements Level {
@@ -41,7 +40,6 @@ export class Mag02 implements Level {
                 nonRotating: true,
             }
         }));
-
 
         const b=initNonRotatingBox(PositionedRect.trbl(winRect.b, VWIDTH*2/3+50, winRect.b+100,VWIDTH/3-50), Color.WATER);
         bus.dispatch(new ChangePhysicsEntityCategory(b, PhysicsEntityCategory.MAGNETIC));

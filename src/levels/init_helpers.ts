@@ -115,7 +115,11 @@ export function initSensor(r: PositionedRect,
 }
 
 
-export function initPlayerEntity(pos?: Pos, color?: Color): Id {
+export function initPlayerEntity(pos: Pos, opts?: {
+    color?: Color,
+    isStatic?: boolean,
+    entityCategory?: PhysicsEntityCategory,
+}): Id {
     return makeEntity({
         entityId: PLAYER,
         initialPos: pos || new Pos(200, 200),
@@ -123,7 +127,7 @@ export function initPlayerEntity(pos?: Pos, color?: Color): Id {
         rendering: {
             type: 'FUNCTION',
             fn: (gfx, id, center) => {
-                gfx.fillcircle(center, 50, color);
+                gfx.fillcircle(center, 50, opts?.color);
                 const angle = getRotation(id) || 0;
                 const eye =
                     new Pos(
@@ -139,7 +143,8 @@ export function initPlayerEntity(pos?: Pos, color?: Color): Id {
                 type: 'CIRCLE',
                 radius: 50,
             },
-            entityCategory: PhysicsEntityCategory.PLAYER,
+            isStatic: opts?.isStatic,
+            entityCategory: opts?.entityCategory ?? PhysicsEntityCategory.PLAYER,
         }
     });
 }

@@ -1,12 +1,13 @@
 /// <reference types="./matter" />
 import { bus } from "../../bus/bus.js";
 import { Pos, VHEIGHT, Positions } from "../../coords/coords.js";
-import { getCenterPosition, getLabel } from "../getters.js";
+import { getCenterPosition, getLabel, isLocked } from "../getters.js";
 import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
 import { assertUnreachable } from "../../util/assert.js";
 import { camera } from "../../coords/camera.js";
 import { PhysicsControls } from "../../events/physics_mouse_events.js";
 import { SetPayloadEvent } from "../../events/payload_events.js";
+import { genericPayloadTable } from "../generic_payload_table.js";
 // Importing a js module with ts typings is incredibly difficult for some reason.
 // Matter should be loaded as a module, but instead we just
 // load it into the global namespace in index.html.
@@ -95,12 +96,17 @@ export class Physics {
         this.disablePhysicsMouse();
     }
     tick() {
+        var _a, _b;
         this.tickCount++;
         for (const [id, tickTarget] of this.pendingUnlocks) {
             if (tickTarget === this.tickCount) {
+                const wasStatic = (_b = (_a = genericPayloadTable.getPayload('LOCKED', id)) === null || _a === void 0 ? void 0 : _a.payload) === null || _b === void 0 ? void 0 : _b.wasStatic;
                 bus.dispatch(new SetPayloadEvent(id, {
                     type: 'LOCKED',
-                    payload: false,
+                    payload: {
+                        isLocked: false,
+                        wasStatic: wasStatic !== null && wasStatic !== void 0 ? wasStatic : false,
+                    }
                 }));
             }
         }
@@ -243,7 +249,10 @@ export class Physics {
                     return;
                 bus.dispatch(new SetPayloadEvent(b.id, {
                     type: 'LOCKED',
-                    payload: !b.isStatic,
+                    payload: {
+                        isLocked: !isLocked(b.id),
+                        wasStatic: b.isStatic,
+                    }
                 }));
             });
         }
@@ -265,6 +274,9 @@ export class Physics {
     }
     unlock(id) {
         this.pendingUnlocks.delete(id);
+        const wasStatic = genericPayloadTable.getPayload('LOCKED', id);
+        if (wasStatic)
+            return;
         const b = this.getBody(id);
         if (!b)
             return;

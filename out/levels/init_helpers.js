@@ -98,7 +98,8 @@ export function initSensor(r, callback, opts) {
         }
     });
 }
-export function initPlayerEntity(pos, color) {
+export function initPlayerEntity(pos, opts) {
+    var _a;
     return makeEntity({
         entityId: PLAYER,
         initialPos: pos || new Pos(200, 200),
@@ -106,7 +107,7 @@ export function initPlayerEntity(pos, color) {
         rendering: {
             type: 'FUNCTION',
             fn: (gfx, id, center) => {
-                gfx.fillcircle(center, 50, color);
+                gfx.fillcircle(center, 50, opts === null || opts === void 0 ? void 0 : opts.color);
                 const angle = getRotation(id) || 0;
                 const eye = new Pos(center.x + Math.cos(angle) * 20, center.y + Math.sin(angle) * 20);
                 gfx.fillcircle(eye, 20, '#000');
@@ -117,7 +118,8 @@ export function initPlayerEntity(pos, color) {
                 type: 'CIRCLE',
                 radius: 50,
             },
-            entityCategory: PhysicsEntityCategory.PLAYER,
+            isStatic: opts === null || opts === void 0 ? void 0 : opts.isStatic,
+            entityCategory: (_a = opts === null || opts === void 0 ? void 0 : opts.entityCategory) !== null && _a !== void 0 ? _a : PhysicsEntityCategory.PLAYER,
         }
     });
 }

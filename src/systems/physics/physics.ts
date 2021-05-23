@@ -5,13 +5,14 @@ import { bus, BusEvent, BusListener } from "../../bus/bus.js";
 import { Pos, VHEIGHT, Positions } from "../../coords/coords.js";
 import { Draw } from "../../events/draw.js";
 import { Id } from "../../payloads/entity_id.js";
-import { getCenterPosition, getLabel } from "../getters.js";
+import { getCenterPosition, getLabel, isLocked } from "../getters.js";
 import { PhysicsEntityCategory, PhysicsTypedPayload } from "../../payloads/physics_payload.js";
 import { assertUnreachable } from "../../util/assert.js";
 import { PositionTypedPayload } from "../../payloads/fixed_position_payload.js";
 import { camera } from "../../coords/camera.js";
 import { PhysicsControls } from "../../events/physics_mouse_events.js";
 import { SetPayloadEvent } from "../../events/payload_events.js";
+import { genericPayloadTable } from "../generic_payload_table.js";
 
 // Importing a js module with ts typings is incredibly difficult for some reason.
 // Matter should be loaded as a module, but instead we just
@@ -114,9 +115,13 @@ export class Physics implements BusListener {
         this.tickCount++;
         for (const [id, tickTarget] of this.pendingUnlocks) {
             if (tickTarget === this.tickCount) {
+                const wasStatic = genericPayloadTable.getPayload('LOCKED', id)?.payload?.wasStatic;
                 bus.dispatch(new SetPayloadEvent(id, {
                     type: 'LOCKED',
-                    payload: false,
+                    payload: {
+                        isLocked: false,
+                        wasStatic: wasStatic ?? false,
+                    }
                 }));
             }
         }
@@ -278,7 +283,10 @@ export class Physics implements BusListener {
                 if (!b) return;
                 bus.dispatch(new SetPayloadEvent(b.id, {
                     type: 'LOCKED',
-                    payload: !b.isStatic,
+                    payload: {
+                        isLocked: !isLocked(b.id),
+                        wasStatic: b.isStatic,
+                    }
                 }));
             });
         }
@@ -303,6 +311,8 @@ export class Physics implements BusListener {
 
     unlock(id: Id) {
         this.pendingUnlocks.delete(id);
+        const wasStatic = genericPayloadTable.getPayload('LOCKED', id);
+        if (wasStatic) return;
         const b = this.getBody(id);
         if (!b) return;
         M.Body.setStatic(b, false);

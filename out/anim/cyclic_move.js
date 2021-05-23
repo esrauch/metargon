@@ -1,28 +1,27 @@
 import { bus } from "../bus/bus.js";
 import { add } from "../coords/coords.js";
 import { SetPayloadEvent } from "../events/payload_events.js";
-import { genericPayloadTable } from "../systems/generic_payload_table.js";
-import { getCenterPosition } from "../systems/getters.js";
+import { getCenterPosition, isLocked } from "../systems/getters.js";
 import { easeInOutInterpPos } from "../util/interp.js";
 export class CyclicMoveAnimation {
-    constructor(entityId, from, to, durationS) {
+    constructor(entityId, from, to, durationS, offsetS = 0) {
         this.entityId = entityId;
         this.from = from;
         this.to = to;
         this.tickCount = 0;
         this.tickLength = durationS * 60;
+        this.tickCount = (offsetS * 60) % this.tickLength;
     }
-    static ofOffset(entityId, offset, durationS) {
+    static ofOffset(entityId, offset, durationS, offsetS) {
         const currentPos = getCenterPosition(entityId);
-        return new CyclicMoveAnimation(entityId, currentPos, add(currentPos, offset), durationS);
+        return new CyclicMoveAnimation(entityId, currentPos, add(currentPos, offset), durationS, offsetS);
     }
-    static to(entityId, to, durationS) {
+    static to(entityId, to, durationS, offsetS) {
         const currentPos = getCenterPosition(entityId);
-        return new CyclicMoveAnimation(entityId, currentPos, to, durationS);
+        return new CyclicMoveAnimation(entityId, currentPos, to, durationS, offsetS);
     }
     tick() {
-        const lockedPayload = genericPayloadTable.getPayload('LOCKED', this.entityId);
-        if (lockedPayload && lockedPayload.payload) {
+        if (isLocked(this.entityId)) {
             // If it is locked then the animation is paused.
             return;
         }

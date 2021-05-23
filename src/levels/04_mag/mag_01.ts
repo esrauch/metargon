@@ -10,7 +10,10 @@ import { Level } from "../level.js";
 
 export class Mag01 implements Level {
     activate(): void {
-        initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT/2), Color.WATER);
+        initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT/2), {
+            color: Color.WATER,
+            entityCategory: PhysicsEntityCategory.MAGNETIC
+        });
         initWorldBounds(/* showWorldBounds */ false);
         initControlsWidget(['MAG'], 'MAG');
 
@@ -20,7 +23,6 @@ export class Mag01 implements Level {
             VHEIGHT/2 + 750,
             0,
         ), 'MAG = DRAG BLUE');
-        bus.dispatch(new ChangePhysicsEntityCategory(PLAYER, PhysicsEntityCategory.MAGNETIC));
 
         initWinSensor(new PositionedRect(new Pos(VWIDTH/2, 500), 250, 250));
     }

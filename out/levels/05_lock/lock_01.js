@@ -1,3 +1,4 @@
+import { CyclicMoveAnimation } from "../../anim/cyclic_move.js";
 import { bus } from "../../bus/bus.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
@@ -7,13 +8,30 @@ import { PLAYER } from "../../payloads/entity_id.js";
 import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
 import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor } from "../init_helpers.js";
 export class Lock01 {
-    activate() {
-        initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT / 2), Color.WATER);
-        initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['LOCK', 'FLAP'], 'LOCK');
-        initStaticBox(PositionedRect.trbl(VHEIGHT / 2, VWIDTH, VHEIGHT / 2 + 750, 0), 'LOCK = FREEZE BLUE');
-        bus.dispatch(new ChangePhysicsEntityCategory(PLAYER, PhysicsEntityCategory.MAGNETIC));
-        initWinSensor(new PositionedRect(new Pos(VWIDTH / 2, 500), 250, 250));
+    constructor() {
+        this.animations = [];
     }
-    deactivate() { }
+    activate() {
+        initPlayerEntity(new Pos(100, VHEIGHT / 2), {
+            color: Color.WATER,
+            entityCategory: PhysicsEntityCategory.MAGNETIC,
+            isStatic: true,
+        });
+        initWorldBounds(/* showWorldBounds */ false);
+        initControlsWidget(['LOCK'], 'LOCK');
+        initStaticBox(PositionedRect.trbl(VHEIGHT - 100, VWIDTH, VHEIGHT, 0), 'LOCK ANY BLUE');
+        bus.dispatch(new ChangePhysicsEntityCategory(PLAYER, PhysicsEntityCategory.MAGNETIC));
+        const winSensor = initWinSensor(new PositionedRect(new Pos(VWIDTH / 2, 1000), 250, 250));
+        this.animations.push(CyclicMoveAnimation.to(PLAYER, new Pos(1900, VHEIGHT / 2), 2));
+        this.animations.push(CyclicMoveAnimation.to(winSensor, new Pos(VWIDTH / 2, VHEIGHT - 1000), 2, /*offsetS*/ 1));
+        bus.addListener(this);
+    }
+    deactivate() {
+        bus.removeListener(this);
+    }
+    onEvent(ev) {
+        if (ev.type !== 'TICK')
+            return;
+        this.animations.forEach(anim => anim.tick());
+    }
 }

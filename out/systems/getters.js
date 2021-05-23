@@ -37,3 +37,9 @@ export function hittest(test) {
     }
     return undefined;
 }
+export function isLocked(id) {
+    const p = genericPayloadTable.getPayload('LOCKED', id);
+    if (!p)
+        return false;
+    return p.payload.isLocked;
+}

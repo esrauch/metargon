@@ -46,6 +46,9 @@ export class Pos {
         return x >= 0 && y >= 0 && x <= VWIDTH && y <= VHEIGHT;
     }
 }
+export function pos(x, y) {
+    return new Pos(x, y);
+}
 export class SPositions {
     constructor(pts) {
         this.pts = pts;
