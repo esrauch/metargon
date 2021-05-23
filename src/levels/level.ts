@@ -14,8 +14,9 @@ import { Flapping04 } from "./02_flap/flap_04.js";
 import { Flapping05 } from "./02_flap/flap_05.js";
 import { Shot01 } from "./03_shot/shot_01.js";
 import { Shot02 } from "./03_shot/shot_02.js";
-import { Shot03 } from "./03_shot/shot_03.js";
 import { Shot04 } from "./03_shot/shot_04.js";
+import { Shot03 } from "./03_shot/shot_03.js";
+import { Mag01 } from "./04_mag/mag_01.js";
 
 export interface Level {
     activate: () => void;
@@ -38,11 +39,12 @@ const screens: (new() => Level)[] = [
     Shot02,
     Shot03,
     Shot04,
+    Mag01,
     FinScreen,
 ]
 
 export function getLevelNumber(n: number): Level {
-    //return new Shot04();
+    //return new Mag01();
     let screenCtor = screens[n];
     return screenCtor ? new screenCtor() : new BrokenScreen();
 }

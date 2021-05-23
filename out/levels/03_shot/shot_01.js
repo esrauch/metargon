@@ -4,13 +4,12 @@ import { makeEntity } from "../../events/make_entity_helper.js";
 import { SetPayloadEvent } from "../../events/payload_events.js";
 import { Win } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initResetButton } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget } from "../init_helpers.js";
 export class Shot01 {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT - 250));
         initWorldBounds();
         initControlsWidget(['SHOT'], 'SHOT');
-        initResetButton();
         this.shotTarget = makeEntity({
             label: 'shot_target',
             initialPos: new Pos(VWIDTH - 750 / 2, VHEIGHT / 4),

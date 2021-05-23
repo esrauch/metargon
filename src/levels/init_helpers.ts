@@ -199,6 +199,7 @@ function makeBoxedTextForControl(control: ControlName): RenderingTypedPayload {
         case 'GOLF': dispChar = 'GOLF'; break;
         case 'ROLL': dispChar = 'ROLL'; break;
         case 'SHOT': dispChar = 'SHOT'; break;
+        case 'MAG': dispChar = 'MAG'; break;
         default: return assertUnreachable(control);
     }
     if (icon) {

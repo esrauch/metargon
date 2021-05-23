@@ -14,7 +14,6 @@ export class Shot01 implements Level, BusListener {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT - 250));
         initWorldBounds();
         initControlsWidget(['SHOT'], 'SHOT');
-        initResetButton();
 
         this.shotTarget = makeEntity({
             label: 'shot_target',

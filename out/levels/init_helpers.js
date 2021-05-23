@@ -178,6 +178,9 @@ function makeBoxedTextForControl(control) {
         case 'SHOT':
             dispChar = 'SHOT';
             break;
+        case 'MAG':
+            dispChar = 'MAG';
+            break;
         default: return assertUnreachable(control);
     }
     if (icon) {

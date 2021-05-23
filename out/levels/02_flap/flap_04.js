@@ -5,7 +5,7 @@ import { PositionedRect } from "../../coords/rect.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { SetPayloadEvent } from "../../events/payload_events.js";
 import { Win } from "../../events/win_loss_events.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initResetButton, initLoseSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initLoseSensor } from "../init_helpers.js";
 const textPos = PositionedRect.trbl(VHEIGHT - 200, VWIDTH, VHEIGHT, 0);
 function makeCountdownRendering(s) {
     return {
@@ -25,7 +25,6 @@ export class Flapping04 {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT / 2));
         initWorldBounds(/* showWorldBounds */ false);
         initControlsWidget(['FLAPPY'], 'FLAPPY');
-        initResetButton();
         this.textEntity = makeEntity({
             initialPos: textPos.center,
             label: 'helpinfo',

@@ -41,4 +41,4 @@ function tick() {
     requestAnimationFrame(tick);
 }
 tick();
-levelSystem.startFirstLevel();
+levelSystem.switchToLevelFromHashOrFirst();

@@ -1,34 +1,23 @@
-import { bus, BusEvent, BusListener } from "../../bus/bus.js";
+import { bus } from "../../bus/bus.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
-import { CreateEntity, DestroyEntity } from "../../events/core_entity_events.js";
+import { DestroyEntity } from "../../events/core_entity_events.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
-import { ClearPayloadEvent, SetPayloadEvent } from "../../events/payload_events.js";
+import { SetPayloadEvent } from "../../events/payload_events.js";
 import { Win } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
-import { Id } from "../../payloads/entity_id.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initResetButton, initWinSensor, initLoseSensor } from "../init_helpers.js";
-import { Level } from "../level.js";
-
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initResetButton, initLoseSensor } from "../init_helpers.js";
 const releaseTime = 5;
-const textPos = PositionedRect.trbl(
-    500,
-    VWIDTH,
-    600,
-    0,
-);
-
-export class Shot03 implements Level, BusListener {
-    private textEntity?: Id;
-    private lastSetSeconds?: number;
-    private ticksRemaining = releaseTime * 60;
-    private shotTarget?: Id;
-
+const textPos = PositionedRect.trbl(500, VWIDTH, 600, 0);
+export class Shot05 {
+    constructor() {
+        this.ticksRemaining = releaseTime * 60;
+    }
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 4, 250));
         initWorldBounds(/* showWorldBounds */ false);
         initControlsWidget(['SHOT'], 'SHOT');
-
+        initResetButton();
         this.textEntity = makeEntity({
             label: 'holderupper',
             initialPos: textPos.center,
@@ -43,11 +32,7 @@ export class Shot03 implements Level, BusListener {
         });
         this.ticksRemaining = releaseTime * 60;
         this.updateCountdownRendering();
-
-
-        const targetRect = new PositionedRect(
-            new Pos(VWIDTH - 750 / 2, VHEIGHT / 2), 750, 750,
-        )
+        const targetRect = new PositionedRect(new Pos(VWIDTH - 750 / 2, VHEIGHT / 2), 750, 750);
         this.shotTarget = makeEntity({
             label: 'shot_target',
             initialPos: targetRect.center,
@@ -60,40 +45,38 @@ export class Shot03 implements Level, BusListener {
                 color: Color.GRASS,
             }
         });
-
-        initLoseSensor(PositionedRect.trbl(
-            VHEIGHT - 250, VWIDTH, VHEIGHT, 0));
-
+        initLoseSensor(PositionedRect.trbl(VHEIGHT - 250, VWIDTH, VHEIGHT, 0));
         bus.addListener(this);
     }
     deactivate() {
         this.lastSetSeconds = undefined;
         bus.removeListener(this);
     }
-
-    onEvent(ev: BusEvent): void {
+    onEvent(ev) {
         switch (ev.type) {
-            case 'TICK': this.onTick(); break;
-            case 'CREATE_ENTITY': this.onCreateEntity(ev); break;
+            case 'TICK':
+                this.onTick();
+                break;
+            case 'CREATE_ENTITY':
+                this.onCreateEntity(ev);
+                break;
         }
     }
-
-    private onCreateEntity(ev: CreateEntity) {
+    onCreateEntity(ev) {
         if (ev.corePayload.payload.label === 'shot') {
             bus.dispatch(new SetPayloadEvent(ev.entityId, {
                 type: 'SENSOR',
                 payload: {
-                    target: this.shotTarget!,
+                    target: this.shotTarget,
                     rect: { w: 750, h: 750 },
                     callback: () => bus.dispatch(new Win())
                 }
             }));
         }
     }
-
-    private onTick() {
-        if (!this.textEntity) return;
-
+    onTick() {
+        if (!this.textEntity)
+            return;
         this.updateCountdownRendering();
         if (this.ticksRemaining == 0) {
             bus.dispatch(new DestroyEntity(this.textEntity));
@@ -101,10 +84,10 @@ export class Shot03 implements Level, BusListener {
         }
         this.ticksRemaining--;
     }
-
-    private updateCountdownRendering() {
+    updateCountdownRendering() {
         const s = Math.round(this.ticksRemaining / 60);
-        if (this.lastSetSeconds == s || !this.textEntity) return;
+        if (this.lastSetSeconds == s || !this.textEntity)
+            return;
         this.lastSetSeconds = s;
         bus.dispatch(new SetPayloadEvent(this.textEntity, {
             type: 'RENDERING',
@@ -117,5 +100,4 @@ export class Shot03 implements Level, BusListener {
             }
         }));
     }
-
 }

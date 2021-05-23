@@ -4,9 +4,10 @@ import { CreateBallControl } from "./create_ball_control.js";
 import { FlappyControl } from "./flappy_control.js";
 import { GolfControl } from "./golf_control.js";
 import { RollControl } from "./roll_control.js";
+import { MagnetControl } from "./magnet_control.js";
 
 export type ControlName =
-    'ROLL' | 'GOLF' | 'FLAPPY' | 'BALL' | 'SHOT';
+    'ROLL' | 'GOLF' | 'FLAPPY' | 'BALL' | 'SHOT' | 'MAG';
 
 const controls = new Map<ControlName, Control>([
     ['GOLF', new GolfControl()],
@@ -14,6 +15,7 @@ const controls = new Map<ControlName, Control>([
     ['BALL', new CreateBallControl()],
     ['ROLL', new RollControl()],
     ['SHOT', new ShotControl()],
+    ['MAG', new MagnetControl()],
 ]);
 
 const allControls: ControlName[] = Array.from(controls.keys());

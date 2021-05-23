@@ -15,7 +15,6 @@ export class Shot02 implements Level, BusListener {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT - 250));
         initWorldBounds();
         initControlsWidget(['SHOT'], 'SHOT');
-        initResetButton();
 
         const targetRect = new PositionedRect(
             new Pos(VWIDTH-750/2, VHEIGHT/2), 750, 750,

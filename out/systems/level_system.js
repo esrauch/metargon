@@ -13,7 +13,11 @@ export var FadeSpeed;
     FadeSpeed[FadeSpeed["DEFAULT"] = 1] = "DEFAULT";
 })(FadeSpeed || (FadeSpeed = {}));
 export class LevelSystem {
-    constructor() { }
+    constructor() {
+        window.addEventListener('hashchange', () => {
+            this.switchToLevelFromHashOrFirst();
+        });
+    }
     onEvent(ev) {
         var _a, _b;
         switch (ev.type) {
@@ -25,8 +29,11 @@ export class LevelSystem {
                 break;
         }
     }
-    startFirstLevel() {
-        this.crossFadeLevel(0);
+    switchToLevelFromHashOrFirst() {
+        const targetLevel = +document.location.hash.substring(1);
+        if (targetLevel === this.activeLevelNumber)
+            return;
+        this.crossFadeLevel(targetLevel);
     }
     crossFadeLevel(nextLevelNumber, temporaryForegroundColor, fadeSpeed = FadeSpeed.DEFAULT) {
         const next = getLevelNumber(nextLevelNumber);
@@ -54,6 +61,7 @@ export class LevelSystem {
         this.activeLevelNumber = num;
         this.activeLevel = a;
         a.activate();
+        document.location.hash = `${num}`;
     }
 }
 LevelSystem.singleton = new LevelSystem();

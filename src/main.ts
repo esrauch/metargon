@@ -50,5 +50,4 @@ function tick() {
 }
 tick();
 
-
-levelSystem.startFirstLevel();
+levelSystem.switchToLevelFromHashOrFirst();

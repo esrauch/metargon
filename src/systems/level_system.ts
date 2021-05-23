@@ -16,7 +16,11 @@ export enum FadeSpeed {
 }
 
 export class LevelSystem implements BusListener {
-    private constructor() { }
+    private constructor() {
+        window.addEventListener('hashchange', () => {
+            this.switchToLevelFromHashOrFirst();
+        });
+    }
     static singleton = new LevelSystem();
 
     private activeLevelNumber?: number;
@@ -35,8 +39,10 @@ export class LevelSystem implements BusListener {
         }
     }
 
-    startFirstLevel() {
-        this.crossFadeLevel(0);
+    switchToLevelFromHashOrFirst() {
+        const targetLevel = +document.location.hash.substring(1);
+        if (targetLevel === this.activeLevelNumber) return;
+        this.crossFadeLevel(targetLevel);
     }
 
     private crossFadeLevel(
@@ -69,13 +75,13 @@ export class LevelSystem implements BusListener {
         })
     }
 
-
     private instantSwapInLevel(num: number, a: Level) {
         if (this.activeLevel) this.activeLevel.deactivate();
         bus.dispatch(new LevelChanged());
         this.activeLevelNumber = num;
         this.activeLevel = a;
         a.activate();
+        document.location.hash = `${num}`;
     }
 }
 

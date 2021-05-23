@@ -25,7 +25,6 @@ export class Shot04 implements Level, BusListener {
         initPlayerEntity(new Pos(VWIDTH / 4, 250));
         initWorldBounds(/* showWorldBounds */ false);
         initControlsWidget(['SHOT'], 'SHOT');
-        initResetButton();
 
         this.textEntity = makeEntity({
             label: 'holderupper',

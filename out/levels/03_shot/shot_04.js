@@ -4,7 +4,7 @@ import { PositionedRect } from "../../coords/rect.js";
 import { DestroyEntity } from "../../events/core_entity_events.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { SetPayloadEvent } from "../../events/payload_events.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initResetButton, initWinSensor, initLoseSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initWinSensor, initLoseSensor } from "../init_helpers.js";
 const releaseTime = 5;
 const textPos = PositionedRect.trbl(500, VWIDTH, 600, 0);
 export class Shot04 {
@@ -15,7 +15,6 @@ export class Shot04 {
         initPlayerEntity(new Pos(VWIDTH / 4, 250));
         initWorldBounds(/* showWorldBounds */ false);
         initControlsWidget(['SHOT'], 'SHOT');
-        initResetButton();
         this.textEntity = makeEntity({
             label: 'holderupper',
             initialPos: textPos.center,

@@ -2,7 +2,7 @@ import { CyclicMoveAnimation } from "../../anim/cyclic_move.js";
 import { bus } from "../../bus/bus.js";
 import { Pos, VWIDTH, VHEIGHT, Vec } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initWinSensor, initResetButton, initStaticBox, initLoseSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initWinSensor, initStaticBox, initLoseSensor } from "../init_helpers.js";
 const level = 'TIME IT';
 export class Rolling05 {
     constructor() {
@@ -13,7 +13,6 @@ export class Rolling05 {
         initPlayerEntity(new Pos(VWIDTH / 4, 100));
         initWorldBounds(/* showWorldBounds */ true);
         initControlsWidget(['ROLL'], 'ROLL');
-        initResetButton();
         initWinSensor(new PositionedRect(new Pos(VWIDTH / 2, VHEIGHT - 125), VWIDTH, 250));
         {
             initStaticBox(PositionedRect.trbl(350, VWIDTH - 150, 350 + 100, 0), level);
