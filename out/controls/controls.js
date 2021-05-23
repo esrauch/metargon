@@ -1,4 +1,4 @@
-import { ArrowControl } from "./arrow_control.js";
+import { ShotControl } from "./shot_control.js";
 import { CreateBallControl } from "./create_ball_control.js";
 import { FlappyControl } from "./flappy_control.js";
 import { GolfControl } from "./golf_control.js";
@@ -8,9 +8,7 @@ const controls = new Map([
     ['FLAPPY', new FlappyControl()],
     ['BALL', new CreateBallControl()],
     ['ROLL', new RollControl()],
-    ['ARROW', new ArrowControl()],
+    ['SHOT', new ShotControl()],
 ]);
-const allControls = [
-    'ROLL', 'GOLF', 'FLAPPY', 'BALL', 'ARROW'
-];
+const allControls = Array.from(controls.keys());
 export { controls, allControls };

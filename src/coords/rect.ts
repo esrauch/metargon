@@ -12,6 +12,16 @@ export class PositionedRect {
         const center = new Pos(l + w / 2, t + h /2);
         return new PositionedRect(center, w, h);
     }
+
+    get t() { return this.center.y - this.h / 2 }
+    get r() { return this.center.x + this.w / 2 }
+    get b() { return this.center.y + this.h / 2 }
+    get l() { return this.center.x - this.w / 2 }
+
+    contains(test: Pos): boolean {
+        return this.l <= test.x && test.x <= this.r &&
+            this.t <= test.y && test.y <= this.b;
+    }
 }
 
 export class Rect {

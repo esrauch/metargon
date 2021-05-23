@@ -12,16 +12,21 @@ import { controlsSystem } from "../systems/controls_system.js";
 import { getRotation } from "../systems/getters.js";
 import { assertUnreachable } from "../util/assert.js";
 
-export function initStaticBox(rect: PositionedRect, text: string = ''): Id {
+export function initStaticBox(rect: PositionedRect, text?: string): Id {
     return makeEntity({
         label: 'box',
         initialPos: rect.center,
-        rendering: {
+        rendering: text ? {
             type: 'BOXED_TEXT',
             text,
             boxW: rect.w,
             boxH: rect.h,
             fontSize: 75,
+        } : {
+            type: 'RECT',
+            width: rect.w,
+            height: rect.h,
+            filled: true,
         },
         physics: {
             hull: {
@@ -53,6 +58,7 @@ export function initSensor(r: PositionedRect,
     callback: () => void, opts?: {
         color?: string,
         triggerOnOutside?: boolean,
+        triggerOnAny?: boolean,
         text?: {value: string, fontSize: number},
     }): Id {
     const renderingPayload: RenderingPayload = opts?.text ?
@@ -192,7 +198,7 @@ function makeBoxedTextForControl(control: ControlName): RenderingTypedPayload {
         case 'FLAPPY': dispChar = 'FLAP'; break;
         case 'GOLF': dispChar = 'GOLF'; break;
         case 'ROLL': dispChar = 'ROLL'; break;
-        case 'ARROW': dispChar = 'SHOT'; break;
+        case 'SHOT': dispChar = 'SHOT'; break;
         default: return assertUnreachable(control);
     }
     if (icon) {

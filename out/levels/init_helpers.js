@@ -11,16 +11,21 @@ import { Icon } from "../payloads/rendering_payload.js";
 import { controlsSystem } from "../systems/controls_system.js";
 import { getRotation } from "../systems/getters.js";
 import { assertUnreachable } from "../util/assert.js";
-export function initStaticBox(rect, text = '') {
+export function initStaticBox(rect, text) {
     return makeEntity({
         label: 'box',
         initialPos: rect.center,
-        rendering: {
+        rendering: text ? {
             type: 'BOXED_TEXT',
             text,
             boxW: rect.w,
             boxH: rect.h,
             fontSize: 75,
+        } : {
+            type: 'RECT',
+            width: rect.w,
+            height: rect.h,
+            filled: true,
         },
         physics: {
             hull: {
@@ -170,7 +175,7 @@ function makeBoxedTextForControl(control) {
         case 'ROLL':
             dispChar = 'ROLL';
             break;
-        case 'ARROW':
+        case 'SHOT':
             dispChar = 'SHOT';
             break;
         default: return assertUnreachable(control);

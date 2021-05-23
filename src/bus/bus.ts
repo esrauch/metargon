@@ -10,7 +10,6 @@ import { ActivateControl } from "../events/activate_control_events.js";
 import { Lose, Win } from "../events/win_loss_events.js";
 import { LevelChanged } from "../events/reset_all_systems_event.js";
 import { ScreenFullyShown } from "../events/screen_fully_shown_event.js";
-import { ShootArrow } from "../events/shoot_arrow.js";
 
 // Core idea is that we should be able to record + replay events for
 // deterministic behavior.
@@ -29,8 +28,7 @@ export type BusEvent =
     Win |
     Lose |
     LevelChanged |
-    ScreenFullyShown |
-    ShootArrow;
+    ScreenFullyShown;
 
 export interface BusListener {
     onEvent(ev: BusEvent): void;
