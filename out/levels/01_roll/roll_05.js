@@ -11,7 +11,7 @@ export class Rolling05 {
     activate() {
         bus.addListener(this);
         initPlayerEntity(new Pos(VWIDTH / 4, 100));
-        initWorldBounds(/* showWorldBounds */ true);
+        initWorldBounds();
         initControlsWidget(['ROLL'], 'ROLL');
         initWinSensor(new PositionedRect(new Pos(VWIDTH / 2, VHEIGHT - 125), VWIDTH, 250));
         {

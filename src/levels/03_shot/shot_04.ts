@@ -3,9 +3,10 @@ import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { DestroyEntity } from "../../events/core_entity_events.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
-import { ClearPayloadEvent, SetPayloadEvent } from "../../events/payload_events.js";
+import { SetPayloadEvent } from "../../events/payload_events.js";
+import { Color } from "../../gfx/gfx.js";
 import { Id } from "../../payloads/entity_id.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initResetButton, initWinSensor, initLoseSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initWinSensor, initLoseSensor } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 const releaseTime = 5;

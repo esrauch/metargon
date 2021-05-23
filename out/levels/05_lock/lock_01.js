@@ -6,12 +6,12 @@ import { Color } from "../../gfx/gfx.js";
 import { PLAYER } from "../../payloads/entity_id.js";
 import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
 import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor } from "../init_helpers.js";
-export class Mag01 {
+export class Lock01 {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT / 2), Color.WATER);
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['MAG'], 'MAG');
-        initStaticBox(PositionedRect.trbl(VHEIGHT / 2, VWIDTH, VHEIGHT / 2 + 750, 0), 'MAG = DRAG BLUE');
+        initControlsWidget(['LOCK', 'FLAP'], 'LOCK');
+        initStaticBox(PositionedRect.trbl(VHEIGHT / 2, VWIDTH, VHEIGHT / 2 + 750, 0), 'LOCK = FREEZE BLUE');
         bus.dispatch(new ChangePhysicsEntityCategory(PLAYER, PhysicsEntityCategory.MAGNETIC));
         initWinSensor(new PositionedRect(new Pos(VWIDTH / 2, 500), 250, 250));
     }

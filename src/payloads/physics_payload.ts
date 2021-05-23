@@ -15,10 +15,19 @@ interface RectangleHull {
     height: number,
 }
 
+export enum PhysicsEntityCategory {
+    PLAYER = 1<<0,
+    NORMAL = 1<<2,
+    MAGNETIC = 1<<2,
+    NO_COLLIDE_WITH_PLAYER = 1<<3,
+}
+
 export interface PhysicsPayload {
     readonly hull: CircleHull | RectangleHull,
     readonly isStatic?: boolean,
-    readonly restitution?: number  // How "elastic" it is (default 0.8)
+    readonly restitution?: number,  // How "elastic" it is (default 0.8)
+    readonly entityCategory?: PhysicsEntityCategory,
+    readonly nonRotating?: boolean,
 }
 
 export interface PhysicsTypedPayload extends TypedPayload<PhysicsPayload> {

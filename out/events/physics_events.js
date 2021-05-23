@@ -19,3 +19,10 @@ export class RollMove {
         this.type = 'ROLL_MOVE';
     }
 }
+export class ChangePhysicsEntityCategory {
+    constructor(entityId, physicsEntityCategory) {
+        this.entityId = entityId;
+        this.physicsEntityCategory = physicsEntityCategory;
+        this.type = 'CHANGE_PHYSICS_ENTITY_CATEGORY';
+    }
+}

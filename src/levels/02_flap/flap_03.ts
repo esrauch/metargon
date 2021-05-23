@@ -10,7 +10,7 @@ export class Flapping03 implements Level, BusListener {
     activate(): void {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT - 300));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['FLAPPY'], 'FLAPPY');
+        initControlsWidget(['FLAP'], 'FLAP');
 
         initStaticBox(PositionedRect.trbl(
             VHEIGHT - 200,

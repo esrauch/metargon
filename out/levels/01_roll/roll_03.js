@@ -4,7 +4,7 @@ import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor, 
 export class Rolling03 {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 4, 100));
-        initWorldBounds(/* showWorldBounds */ true);
+        initWorldBounds();
         initControlsWidget(['ROLL'], 'ROLL');
         initStaticBox(PositionedRect.trbl(350, VWIDTH - 100, 350 + 200, 0), 'AIR BUD');
         initLoseSensor(PositionedRect.trbl(VHEIGHT / 2 - 250, VWIDTH, VHEIGHT / 2, VWIDTH - 250));

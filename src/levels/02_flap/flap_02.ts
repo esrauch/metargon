@@ -33,7 +33,7 @@ export class Flapping02 implements Level, BusListener {
     activate(): void {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT/2));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['FLAPPY'], 'FLAPPY');
+        initControlsWidget(['FLAP'], 'FLAP');
 
         this.textEntity = makeEntity({
             initialPos: textPos.center,

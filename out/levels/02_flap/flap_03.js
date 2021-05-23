@@ -7,8 +7,8 @@ export class Flapping03 {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT - 300));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['FLAPPY'], 'FLAPPY');
-        initStaticBox(PositionedRect.trbl(VHEIGHT - 200, VWIDTH, VHEIGHT, 0), 'BECOME PUSHED');
+        initControlsWidget(['FLAP'], 'FLAP');
+        initStaticBox(PositionedRect.trbl(VHEIGHT - 200, VWIDTH, VHEIGHT, 0));
         initLoseSensor(new PositionedRect(new Pos(500, 1250), 250, 250));
         initWinSensor(new PositionedRect(new Pos(500, 1500), 250, 250));
         initLoseSensor(new PositionedRect(new Pos(500, 1750), 250, 250));

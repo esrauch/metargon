@@ -8,7 +8,7 @@ export class Flapping05 implements Level {
     activate(): void {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT - 250));
         initWorldBounds();
-        initControlsWidget(['FLAPPY', 'ROLL']);
+        initControlsWidget(['FLAP', 'ROLL']);
 
         initWinSensor(
             new PositionedRect(new Pos(VWIDTH/2, 300), VWIDTH, 100));

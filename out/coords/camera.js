@@ -1,3 +1,5 @@
+import { bus } from "../bus/bus.js";
+import { ViewportChanged } from "../events/viewport_size_change_event.js";
 import { SPos, VHEIGHT, Pos, VWIDTH } from "./coords.js";
 export class Camera {
     // The mapping from VirtualPos to Screen
@@ -32,6 +34,7 @@ export class Camera {
         this.mult = mult;
         this.vleftoff = leftoff;
         this.vtopoff = topoff;
+        bus.dispatch(new ViewportChanged());
     }
     toScreenPos(vpos) {
         return new SPos((vpos.x + this.vleftoff) * this.mult, (vpos.y + this.vtopoff) * this.mult);

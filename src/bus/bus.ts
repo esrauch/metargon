@@ -1,7 +1,7 @@
 // The Bus is a single global point where everything flows through.
 // At least for now, all possible event types are centrally defined here.
 
-import { ApplyForce, RollMove, SetVelocity } from "../events/physics_events.js";
+import { ApplyForce, ChangePhysicsEntityCategory, RollMove, SetVelocity } from "../events/physics_events.js";
 import { CreateEntity, DestroyEntity } from "../events/core_entity_events.js";
 import { Draw } from "../events/draw.js";
 import { Tick } from "../events/tick_event.js";
@@ -10,6 +10,8 @@ import { ActivateControl } from "../events/activate_control_events.js";
 import { Lose, Win } from "../events/win_loss_events.js";
 import { LevelChanged } from "../events/reset_all_systems_event.js";
 import { ScreenFullyShown } from "../events/screen_fully_shown_event.js";
+import { DisablePhysicsMouse, EnablePhysicsMouse } from "../events/physics_mouse_events.js";
+import { ViewportChanged } from "../events/viewport_size_change_event.js";
 
 // Core idea is that we should be able to record + replay events for
 // deterministic behavior.
@@ -28,7 +30,11 @@ export type BusEvent =
     Win |
     Lose |
     LevelChanged |
-    ScreenFullyShown;
+    ScreenFullyShown |
+    ChangePhysicsEntityCategory |
+    EnablePhysicsMouse |
+    DisablePhysicsMouse |
+    ViewportChanged;
 
 export interface BusListener {
     onEvent(ev: BusEvent): void;

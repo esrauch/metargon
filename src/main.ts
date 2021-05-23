@@ -7,6 +7,7 @@ import { controls } from "./controls/controls.js";
 import { input } from './input/input.js';
 import { allSystems } from "./systems/all_systems.js";
 import { levelSystem } from "./systems/level_system.js";
+import { physics } from "./systems/physics/physics.js";
 
 const canvas = document.querySelector('canvas')!;
 const gfx = new Gfx2d(canvas);

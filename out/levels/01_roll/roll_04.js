@@ -4,7 +4,7 @@ import { initPlayerEntity, initWorldBounds, initControlsWidget, initWinSensor, i
 export class Rolling04 {
     activate() {
         initPlayerEntity(new Pos(VWIDTH * 3 / 4, 100));
-        initWorldBounds(/* showWorldBounds */ true);
+        initWorldBounds();
         initControlsWidget(['ROLL'], 'ROLL');
         initStaticBox(PositionedRect.trbl(1750, VWIDTH / 2, 1750 + 250, 0));
         initWinSensor(PositionedRect.trbl(1750 - 250, 250, 1750, 0));

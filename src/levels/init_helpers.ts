@@ -7,10 +7,33 @@ import { makeEntity } from "../events/make_entity_helper.js";
 import { Lose, Win } from "../events/win_loss_events.js";
 import { Color, LINE_WIDTH } from "../gfx/gfx.js";
 import { Id, PLAYER } from "../payloads/entity_id.js";
+import { PhysicsEntityCategory } from "../payloads/physics_payload.js";
 import { Icon, RenderingPayload, RenderingTypedPayload } from "../payloads/rendering_payload.js";
 import { controlsSystem } from "../systems/controls_system.js";
 import { getRotation } from "../systems/getters.js";
 import { assertUnreachable } from "../util/assert.js";
+
+export function initNonRotatingBox(rect: PositionedRect, color?: Color): Id {
+    return makeEntity({
+        label: 'box',
+        initialPos: rect.center,
+        rendering:{
+            type: 'RECT',
+            width: rect.w,
+            height: rect.h,
+            filled: true,
+            color,
+        },
+        physics: {
+            hull: {
+                type: 'RECT',
+                width: rect.w,
+                height: rect.h,
+            },
+            nonRotating: true,
+        }
+    });    
+}
 
 export function initStaticBox(rect: PositionedRect, text?: string): Id {
     return makeEntity({
@@ -43,14 +66,12 @@ export function initStaticBox(rect: PositionedRect, text?: string): Id {
 export function initWinSensor(r: PositionedRect): Id {
     return initSensor(r, () => bus.dispatch(new Win()), {
         color: Color.GRASS,
-        //text: {value: 'WIN', fontSize: 50},
     })
 }
 
 export function initLoseSensor(r: PositionedRect): Id {
     return initSensor(r, () => bus.dispatch(new Lose()), {
         color: Color.FIRE,
-        //text: {value: 'LOSE', fontSize: 50},
     })
 }
 
@@ -94,7 +115,7 @@ export function initSensor(r: PositionedRect,
 }
 
 
-export function initPlayerEntity(pos?: Pos): Id {
+export function initPlayerEntity(pos?: Pos, color?: Color): Id {
     return makeEntity({
         entityId: PLAYER,
         initialPos: pos || new Pos(200, 200),
@@ -102,7 +123,7 @@ export function initPlayerEntity(pos?: Pos): Id {
         rendering: {
             type: 'FUNCTION',
             fn: (gfx, id, center) => {
-                gfx.fillcircle(center, 50);
+                gfx.fillcircle(center, 50, color);
                 const angle = getRotation(id) || 0;
                 const eye =
                     new Pos(
@@ -117,7 +138,8 @@ export function initPlayerEntity(pos?: Pos): Id {
             hull: {
                 type: 'CIRCLE',
                 radius: 50,
-            }
+            },
+            entityCategory: PhysicsEntityCategory.PLAYER,
         }
     });
 }
@@ -191,62 +213,29 @@ export function makeWorldBoundsEntity(showBounds: boolean) {
 export const CONTROL_SIZE = 200;
 
 function makeBoxedTextForControl(control: ControlName): RenderingTypedPayload {
-    let icon: Icon|undefined = undefined;
-    let dispChar: string|undefined = undefined;
-    switch (control) {
-        case 'BALL': dispChar = 'BALL'; break;
-        case 'FLAPPY': dispChar = 'FLAP'; break;
-        case 'GOLF': dispChar = 'GOLF'; break;
-        case 'ROLL': dispChar = 'ROLL'; break;
-        case 'SHOT': dispChar = 'SHOT'; break;
-        case 'MAG': dispChar = 'MAG'; break;
-        default: return assertUnreachable(control);
-    }
-    if (icon) {
-        return {
-            type: 'RENDERING',
-            payload: {
-                type: 'CONDITIONAL',
-                cond: () => controlsSystem.getActiveControlName() === control,
-                ifTrue: {
-                    type: 'ICON',
-                    icon: Icon.SPIN,
-                    w: CONTROL_SIZE,
-                    color: Color.FG,
-                },
-                ifFalse:{
-                    type: 'ICON',
-                    icon: Icon.SPIN,
-                    w: CONTROL_SIZE,
-                    color: Color.BG_MILD,
-                }
+    return {
+        type: 'RENDERING',
+        payload: {
+            type: 'CONDITIONAL',
+            cond: () => controlsSystem.getActiveControlName() === control,
+            ifTrue: {
+                type: 'BOXED_TEXT',
+                text: control,
+                boxW: CONTROL_SIZE,
+                boxH: CONTROL_SIZE,
+                fontSize: 65,
+                color: Color.FG,
+            },
+            ifFalse:{
+                type: 'BOXED_TEXT',
+                text: control,
+                boxW: CONTROL_SIZE,
+                boxH: CONTROL_SIZE,
+                fontSize: 65,
+                color: Color.BG_MILD,
             }
         }
-    } else {
-        return {
-            type: 'RENDERING',
-            payload: {
-                type: 'CONDITIONAL',
-                cond: () => controlsSystem.getActiveControlName() === control,
-                ifTrue: {
-                    type: 'BOXED_TEXT',
-                    text: dispChar ?? '?',
-                    boxW: CONTROL_SIZE,
-                    boxH: CONTROL_SIZE,
-                    fontSize: 65,
-                    color: Color.FG,
-                },
-                ifFalse:{
-                    type: 'BOXED_TEXT',
-                    text: dispChar ?? '?',
-                    boxW: CONTROL_SIZE,
-                    boxH: CONTROL_SIZE,
-                    fontSize: 65,
-                    color: Color.BG_MILD,
-                }
-            }
-        }
-    }
+    };
 }
 
 export function initControlsWidget(

@@ -1,14 +1,17 @@
 /// <reference types="./matter" />
 
 import { ApplyForce, RollMove, SetVelocity } from "../../events/physics_events.js";
-import { BusEvent, BusListener } from "../../bus/bus.js";
+import { bus, BusEvent, BusListener } from "../../bus/bus.js";
 import { Pos, VHEIGHT, Positions } from "../../coords/coords.js";
 import { Draw } from "../../events/draw.js";
 import { Id } from "../../payloads/entity_id.js";
 import { getCenterPosition, getLabel } from "../getters.js";
-import { PhysicsTypedPayload } from "../../payloads/physics_payload.js";
+import { PhysicsEntityCategory, PhysicsTypedPayload } from "../../payloads/physics_payload.js";
 import { assertUnreachable } from "../../util/assert.js";
 import { PositionTypedPayload } from "../../payloads/fixed_position_payload.js";
+import { camera } from "../../coords/camera.js";
+import { PhysicsControls } from "../../events/physics_mouse_events.js";
+import { SetPayloadEvent } from "../../events/payload_events.js";
 
 // Importing a js module with ts typings is incredibly difficult for some reason.
 // Matter should be loaded as a module, but instead we just
@@ -22,6 +25,10 @@ export class Physics implements BusListener {
         renderHulls: false,
     };
     readonly engine: Matter.Engine;
+    readonly mouse: Matter.Mouse;
+    private mouseConstraint ?: Matter.MouseConstraint;
+    private tickCount = 0;
+    private pendingUnlocks: Map<Id, number> = new Map();
 
     static singleton = new Physics();
 
@@ -31,6 +38,7 @@ export class Physics implements BusListener {
                 y: VHEIGHT / 600,
             }
         });
+        this.mouse = M.Mouse.create(document.querySelector('canvas')!);
     }
 
     getBody(id: Id): Matter.Body | undefined {
@@ -68,6 +76,9 @@ export class Physics implements BusListener {
                     this.setPhysicsPayload(ev.entityId, ev.typedPayload);
                 if (ev.typedPayload.type == 'POSITION')
                     this.maybeSetPosition(ev.entityId, ev.typedPayload);
+                if (ev.typedPayload.type == 'LOCKED')
+                    if (ev.typedPayload.payload) this.lock(ev.entityId);
+                    else this.unlock(ev.entityId);
                 break;
             case 'CLEAR_PAYLOAD':
                 if (ev.payloadType == 'PHYSICS')
@@ -76,15 +87,39 @@ export class Physics implements BusListener {
             case 'DESTROY_ENTITY':
                 this.destroyEntity(ev.entityId);
                 break;
+            case 'VIEWPORT_CHANGED':
+                this.onViewportChanged();
+                break;
+            case 'ENABLE_PHYSICS_MOUSE':
+                this.enablePhysicsMouse(ev.which);
+                break;
+            case 'DISABLE_PHYSICS_MOUSE':
+                this.disablePhysicsMouse();
+                break;
+            case 'CHANGE_PHYSICS_ENTITY_CATEGORY':
+                this.setEntityCategory(ev.entityId, ev.physicsEntityCategory);
+                break;
         }
     }
 
     private reset() {
+        this.tickCount = 0;
+        this.pendingUnlocks.clear();
         M.Engine.clear(this.engine);
         M.Composite.clear(this.engine.world, false, true);
+        this.disablePhysicsMouse();
     }
 
     private tick() {
+        this.tickCount++;
+        for (const [id, tickTarget] of this.pendingUnlocks) {
+            if (tickTarget === this.tickCount) {
+                bus.dispatch(new SetPayloadEvent(id, {
+                    type: 'LOCKED',
+                    payload: false,
+                }));
+            }
+        }
         M.Engine.update(this.engine, STEP);
     }
 
@@ -120,11 +155,6 @@ export class Physics implements BusListener {
             console.error(`rollmove on unknown body ${ev.entityId}`);
             return;
         }
-        // Apply the force offset from the center to cause some torque.
-        // const bodyPos = body.position;
-        // M.Body.applyForce(body,
-        //     M.Vector.create(bodyPos.x, bodyPos.y - 30),
-        //     M.Vector.create(ev.dir, 0));
 
         const V = 20;
 
@@ -153,8 +183,9 @@ export class Physics implements BusListener {
     }
 
     private setPhysicsPayload(id: Id, payload: PhysicsTypedPayload) {
-        if (this.getBody(id)) {
-            throw Error('Cannot set a physics payload when there already is one');
+        const preexistingBody = this.getBody(id);
+        if (preexistingBody) {
+            M.Composite.remove(this.engine.world, preexistingBody);
         }
         const physicsOptions = payload.payload;
         if (!physicsOptions) return;
@@ -162,31 +193,46 @@ export class Physics implements BusListener {
         const label = getLabel(id);
 
         const hull = physicsOptions.hull;
+        const opts = {
+            id,
+            label,
+            restitution: physicsOptions.restitution || 0.8,
+            isStatic: physicsOptions.isStatic,
+            friction: 0.3,
+            inertia: physicsOptions.nonRotating ? Infinity : undefined,
+        };
+
         switch (hull.type) {
             case 'CIRCLE':
-                const ball = M.Bodies.circle(initialPos.x, initialPos.y, hull.radius,
-                    {
-                        id,
-                        label,
-                        restitution: physicsOptions.restitution || 0.8,
-                        isStatic: physicsOptions.isStatic,
-                        friction: 0.3,
-                    });
+                const ball = M.Bodies.circle(initialPos.x, initialPos.y, hull.radius, opts);
                 M.Composite.add(this.engine.world, ball);
                 break;
             case 'RECT':
                 const rect = M.Bodies.rectangle(
-                    initialPos.x, initialPos.y, hull.width, hull.height, {
-                    id,
-                    label,
-                    restitution: physicsOptions.restitution || 0.8,
-                    isStatic: physicsOptions.isStatic,
-                    friction: 0.3,
-                });
+                    initialPos.x, initialPos.y, hull.width, hull.height, opts);
                 M.Composite.add(this.engine.world, rect);
                 break;
             default:
                 return assertUnreachable(hull);
+        }
+
+        this.setEntityCategory(id, physicsOptions.entityCategory);
+    }
+
+    private setEntityCategory(id: Id, category: PhysicsEntityCategory = PhysicsEntityCategory.NORMAL) {
+        const b = this.getBody(id);
+        if (!b) return;
+        b.collisionFilter.category = category;
+
+        switch (category) {
+            case PhysicsEntityCategory.NO_COLLIDE_WITH_PLAYER:
+                b.collisionFilter.mask = ~PhysicsEntityCategory.PLAYER;
+                break;
+            case PhysicsEntityCategory.PLAYER:
+                b.collisionFilter.mask = ~PhysicsEntityCategory.NO_COLLIDE_WITH_PLAYER;
+                break;
+            default:
+                b.collisionFilter.mask = ~0;
         }
     }
 
@@ -200,6 +246,66 @@ export class Physics implements BusListener {
     destroyEntity(id: Id) {
         const body = this.getBody(id);
         if (body) M.Composite.remove(this.engine.world, body);
+    }
+
+    onViewportChanged() {
+        M.Mouse.setOffset(this.mouse, M.Vector.create(-camera.vleftoff, -camera.vtopoff));
+        const scale = 1/camera.mult;
+        M.Mouse.setScale(this.mouse, M.Vector.create(scale, scale));
+    }
+
+    enablePhysicsMouse(which: PhysicsControls) {
+        if (this.mouseConstraint) return;
+        if (which === PhysicsControls.MAG) {
+            this.mouseConstraint = M.MouseConstraint.create(this.engine, {
+                mouse: this.mouse,
+                constraint: {
+                    stiffness: 0.5,
+                } as any,
+                collisionFilter: {mask: PhysicsEntityCategory.MAGNETIC}
+            });
+        } else {
+            this.mouseConstraint = M.MouseConstraint.create(this.engine, {
+                mouse: this.mouse,
+                constraint: {
+                    stiffness: 0, // Causes it to not actually move it
+                } as any,
+                collisionFilter: {mask: PhysicsEntityCategory.MAGNETIC}
+            });
+
+            M.Events.on(this.mouseConstraint, 'startdrag', () => {
+                const b = this.mouseConstraint?.body;
+                if (!b) return;
+                bus.dispatch(new SetPayloadEvent(b.id, {
+                    type: 'LOCKED',
+                    payload: !b.isStatic,
+                }));
+            });
+        }
+
+        M.Composite.add(this.engine.world, this.mouseConstraint);
+
+    }
+
+    disablePhysicsMouse() {
+        if (!this.mouseConstraint) return;
+        M.Composite.remove(this.engine.world, this.mouseConstraint);
+        this.mouseConstraint = undefined;
+    }
+
+    lock(id: Id) {
+        const b = this.getBody(id);
+        if (!b || this.pendingUnlocks.has(id)) return;
+        M.Body.setStatic(b, true);
+        const targetUnlockTick = 3*60 + this.tickCount;
+        this.pendingUnlocks.set(id, targetUnlockTick);
+    }
+
+    unlock(id: Id) {
+        this.pendingUnlocks.delete(id);
+        const b = this.getBody(id);
+        if (!b) return;
+        M.Body.setStatic(b, false);
     }
 }
 

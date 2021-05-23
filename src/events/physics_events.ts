@@ -1,5 +1,6 @@
 import { Vec } from "../coords/coords.js";
 import { Id } from "../payloads/entity_id.js";
+import { PhysicsEntityCategory } from "../payloads/physics_payload.js";
 
 export class ApplyForce {
     readonly type = 'APPLY_FORCE';
@@ -23,4 +24,12 @@ export class RollMove {
         readonly entityId: Id,
         readonly dir: number) {
     }
+}
+
+export class ChangePhysicsEntityCategory {
+    readonly type = 'CHANGE_PHYSICS_ENTITY_CATEGORY';
+    constructor(
+        readonly entityId: Id,
+        readonly physicsEntityCategory: PhysicsEntityCategory,
+    ) {}
 }

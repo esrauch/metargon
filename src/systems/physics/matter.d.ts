@@ -1274,7 +1274,7 @@ declare namespace Matter {
          * @param {} object
          * @return {composite} The original composite with the objects added
          */
-        static add(composite: Composite, object: Body[] | Body | Composite | Constraint): Composite;
+        static add(composite: Composite, object: Body[] | Body | Composite | Constraint | MouseConstraint): Composite;
 
         /**
          * Returns all bodies in the given composite, including all bodies in its children, recursively.
@@ -1357,7 +1357,7 @@ declare namespace Matter {
          * @param {boolean} [deep=false]
          * @return {composite} The original composite with the objects removed
          */
-        static remove(composite: Composite, object: Body | Composite | Constraint, deep?: boolean): Composite;
+        static remove(composite: Composite, object: Body | Composite | Constraint | MouseConstraint, deep?: boolean): Composite;
 
 
 
