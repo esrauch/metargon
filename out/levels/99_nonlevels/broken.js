@@ -20,7 +20,7 @@ export class BrokenScreen {
             rendering: {
                 type: 'TEXT',
                 text: 'U BROKE IT :(',
-                size: 600,
+                size: 400,
                 color: Color.FIRE,
             }
         });

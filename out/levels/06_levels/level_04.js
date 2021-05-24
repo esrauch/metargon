@@ -26,7 +26,7 @@ export class Level04 {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 2, 250));
         initWorldBounds(/* showWorldBounds */ false, /* skipblockontop */ true);
-        initControls('SHOT');
+        initControls();
         initStaticBox(PositionedRect.trbl(0, 1300, VHEIGHT, 1200));
         const textEntity = makeEntity({
             label: 'holderupper',

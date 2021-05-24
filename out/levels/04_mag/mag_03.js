@@ -1,45 +1,22 @@
-import { pos, VHEIGHT, VWIDTH } from "../../coords/coords.js";
+import { bus } from "../../bus/bus.js";
+import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
-import { makeEntity } from "../../events/make_entity_helper.js";
+import { ChangePhysicsEntityCategory } from "../../events/physics_events.js";
 import { Color } from "../../gfx/gfx.js";
 import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
-import { initControlsWidget, initPlayerEntity, initResetButton, initWinSensor, initWorldBounds } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor, initResetButton, initNonRotatingBox, initLoseSensor } from "../init_helpers.js";
 export class Mag03 {
     activate() {
-        initPlayerEntity(pos(VWIDTH / 2, VHEIGHT));
+        initPlayerEntity(new Pos(VWIDTH / 4, VHEIGHT / 2));
         initWorldBounds();
-        initControlsWidget(['MAG'], 'MAG');
+        initControlsWidget(['MAG', 'ROLL'], 'MAG');
         initResetButton();
-        const ballId = makeEntity({
-            initialPos: pos(VWIDTH / 3, VHEIGHT - 150),
-            label: 'ball',
-            physics: {
-                hull: {
-                    type: 'RECT',
-                    width: 300,
-                    height: 200,
-                },
-                entityCategory: PhysicsEntityCategory.MAGNETIC
-            },
-            rendering: {
-                type: 'PHYSICS_HULL',
-                color: Color.WATER,
-            }
-        });
-        makeEntity({
-            initialPos: pos(750, VHEIGHT - 600),
-            label: 'rope',
-            rendering: {
-                type: 'CONNECTOR',
-                otherEntity: ballId
-            }
-        }, {
-            type: 'PHYSICS_CONSTRAINT',
-            payload: {
-                entity: ballId,
-            }
-        });
-        initWinSensor(PositionedRect.trbl(VHEIGHT - 250, VWIDTH, VHEIGHT, VWIDTH - 250));
+        initStaticBox(PositionedRect.trbl(VHEIGHT / 2, VWIDTH, VHEIGHT / 2 + 750, VWIDTH * 2 / 3));
+        initStaticBox(PositionedRect.trbl(VHEIGHT / 2, VWIDTH / 3, VHEIGHT / 2 + 750, 0));
+        initWinSensor(new PositionedRect(new Pos(VWIDTH * 3 / 4, VHEIGHT / 2 - 125), 250, 250));
+        initLoseSensor(PositionedRect.trbl(VHEIGHT - 125, VWIDTH, VHEIGHT, 0));
+        const b = initNonRotatingBox(new PositionedRect(new Pos(100, VHEIGHT / 4), 125, 125), Color.WATER);
+        bus.dispatch(new ChangePhysicsEntityCategory(b, PhysicsEntityCategory.MAGNETIC));
     }
     deactivate() { }
 }

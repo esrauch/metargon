@@ -20,8 +20,8 @@ import { Mag02 } from "./04_mag/mag_02.js";
 import { Lock01 } from "./05_lock/lock_01.js";
 import { Lock02 } from "./05_lock/lock_02.js";
 import { Level02 } from "./06_levels/level_02.js";
-import { Mag04 } from "./04_mag/mag_04.js";
 import { Mag03 } from "./04_mag/mag_03.js";
+import { Level05 } from "./06_levels/level_05.js";
 import { Level01 } from "./06_levels/level_01.js";
 import { Level04 } from "./06_levels/level_04.js";
 import { Level03 } from "./06_levels/level_03.js";
@@ -44,17 +44,17 @@ const screens = [
     Mag01,
     Mag02,
     Mag03,
-    Mag04,
     Lock01,
     Lock02,
     Level01,
     Level02,
     Level03,
     Level04,
+    Level05,
     FinScreen,
 ];
 export function getLevelNumber(n) {
-    return new Level03();
+    // return new Level01();
     let screenCtor = screens[n];
     return screenCtor ? new screenCtor() : new BrokenScreen();
 }
