@@ -1,36 +1,33 @@
 import { CyclicMoveAnimation } from "../../anim/cyclic_move.js";
-import { bus } from "../../bus/bus.js";
+import { DelayedWin } from "../../anim/delayed_callback.js";
+import { UpdateRenderingAnim } from "../../anim/update_rendering_anim.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
-import { SetPayloadEvent } from "../../events/payload_events.js";
-import { Win } from "../../events/win_loss_events.js";
+import { animationSystem } from "../../systems/animation_system.js";
 import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initLoseSensor } from "../init_helpers.js";
 const textPos = PositionedRect.trbl(VHEIGHT - 200, VWIDTH, VHEIGHT, 0);
-function makeCountdownRendering(s) {
+const levelDurationS = 20;
+function makeCountdownRendering(tickCount) {
+    const timeLeft = levelDurationS - Math.round(tickCount / 60);
     return {
         type: 'BOXED_TEXT',
         boxW: textPos.w,
         boxH: textPos.h,
-        text: `FLAP FOR ${s}`,
+        text: `FLAP FOR ${timeLeft}`,
         fontSize: 75,
     };
 }
 export class Flapping04 {
-    constructor() {
-        this.anims = [];
-        this.tickCount = 0;
-    }
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT / 2));
         initWorldBounds(/* showWorldBounds */ false);
         initControlsWidget(['FLAP'], 'FLAP');
-        this.textEntity = makeEntity({
+        const textEntity = makeEntity({
             initialPos: textPos.center,
             label: 'helpinfo',
-            rendering: makeCountdownRendering(20)
         });
-        this.lastSetTime = 20;
+        animationSystem.addAnimation(new UpdateRenderingAnim(textEntity, makeCountdownRendering, 60));
         initLoseSensor(PositionedRect.trbl(200, VWIDTH, 400, 0));
         initLoseSensor(PositionedRect.trbl(VHEIGHT - 400, VWIDTH, VHEIGHT - 200, 0));
         initLoseSensor(PositionedRect.trbl(400, 200, VHEIGHT - 400, 0));
@@ -42,32 +39,10 @@ export class Flapping04 {
         this.makeMovingBlock(250, VHEIGHT / 2, 1750, VHEIGHT / 2, 8);
         this.makeMovingBlock(250, VHEIGHT / 2, 1750, VHEIGHT / 2, 2);
         this.makeMovingBlock(VWIDTH - 250, VHEIGHT - 250, VWIDTH - 1750, VHEIGHT - 1750, 8);
-        bus.addListener(this);
-    }
-    deactivate() {
-        this.anims = [];
-        bus.removeListener(this);
+        animationSystem.addAnimation(new DelayedWin(levelDurationS * 60));
     }
     makeMovingBlock(fromX, fromY, toX, toY, durationS) {
         const id = initStaticBox(new PositionedRect(new Pos(fromX, fromY), 250, 250));
-        this.anims.push(CyclicMoveAnimation.to(id, new Pos(toX, toY), durationS));
-    }
-    onEvent(ev) {
-        if (ev.type !== 'TICK')
-            return;
-        const timeLeft = 20 - Math.round(this.tickCount / 60);
-        if (timeLeft !== this.lastSetTime && this.textEntity) {
-            bus.dispatch(new SetPayloadEvent(this.textEntity, {
-                type: 'RENDERING',
-                payload: makeCountdownRendering(timeLeft)
-            }));
-            this.lastSetTime = timeLeft;
-        }
-        if (this.tickCount === 60 * 20)
-            bus.dispatch(new Win());
-        this.tickCount++;
-        for (let anim of this.anims) {
-            anim.tick();
-        }
+        animationSystem.addAnimation(CyclicMoveAnimation.to(id, new Pos(toX, toY), durationS));
     }
 }

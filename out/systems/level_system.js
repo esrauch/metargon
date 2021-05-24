@@ -55,8 +55,8 @@ export class LevelSystem {
         });
     }
     instantSwapInLevel(num, a) {
-        if (this.activeLevel)
-            this.activeLevel.deactivate();
+        var _a, _b;
+        (_b = (_a = this.activeLevel) === null || _a === void 0 ? void 0 : _a.deactivate) === null || _b === void 0 ? void 0 : _b.call(_a);
         bus.dispatch(new LevelChanged());
         this.activeLevelNumber = num;
         this.activeLevel = a;

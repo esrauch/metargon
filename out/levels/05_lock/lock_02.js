@@ -94,6 +94,4 @@ export class Lock02 {
             }
         });
     }
-    deactivate() {
-    }
 }

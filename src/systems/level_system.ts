@@ -76,7 +76,7 @@ export class LevelSystem implements BusListener {
     }
 
     private instantSwapInLevel(num: number, a: Level) {
-        if (this.activeLevel) this.activeLevel.deactivate();
+        this.activeLevel?.deactivate?.();
         bus.dispatch(new LevelChanged());
         this.activeLevelNumber = num;
         this.activeLevel = a;

@@ -20,6 +20,7 @@ export class CyclicMoveAnimation {
         const currentPos = getCenterPosition(entityId);
         return new CyclicMoveAnimation(entityId, currentPos, to, durationS, offsetS);
     }
+    isDone() { return false; }
     tick() {
         if (isLocked(this.entityId)) {
             // If it is locked then the animation is paused.

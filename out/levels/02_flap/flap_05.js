@@ -11,6 +11,4 @@ export class Flapping05 {
         initStaticBox(PositionedRect.trbl(550, VWIDTH - 150, 550 + 100, 0), level);
         initStaticBox(PositionedRect.trbl(1550, VWIDTH, 1550 + 100, 150), level);
     }
-    deactivate() {
-    }
 }

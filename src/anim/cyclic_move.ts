@@ -2,12 +2,12 @@ import { bus } from "../bus/bus.js";
 import { add, Pos, Vec } from "../coords/coords.js";
 import { SetPayloadEvent } from "../events/payload_events.js";
 import { Id } from "../payloads/entity_id.js";
-import { genericPayloadTable } from "../systems/generic_payload_table.js";
 import { getCenterPosition, isLocked } from "../systems/getters.js";
 import { easeInOutInterpPos } from "../util/interp.js";
+import { Anim } from "./animation.js";
 
 
-export class CyclicMoveAnimation {
+export class CyclicMoveAnimation implements Anim {
     private tickCount = 0;
     private tickLength: number;
 
@@ -30,6 +30,8 @@ export class CyclicMoveAnimation {
         const currentPos = getCenterPosition(entityId);
         return new CyclicMoveAnimation(entityId, currentPos, to, durationS, offsetS);
     }
+
+    isDone() { return false; }
 
     tick() {
         if (isLocked(this.entityId)) {

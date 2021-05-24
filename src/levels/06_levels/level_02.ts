@@ -60,11 +60,11 @@ function makeWhiteBall(x: number, y: number) {
     });
 }
 
-export class Lock03 implements Level {
+export class Level02 implements Level {
     activate(): void {
         initPlayerEntity(new Pos(100, VHEIGHT*3/4));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['LOCK', 'FLAP', 'ROLL'], 'LOCK');
+        initControlsWidget();
 
         const staticBox = initStaticBox(
             new PositionedRect(new Pos(VWIDTH/2, VHEIGHT*3/4 + 25), VWIDTH, 100));

@@ -1,11 +1,8 @@
-import { bus } from "../../bus/bus.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
-import { ChangePhysicsEntityCategory } from "../../events/physics_events.js";
 import { Color } from "../../gfx/gfx.js";
-import { PLAYER } from "../../payloads/entity_id.js";
 import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor, initResetButton } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 export class Mag01 implements Level {
@@ -22,7 +19,7 @@ export class Mag01 implements Level {
             VWIDTH,
             VHEIGHT/2 + 750,
             0,
-        ), {text: 'MAG = DRAG BLUE'});
+        ), {text: 'MAG = DRAG ANY BLUE'});
 
         initWinSensor(new PositionedRect(new Pos(VWIDTH/2, 500), 250, 250));
     }

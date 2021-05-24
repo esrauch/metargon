@@ -11,7 +11,7 @@ export class Mag01 {
         });
         initWorldBounds(/* showWorldBounds */ false);
         initControlsWidget(['MAG'], 'MAG');
-        initStaticBox(PositionedRect.trbl(VHEIGHT / 2, VWIDTH, VHEIGHT / 2 + 750, 0), { text: 'MAG = DRAG BLUE' });
+        initStaticBox(PositionedRect.trbl(VHEIGHT / 2, VWIDTH, VHEIGHT / 2 + 750, 0), { text: 'MAG = DRAG ANY BLUE' });
         initWinSensor(new PositionedRect(new Pos(VWIDTH / 2, 500), 250, 250));
     }
     deactivate() { }

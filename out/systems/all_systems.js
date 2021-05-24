@@ -1,3 +1,4 @@
+import { animationSystem } from "./animation_system.js";
 import { controlsSystem } from "./controls_system.js";
 import { genericPayloadTable } from "./generic_payload_table.js";
 import { levelSystem } from "./level_system.js";
@@ -13,5 +14,6 @@ const allSystems = [
     renderer,
     sensorSystem,
     levelSystem,
+    animationSystem,
 ];
 export { allSystems };

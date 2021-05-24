@@ -11,9 +11,9 @@ export type ControlName =
     'ROLL' | 'GOLF' | 'FLAP' | 'BALL' | 'SHOT' | 'MAG' | 'LOCK';
 
 const controls = new Map<ControlName, Control>([
-    ['GOLF', new GolfControl()],
+    // ['GOLF', new GolfControl()],
     ['FLAP', new FlapControl()],
-    ['BALL', new CreateBallControl()],
+    //['BALL', new CreateBallControl()],
     ['ROLL', new RollControl()],
     ['SHOT', new ShotControl()],
     ['MAG', new MagnetControl()],

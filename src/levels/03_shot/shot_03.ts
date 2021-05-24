@@ -1,13 +1,17 @@
+import { DelayedCallback } from "../../anim/delayed_callback.js";
+import { UpdateRenderingAnim } from "../../anim/update_rendering_anim.js";
 import { bus, BusEvent, BusListener } from "../../bus/bus.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { CreateEntity, DestroyEntity } from "../../events/core_entity_events.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
-import { ClearPayloadEvent, SetPayloadEvent } from "../../events/payload_events.js";
+import { SetPayloadEvent } from "../../events/payload_events.js";
 import { Win } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
 import { Id } from "../../payloads/entity_id.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initResetButton, initWinSensor, initLoseSensor } from "../init_helpers.js";
+import { RenderingPayload } from "../../payloads/rendering_payload.js";
+import { animationSystem } from "../../systems/animation_system.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 const releaseTime = 5;
@@ -18,10 +22,18 @@ const textPos = PositionedRect.trbl(
     0,
 );
 
+function updateCountdownRendering(tickCount: number): RenderingPayload {
+    const s = releaseTime - Math.round(tickCount / 60);
+    return {
+        type: 'BOXED_TEXT',
+        boxW: textPos.w,
+        boxH: textPos.h,
+        text: `OH NO... ${s}`,
+        fontSize: 75,
+    };
+}
+
 export class Shot03 implements Level, BusListener {
-    private textEntity?: Id;
-    private lastSetSeconds?: number;
-    private ticksRemaining = releaseTime * 60;
     private shotTarget?: Id;
 
     activate() {
@@ -29,7 +41,7 @@ export class Shot03 implements Level, BusListener {
         initWorldBounds(/* showWorldBounds */ false);
         initControlsWidget(['SHOT'], 'SHOT');
 
-        this.textEntity = makeEntity({
+        const textEntity = makeEntity({
             label: 'holderupper',
             initialPos: textPos.center,
             physics: {
@@ -41,13 +53,14 @@ export class Shot03 implements Level, BusListener {
                 isStatic: true,
             }
         });
-        this.ticksRemaining = releaseTime * 60;
-        this.updateCountdownRendering();
-
+        animationSystem.addAnimation(new UpdateRenderingAnim(textEntity, updateCountdownRendering, 60));
+        animationSystem.addAnimation(
+            new DelayedCallback(
+                () => { bus.dispatch(new DestroyEntity(textEntity)); },
+                releaseTime * 60));
 
         const targetRect = new PositionedRect(
-            new Pos(VWIDTH - 750 / 2, VHEIGHT / 2), 750, 750,
-        )
+            new Pos(VWIDTH - 750 / 2, VHEIGHT / 2), 750, 750);
         this.shotTarget = makeEntity({
             label: 'shot_target',
             initialPos: targetRect.center,
@@ -67,13 +80,11 @@ export class Shot03 implements Level, BusListener {
         bus.addListener(this);
     }
     deactivate() {
-        this.lastSetSeconds = undefined;
         bus.removeListener(this);
     }
 
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
-            case 'TICK': this.onTick(); break;
             case 'CREATE_ENTITY': this.onCreateEntity(ev); break;
         }
     }
@@ -90,32 +101,4 @@ export class Shot03 implements Level, BusListener {
             }));
         }
     }
-
-    private onTick() {
-        if (!this.textEntity) return;
-
-        this.updateCountdownRendering();
-        if (this.ticksRemaining == 0) {
-            bus.dispatch(new DestroyEntity(this.textEntity));
-            this.textEntity = undefined;
-        }
-        this.ticksRemaining--;
-    }
-
-    private updateCountdownRendering() {
-        const s = Math.round(this.ticksRemaining / 60);
-        if (this.lastSetSeconds == s || !this.textEntity) return;
-        this.lastSetSeconds = s;
-        bus.dispatch(new SetPayloadEvent(this.textEntity, {
-            type: 'RENDERING',
-            payload: {
-                type: 'BOXED_TEXT',
-                boxW: textPos.w,
-                boxH: textPos.h,
-                text: `OH NO... ${s}`,
-                fontSize: 75,
-            }
-        }));
-    }
-
 }
