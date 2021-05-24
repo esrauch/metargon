@@ -6,7 +6,7 @@ import { Pos, VHEIGHT, Positions } from "../../coords/coords.js";
 import { Draw } from "../../events/draw.js";
 import { Id } from "../../payloads/entity_id.js";
 import { getCenterPosition, getLabel, isLocked } from "../getters.js";
-import { PhysicsEntityCategory, PhysicsTypedPayload } from "../../payloads/physics_payload.js";
+import { PhysicsConstraintPayload, PhysicsEntityCategory, PhysicsTypedPayload } from "../../payloads/physics_payload.js";
 import { assertUnreachable } from "../../util/assert.js";
 import { PositionTypedPayload } from "../../payloads/fixed_position_payload.js";
 import { camera } from "../../coords/camera.js";
@@ -79,17 +79,27 @@ export class Physics implements BusListener {
                 this.rollMove(ev);
                 break;
             case 'SET_PAYLOAD':
-                if (ev.typedPayload.type == 'PHYSICS')
-                    this.setPhysicsPayload(ev.entityId, ev.typedPayload);
-                if (ev.typedPayload.type == 'POSITION')
-                    this.maybeSetPosition(ev.entityId, ev.typedPayload);
-                if (ev.typedPayload.type == 'LOCKED')
-                    if (ev.typedPayload.payload.isLocked) this.lock(ev.entityId);
-                    else this.unlock(ev.entityId);
+                switch (ev.typedPayload.type) {
+                    case 'PHYSICS':
+                        this.setPhysicsPayload(ev.entityId, ev.typedPayload);
+                        break;
+                    case 'POSITION':
+                        this.maybeSetPosition(ev.entityId, ev.typedPayload);
+                        break;
+                    case 'LOCKED':
+                        if (ev.typedPayload.payload.isLocked) this.lock(ev.entityId);
+                        else this.unlock(ev.entityId);
+                        break;
+                    case 'PHYSICS_CONSTRAINT':
+                        this.setConstraint(ev.entityId, ev.typedPayload.payload);
+                        break;
+                }
                 break;
             case 'CLEAR_PAYLOAD':
                 if (ev.payloadType == 'PHYSICS')
                     this.destroyEntity(ev.entityId);
+                if (ev.payloadType == 'LOCKED')
+                    this.unlock(ev.entityId);
                 break;
             case 'DESTROY_ENTITY':
                 this.destroyEntity(ev.entityId);
@@ -317,7 +327,7 @@ export class Physics implements BusListener {
         const b = this.getBody(id);
         if (!b || this.pendingUnlocks.has(id)) return;
         M.Body.setStatic(b, true);
-        const targetUnlockTick = 3*60 + this.tickCount;
+        const targetUnlockTick = 150 + this.tickCount;
         this.pendingUnlocks.set(id, targetUnlockTick);
     }
 
@@ -329,6 +339,18 @@ export class Physics implements BusListener {
         if (!b) return;
         M.Body.setStatic(b, false);
     }
+
+    setConstraint(id: Id, constraintPayload: PhysicsConstraintPayload) {
+        const otherBody = this.getBody(constraintPayload.entity);
+        if (!otherBody) { console.error('missing body for constraint'); return; }
+        const pos = getCenterPosition(id);
+        const constraint = M.Constraint.create({
+            pointA: pos,
+            bodyB: otherBody,
+        })
+        M.Composite.add(this.engine.world, constraint);
+    }
+
 }
 
 const physics = Physics.singleton;

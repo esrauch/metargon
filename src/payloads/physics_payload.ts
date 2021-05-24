@@ -2,6 +2,7 @@
 // When objects are created, if they have any EntityPhysicsData attached then
 // its position will be managed/updated by the Physics engine.
 
+import { Id } from "./entity_id.js";
 import { TypedPayload } from "./payload.js";
 
 interface CircleHull {
@@ -34,4 +35,12 @@ export interface PhysicsPayload {
 
 export interface PhysicsTypedPayload extends TypedPayload<PhysicsPayload> {
     readonly type: 'PHYSICS'
+}
+
+export interface PhysicsConstraintPayload {
+    entity: Id,
+}
+
+export interface PhysicsConstraintTypedPayload extends TypedPayload<PhysicsConstraintPayload> {
+    readonly type: 'PHYSICS_CONSTRAINT'
 }

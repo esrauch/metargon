@@ -54,6 +54,12 @@ export type Primitive =
     {
         readonly type: 'PHYSICS_HULL',
         readonly color?: string,
+    } |
+    {
+        // Draws a line from self position to otherEntity position.
+        readonly type: 'CONNECTOR',
+        readonly otherEntity: Id,
+        readonly color?: string,
     }
 
 export interface CompoundRenderingOption {

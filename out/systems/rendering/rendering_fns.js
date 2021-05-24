@@ -1,5 +1,6 @@
 import { add } from "../../coords/coords.js";
 import { assertUnreachable } from "../../util/assert.js";
+import { getCenterPosition } from "../getters.js";
 import { physics } from "../physics/physics.js";
 export function makeRenderingFn(value) {
     switch (value.type) {
@@ -66,6 +67,12 @@ function makeCompoundRenderingFn(prims) {
                     const poly = physics.getHullPoly(id);
                     if (poly)
                         gfx.filledpoly(poly, p.color);
+                    break;
+                case 'CONNECTOR':
+                    const other = getCenterPosition(p.otherEntity);
+                    if (!other)
+                        return;
+                    gfx.line(pos, other, p.color);
                     break;
                 default:
                     assertUnreachable(p);

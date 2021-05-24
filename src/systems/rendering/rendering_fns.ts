@@ -3,6 +3,7 @@ import { Gfx } from "../../gfx/gfx.js";
 import { Id } from "../../payloads/entity_id.js";
 import { RenderingPayload, Primitive, ConditionalRenderingOption, Icon, } from "../../payloads/rendering_payload.js";
 import { assertUnreachable } from "../../util/assert.js";
+import { getCenterPosition } from "../getters.js";
 import { physics } from "../physics/physics.js";
 
 export type DrawFn = (gfx: Gfx, id: Id, pos: Pos) => void;
@@ -72,6 +73,11 @@ function makeCompoundRenderingFn(prims: Primitive[]): DrawFn {
                 case 'PHYSICS_HULL':
                     const poly = physics.getHullPoly(id);
                     if (poly) gfx.filledpoly(poly, p.color);
+                    break;
+                case 'CONNECTOR':
+                    const other = getCenterPosition(p.otherEntity);
+                    if (!other) return;
+                    gfx.line(pos, other, p.color);
                     break;
                 default:
                     assertUnreachable(p);
