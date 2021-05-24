@@ -64,7 +64,7 @@ export class Level02 implements Level {
     activate(): void {
         initPlayerEntity(new Pos(100, VHEIGHT*3/4));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget();
+        initControlsWidget(undefined, 'ROLL');
 
         const staticBox = initStaticBox(
             new PositionedRect(new Pos(VWIDTH/2, VHEIGHT*3/4 + 25), VWIDTH, 100));

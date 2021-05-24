@@ -163,7 +163,7 @@ export function initPlayerEntity(pos: Pos, opts?: {
     });
 }
 
-export function initWorldBounds(showBounds: boolean = true) {
+export function initWorldBounds(showBounds: boolean = true, skipBlockOnTop?: boolean) {
     // Build 4 walls around.
     function makeStaticBlock(
         label: string,
@@ -198,7 +198,7 @@ export function initWorldBounds(showBounds: boolean = true) {
     // Invisible physics-only blocks surrounding the world.
     makeStaticBlock("left", L - D, T - D, L, B + D);
     makeStaticBlock("right", R, T - D, R + D, B + D);
-    makeStaticBlock("top", L - D, T - D, R + D, T);
+    if (!skipBlockOnTop) makeStaticBlock("top", L - D, T - D, R + D, T);
     makeStaticBlock("bottom", L - D, B, R + D, B + D);
 
     makeWorldBoundsEntity(showBounds);

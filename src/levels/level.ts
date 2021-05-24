@@ -23,6 +23,8 @@ import { Level02 } from "./06_levels/level_02.js";
 import { Mag04 } from "./04_mag/mag_04.js";
 import { Mag03 } from "./04_mag/mag_03.js";
 import { Level01 } from "./06_levels/level_01.js";
+import { Level04 } from "./06_levels/level_04.js";
+import { Level03 } from "./06_levels/level_03.js";
 
 export interface Level {
     activate: () => void;
@@ -52,12 +54,14 @@ const screens: (new() => Level)[] = [
     Lock01,
     Lock02,  // 20
     Level01,
-    Level02, 
+    Level02,
+    Level03,
+    Level04,
     FinScreen,
 ]
 
 export function getLevelNumber(n: number): Level {
-    // return new Shot04();
+    return new Level04();
     let screenCtor = screens[n];
     return screenCtor ? new screenCtor() : new BrokenScreen();
 }

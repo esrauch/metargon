@@ -135,7 +135,7 @@ export function initPlayerEntity(pos, opts) {
         }
     });
 }
-export function initWorldBounds(showBounds = true) {
+export function initWorldBounds(showBounds = true, skipBlockOnTop) {
     // Build 4 walls around.
     function makeStaticBlock(label, x1, y1, x2, y2) {
         // Matter rectangle() does x/y based on _center_ for some reason
@@ -165,7 +165,8 @@ export function initWorldBounds(showBounds = true) {
     // Invisible physics-only blocks surrounding the world.
     makeStaticBlock("left", L - D, T - D, L, B + D);
     makeStaticBlock("right", R, T - D, R + D, B + D);
-    makeStaticBlock("top", L - D, T - D, R + D, T);
+    if (!skipBlockOnTop)
+        makeStaticBlock("top", L - D, T - D, R + D, T);
     makeStaticBlock("bottom", L - D, B, R + D, B + D);
     makeWorldBoundsEntity(showBounds);
 }
