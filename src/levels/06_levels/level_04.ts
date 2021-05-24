@@ -11,7 +11,7 @@ import { Color } from "../../gfx/gfx.js";
 import { Id } from "../../payloads/entity_id.js";
 import { RenderingPayload } from "../../payloads/rendering_payload.js";
 import { animationSystem } from "../../systems/animation_system.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor, initStaticBox } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initLoseSensor, initStaticBox, initControls } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 const releaseTime = 5;
@@ -39,7 +39,7 @@ export class Level04 implements Level, BusListener {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 2, 250));
         initWorldBounds(/* showWorldBounds */ false, /* skipblockontop */ true);
-        initControlsWidget(undefined, 'SHOT');
+        initControls('SHOT');
 
         initStaticBox(PositionedRect.trbl(0, 1300, VHEIGHT, 1200));
 

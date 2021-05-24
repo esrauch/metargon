@@ -4,14 +4,14 @@ import { CyclicMoveAnimation } from "../../anim/cyclic_move.js";
 import { Pos, VWIDTH, VHEIGHT, Vec } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { animationSystem } from "../../systems/animation_system.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor, initLoseSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initStaticBox, initWinSensor, initLoseSensor, initControls } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 export class Level01 implements Level {
     activate(): void {
         initPlayerEntity(new Pos(VWIDTH / 4, 100));
         initWorldBounds();
-        initControlsWidget();
+        initControls();
 
         initWinSensor(
             new PositionedRect(new Pos(VWIDTH/2, VHEIGHT - 125), VWIDTH, 250));

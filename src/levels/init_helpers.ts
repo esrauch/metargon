@@ -257,6 +257,14 @@ function makeBoxedTextForControl(control: ControlName): RenderingTypedPayload {
     };
 }
 
+export function initControls(
+    initialActive?: ControlName,
+    controls ?: ControlName[],
+) {
+    // Just opposite arg order, lol.
+    initControlsWidget(controls, initialActive);
+}
+
 export function initControlsWidget(
         controls: ControlName[] = allControls,
         initialActive?: ControlName) {

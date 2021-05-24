@@ -9,9 +9,10 @@ import { SetPayloadEvent } from "../../events/payload_events.js";
 import { Win } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
 import { Id } from "../../payloads/entity_id.js";
+import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
 import { RenderingPayload } from "../../payloads/rendering_payload.js";
 import { animationSystem } from "../../systems/animation_system.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor, initStaticBox } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initLoseSensor, initStaticBox, initControls } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 const releaseTime = 5;
@@ -37,11 +38,14 @@ export class Level03 implements Level, BusListener {
     private shotTarget?: Id;
 
     activate() {
-        initPlayerEntity(new Pos(VWIDTH / 2, 250));
+        initPlayerEntity(new Pos(VWIDTH / 2, 250), {
+            entityCategory: PhysicsEntityCategory.MAGNETIC,
+            color: Color.WATER,
+        });
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(undefined, 'SHOT');
+        initControls('LOCK');
 
-        initStaticBox(PositionedRect.trbl(0, 1300, 1000, 1200));
+        initStaticBox(PositionedRect.trbl(0, 1300, 1500, 1200));
 
         const textEntity = makeEntity({
             label: 'holderupper',

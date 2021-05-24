@@ -9,7 +9,7 @@ import { SetPayloadEvent } from "../../events/payload_events.js";
 import { Win } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
 import { animationSystem } from "../../systems/animation_system.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor, initStaticBox } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initLoseSensor, initStaticBox, initControls } from "../init_helpers.js";
 const releaseTime = 5;
 const textPos = PositionedRect.trbl(500, VWIDTH, 600, 0);
 function updateCountdownRendering(tickCount) {
@@ -26,7 +26,7 @@ export class Level04 {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 2, 250));
         initWorldBounds(/* showWorldBounds */ false, /* skipblockontop */ true);
-        initControlsWidget(undefined, 'SHOT');
+        initControls('SHOT');
         initStaticBox(PositionedRect.trbl(0, 1300, VHEIGHT, 1200));
         const textEntity = makeEntity({
             label: 'holderupper',

@@ -220,6 +220,10 @@ function makeBoxedTextForControl(control) {
         }
     };
 }
+export function initControls(initialActive, controls) {
+    // Just opposite arg order, lol.
+    initControlsWidget(controls, initialActive);
+}
 export function initControlsWidget(controls = allControls, initialActive) {
     const w = CONTROL_SIZE;
     const h = CONTROL_SIZE;

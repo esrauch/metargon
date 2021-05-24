@@ -10,7 +10,7 @@ import { Lose } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
 import { Id, PLAYER } from "../../payloads/entity_id.js";
 import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor, initLoseSensor, initSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initStaticBox, initWinSensor, initControls } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 function dispatchLose() { bus.dispatch(new Lose()) }
@@ -64,7 +64,7 @@ export class Level02 implements Level {
     activate(): void {
         initPlayerEntity(new Pos(100, VHEIGHT*3/4));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(undefined, 'ROLL');
+        initControls('ROLL');
 
         const staticBox = initStaticBox(
             new PositionedRect(new Pos(VWIDTH/2, VHEIGHT*3/4 + 25), VWIDTH, 100));

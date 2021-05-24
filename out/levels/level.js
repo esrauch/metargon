@@ -54,7 +54,7 @@ const screens = [
     FinScreen,
 ];
 export function getLevelNumber(n) {
-    return new Level04();
+    return new Level03();
     let screenCtor = screens[n];
     return screenCtor ? new screenCtor() : new BrokenScreen();
 }
