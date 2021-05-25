@@ -22,7 +22,7 @@ export class Lock01 {
         });
         bus.dispatch(new ChangePhysicsEntityCategory(PLAYER, PhysicsEntityCategory.MAGNETIC));
         const winSensor = initWinSensor(new PositionedRect(new Pos(VWIDTH / 2, 1000), 250, 250));
-        animationSystem.addAnimation(CyclicMoveAnimation.to(PLAYER, new Pos(1900, VHEIGHT / 2), 2));
-        animationSystem.addAnimation(CyclicMoveAnimation.to(winSensor, new Pos(VWIDTH / 2, VHEIGHT - 1000), 2, /*offsetS*/ 1));
+        animationSystem.start(CyclicMoveAnimation.to(PLAYER, new Pos(1900, VHEIGHT / 2), 2));
+        animationSystem.start(CyclicMoveAnimation.to(winSensor, new Pos(VWIDTH / 2, VHEIGHT - 1000), 2, /*offsetS*/ 1));
     }
 }

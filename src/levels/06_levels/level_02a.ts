@@ -10,7 +10,7 @@ import { Lose } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
 import { Id, PLAYER } from "../../payloads/entity_id.js";
 import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor, initLoseSensor, initSensor, initControls } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initStaticBox, initWinSensor, initControls } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 function dispatchLose() { bus.dispatch(new Lose()) }
@@ -42,7 +42,7 @@ function makeLoseBall(x: number, y: number) {
     })
 }
 
-function makeBlueBall(x: number, y: number) {
+function makeWhiteBall(x: number, y: number) {
     const r = 75;
     makeEntity({
         label: 'blue_ball',
@@ -50,23 +50,21 @@ function makeBlueBall(x: number, y: number) {
         rendering: {
             type: 'CIRCLE',
             radius: r,
-            color: Color.WATER,
         },
         physics:  {
             hull: {
                 type: 'CIRCLE',
                 radius: r,
             },
-            entityCategory: PhysicsEntityCategory.MAGNETIC,
         }
     });
 }
 
-export class Level02 implements Level {
+export class Level02a implements Level {
     activate(): void {
         initPlayerEntity(new Pos(100, VHEIGHT*3/4));
         initWorldBounds(/* showWorldBounds */ false);
-        initControls();
+        initControls('ROLL');
 
         const staticBox = initStaticBox(
             new PositionedRect(new Pos(VWIDTH/2, VHEIGHT*3/4 + 25), VWIDTH, 100));
@@ -87,7 +85,7 @@ export class Level02 implements Level {
             makeLoseBall(i * 50, VHEIGHT-600);
 
         for (let i = 0; i < 10; ++i)
-            makeBlueBall(i * 50, VHEIGHT-400);
+            makeWhiteBall(i * 50, VHEIGHT-400);
 
         const moveToTopSensor = PositionedRect.trbl(VHEIGHT-400, VWIDTH,VHEIGHT,0);
         makeEntity({
@@ -108,5 +106,8 @@ export class Level02 implements Level {
                 }
             }
         });
+    }
+
+    deactivate() {
     }
 }

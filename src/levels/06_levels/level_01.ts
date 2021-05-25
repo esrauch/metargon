@@ -23,7 +23,7 @@ export class Level01 implements Level {
         initStaticBox(PositionedRect.trbl(1550, VWIDTH, 1550 + 100, 150));
 
         const lose = initLoseSensor(PositionedRect.trbl(-VHEIGHT-200,VWIDTH,-200,0));
-        animationSystem.addAnimation(CyclicMoveAnimation.ofOffset(lose, new Vec(0, VHEIGHT+200), 25));
+        animationSystem.start(CyclicMoveAnimation.ofOffset(lose, new Vec(0, VHEIGHT+200), 25));
     }
 
     deactivate() {}

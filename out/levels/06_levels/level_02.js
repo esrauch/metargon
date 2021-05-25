@@ -36,7 +36,7 @@ function makeLoseBall(x, y) {
         }
     });
 }
-function makeWhiteBall(x, y) {
+function makeBlueBall(x, y) {
     const r = 75;
     makeEntity({
         label: 'blue_ball',
@@ -44,12 +44,14 @@ function makeWhiteBall(x, y) {
         rendering: {
             type: 'CIRCLE',
             radius: r,
+            color: Color.WATER,
         },
         physics: {
             hull: {
                 type: 'CIRCLE',
                 radius: r,
             },
+            entityCategory: PhysicsEntityCategory.MAGNETIC,
         }
     });
 }
@@ -57,7 +59,7 @@ export class Level02 {
     activate() {
         initPlayerEntity(new Pos(100, VHEIGHT * 3 / 4));
         initWorldBounds(/* showWorldBounds */ false);
-        initControls('ROLL');
+        initControls();
         const staticBox = initStaticBox(new PositionedRect(new Pos(VWIDTH / 2, VHEIGHT * 3 / 4 + 25), VWIDTH, 100));
         bus.dispatch(new ChangePhysicsEntityCategory(staticBox, PhysicsEntityCategory.COLLIDE_ONLY_WITH_PLAYER));
         initWinSensor(new PositionedRect(new Pos(VWIDTH - 125, VHEIGHT * 3 / 4 - 125), 250, 250));
@@ -71,7 +73,7 @@ export class Level02 {
         for (let i = 0; i < 20; ++i)
             makeLoseBall(i * 50, VHEIGHT - 600);
         for (let i = 0; i < 10; ++i)
-            makeWhiteBall(i * 50, VHEIGHT - 400);
+            makeBlueBall(i * 50, VHEIGHT - 400);
         const moveToTopSensor = PositionedRect.trbl(VHEIGHT - 400, VWIDTH, VHEIGHT, 0);
         makeEntity({
             label: 'moveToTopSensor',
@@ -91,7 +93,5 @@ export class Level02 {
                 }
             }
         });
-    }
-    deactivate() {
     }
 }

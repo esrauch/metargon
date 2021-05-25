@@ -1,10 +1,8 @@
-import { DelayedCallback, DelayedWin } from "../../anim/delayed_callback.js";
+import { DelayedWin } from "../../anim/delayed_callback.js";
 import { UpdateRenderingAnim } from "../../anim/update_rendering_anim.js";
-import { bus } from "../../bus/bus.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
-import { Win } from "../../events/win_loss_events.js";
 import { RenderingPayload } from "../../payloads/rendering_payload.js";
 import { animationSystem } from "../../systems/animation_system.js";
 import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor } from "../init_helpers.js";
@@ -41,7 +39,7 @@ export class Flapping02 implements Level {
             label: 'helpinfo',
         });
 
-        animationSystem.addAnimation(
+        animationSystem.start(
             new UpdateRenderingAnim(textEntity, makeCountdownRendering, 60)
         );
 
@@ -50,6 +48,6 @@ export class Flapping02 implements Level {
         initLoseSensor(PositionedRect.trbl(400, 200, VHEIGHT - 400, 0));
         initLoseSensor(PositionedRect.trbl(400, VWIDTH, VHEIGHT - 400, VWIDTH - 200));
 
-        animationSystem.addAnimation(new DelayedWin(levelDurationS * 60));
+        animationSystem.start(new DelayedWin(levelDurationS * 60));
     }
 }

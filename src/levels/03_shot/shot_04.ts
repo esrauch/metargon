@@ -1,12 +1,11 @@
-import { DelayedCallback } from "../../anim/delayed_callback.js";
+
+import { DelayedDestroy } from "../../anim/delayed_callback.js";
 import { UpdateRenderingAnim } from "../../anim/update_rendering_anim.js";
-import { bus, BusEvent, BusListener } from "../../bus/bus.js";
+import { bus } from "../../bus/bus.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { DestroyEntity } from "../../events/core_entity_events.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
-import { SetPayloadEvent } from "../../events/payload_events.js";
-import { Id } from "../../payloads/entity_id.js";
 import { RenderingPayload } from "../../payloads/rendering_payload.js";
 import { animationSystem } from "../../systems/animation_system.js";
 import { initPlayerEntity, initWorldBounds, initControlsWidget, initWinSensor, initLoseSensor } from "../init_helpers.js";
@@ -50,11 +49,8 @@ export class Shot04 implements Level {
                 isStatic: true,
             }
         });
-        animationSystem.addAnimation(new UpdateRenderingAnim(textEntity, updateCountdownRendering, 60));
-        animationSystem.addAnimation(
-            new DelayedCallback(
-                () => { bus.dispatch(new DestroyEntity(textEntity)); },
-                releaseTime * 60));
+        animationSystem.start(new UpdateRenderingAnim(textEntity, updateCountdownRendering, 60));
+        animationSystem.start(new DelayedDestroy(textEntity, releaseTime * 60));
 
         const winBox = PositionedRect.trbl(
             VHEIGHT- 250, VWIDTH/2, VHEIGHT, VWIDTH/2 - 250);

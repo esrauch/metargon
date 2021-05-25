@@ -18,13 +18,17 @@ import { Shot03 } from "./03_shot/shot_03.js";
 import { Mag01 } from "./04_mag/mag_01.js";
 import { Mag02 } from "./04_mag/mag_02.js";
 import { Lock01 } from "./05_lock/lock_01.js";
-import { Lock02 } from "./05_lock/lock_02.js";
 import { Level02 } from "./06_levels/level_02.js";
-import { Mag03 } from "./04_mag/mag_03.js";
+import { Level02a } from "./06_levels/level_02a.js";
 import { Level05 } from "./06_levels/level_05.js";
+import { Mag03 } from "./04_mag/mag_03.js";
 import { Level01 } from "./06_levels/level_01.js";
-import { Level04 } from "./06_levels/level_04.js";
+import { Level03MissingTop } from "./06_levels/level_03missingtop.js";
 import { Level03 } from "./06_levels/level_03.js";
+import { Level03DropLock } from "./06_levels/level_03droplock.js";
+import { Level03Lock } from "./06_levels/level_03lock.js";
+import { Level06 } from "./06_levels/level_06cheese.js";
+import { Level04 } from "./06_levels/level_04.js";
 
 export interface Level {
     activate: () => void;
@@ -51,12 +55,16 @@ const screens: (new() => Level)[] = [
     Mag02,
     Mag03,
     Lock01,
-    Lock02,  
     Level01, // 20
-    Level02,
+    Level02,  
+    Level02a,
     Level03,
+    Level03Lock,
+    Level03DropLock,  // 25
+    Level03MissingTop,
     Level04,
-    Level05,
+    Level05, 
+    Level06,
     FinScreen,
 ]
 

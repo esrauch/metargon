@@ -15,7 +15,7 @@ export class AnimationSystem {
                 break;
         }
     }
-    addAnimation(animation) {
+    start(animation) {
         this.animations.push(animation);
     }
     removeAnimationsForEntity(id) {
@@ -24,6 +24,8 @@ export class AnimationSystem {
     tick() {
         const toRemove = new Set();
         for (const anim of this.animations) {
+            //const locked = anim.entityId && isLocked(anim.entityId);
+            //if (locked) continue;
             if (anim.isDone())
                 toRemove.add(anim);
             else

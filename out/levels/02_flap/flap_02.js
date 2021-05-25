@@ -26,11 +26,11 @@ export class Flapping02 {
             initialPos: textPos.center,
             label: 'helpinfo',
         });
-        animationSystem.addAnimation(new UpdateRenderingAnim(textEntity, makeCountdownRendering, 60));
+        animationSystem.start(new UpdateRenderingAnim(textEntity, makeCountdownRendering, 60));
         initLoseSensor(PositionedRect.trbl(200, VWIDTH, 400, 0));
         initLoseSensor(PositionedRect.trbl(VHEIGHT - 400, VWIDTH, VHEIGHT - 200, 0));
         initLoseSensor(PositionedRect.trbl(400, 200, VHEIGHT - 400, 0));
         initLoseSensor(PositionedRect.trbl(400, VWIDTH, VHEIGHT - 400, VWIDTH - 200));
-        animationSystem.addAnimation(new DelayedWin(levelDurationS * 60));
+        animationSystem.start(new DelayedWin(levelDurationS * 60));
     }
 }

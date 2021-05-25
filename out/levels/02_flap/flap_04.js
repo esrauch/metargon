@@ -27,7 +27,7 @@ export class Flapping04 {
             initialPos: textPos.center,
             label: 'helpinfo',
         });
-        animationSystem.addAnimation(new UpdateRenderingAnim(textEntity, makeCountdownRendering, 60));
+        animationSystem.start(new UpdateRenderingAnim(textEntity, makeCountdownRendering, 60));
         initLoseSensor(PositionedRect.trbl(200, VWIDTH, 400, 0));
         initLoseSensor(PositionedRect.trbl(VHEIGHT - 400, VWIDTH, VHEIGHT - 200, 0));
         initLoseSensor(PositionedRect.trbl(400, 200, VHEIGHT - 400, 0));
@@ -39,10 +39,10 @@ export class Flapping04 {
         this.makeMovingBlock(250, VHEIGHT / 2, 1750, VHEIGHT / 2, 8);
         this.makeMovingBlock(250, VHEIGHT / 2, 1750, VHEIGHT / 2, 2);
         this.makeMovingBlock(VWIDTH - 250, VHEIGHT - 250, VWIDTH - 1750, VHEIGHT - 1750, 8);
-        animationSystem.addAnimation(new DelayedWin(levelDurationS * 60));
+        animationSystem.start(new DelayedWin(levelDurationS * 60));
     }
     makeMovingBlock(fromX, fromY, toX, toY, durationS) {
         const id = initStaticBox(new PositionedRect(new Pos(fromX, fromY), 250, 250));
-        animationSystem.addAnimation(CyclicMoveAnimation.to(id, new Pos(toX, toY), durationS));
+        animationSystem.start(CyclicMoveAnimation.to(id, new Pos(toX, toY), durationS));
     }
 }

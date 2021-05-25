@@ -2,6 +2,8 @@ import { Anim } from "../anim/animation.js";
 import { CyclicMoveAnimation } from "../anim/cyclic_move.js";
 import { BusEvent, BusListener } from "../bus/bus.js";
 import { Id } from "../payloads/entity_id.js";
+import { genericPayloadTable } from "./generic_payload_table.js";
+import { isLocked } from "./getters.js";
 
 
 export class AnimationSystem implements BusListener {
@@ -24,7 +26,7 @@ export class AnimationSystem implements BusListener {
         }
     }
 
-    addAnimation(animation: Anim) {
+    start(animation: Anim) {
         this.animations.push(animation);
     }
 
@@ -38,6 +40,8 @@ export class AnimationSystem implements BusListener {
     private tick() {
         const toRemove = new Set();
         for (const anim of this.animations) {
+            //const locked = anim.entityId && isLocked(anim.entityId);
+            //if (locked) continue;
             if (anim.isDone()) toRemove.add(anim);
             else anim.tick();
         }

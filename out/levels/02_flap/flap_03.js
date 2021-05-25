@@ -14,6 +14,6 @@ export class Flapping03 {
         initLoseSensor(new PositionedRect(new Pos(500, 1750), 250, 250));
         initLoseSensor(new PositionedRect(new Pos(1500, 1500), 250, 750));
         const pusher = initStaticBox(PositionedRect.trbl(1000, 250, 2000, 0));
-        animationSystem.addAnimation(CyclicMoveAnimation.to(pusher, new Pos(VWIDTH - 125, VHEIGHT / 2), 5));
+        animationSystem.start(CyclicMoveAnimation.to(pusher, new Pos(VWIDTH - 125, VHEIGHT / 2), 5));
     }
 }

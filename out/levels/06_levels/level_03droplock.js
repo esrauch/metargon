@@ -7,8 +7,9 @@ import { makeEntity } from "../../events/make_entity_helper.js";
 import { SetPayloadEvent } from "../../events/payload_events.js";
 import { Win } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
+import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
 import { animationSystem } from "../../systems/animation_system.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initLoseSensor, initStaticBox, initControls } from "../init_helpers.js";
 const releaseTime = 5;
 const textPos = PositionedRect.trbl(500, VWIDTH, 600, 0);
 function updateCountdownRendering(tickCount) {
@@ -21,11 +22,16 @@ function updateCountdownRendering(tickCount) {
         fontSize: 75,
     };
 }
-export class Shot03 {
+// Done with either a tricky Lock or an easy Mag to drag through a wall to cheese.
+export class Level03DropLock {
     activate() {
-        initPlayerEntity(new Pos(VWIDTH / 4, 250));
+        initPlayerEntity(new Pos(VWIDTH / 2, 250), {
+            entityCategory: PhysicsEntityCategory.MAGNETIC,
+            color: Color.WATER,
+        });
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['SHOT'], 'SHOT');
+        initControls('LOCK');
+        initStaticBox(PositionedRect.trbl(0, 1300, 1500, 1200));
         const textEntity = makeEntity({
             label: 'holderupper',
             initialPos: textPos.center,
@@ -40,7 +46,7 @@ export class Shot03 {
         });
         animationSystem.start(new UpdateRenderingAnim(textEntity, updateCountdownRendering, 60));
         animationSystem.start(new DelayedDestroy(textEntity, releaseTime * 60));
-        const targetRect = new PositionedRect(new Pos(VWIDTH - 750 / 2, VHEIGHT / 2), 750, 750);
+        const targetRect = new PositionedRect(new Pos(VWIDTH - 750 / 2, VHEIGHT / 4), 750, 100);
         this.shotTarget = makeEntity({
             label: 'shot_target',
             initialPos: targetRect.center,
@@ -72,7 +78,7 @@ export class Shot03 {
                 type: 'SENSOR',
                 payload: {
                     target: this.shotTarget,
-                    rect: { w: 750, h: 750 },
+                    rect: { w: 750, h: 100 },
                     callback: () => bus.dispatch(new Win())
                 }
             }));

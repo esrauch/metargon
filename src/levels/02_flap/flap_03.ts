@@ -26,7 +26,7 @@ export class Flapping03 implements Level {
 
         const pusher = initStaticBox(PositionedRect.trbl(1000, 250, 2000, 0));
         
-        animationSystem.addAnimation(
+        animationSystem.start(
         CyclicMoveAnimation.to(pusher, new Pos(VWIDTH - 125, VHEIGHT/2), 5));
     }
 }

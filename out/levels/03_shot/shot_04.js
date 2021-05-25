@@ -1,9 +1,7 @@
-import { DelayedCallback } from "../../anim/delayed_callback.js";
+import { DelayedDestroy } from "../../anim/delayed_callback.js";
 import { UpdateRenderingAnim } from "../../anim/update_rendering_anim.js";
-import { bus } from "../../bus/bus.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
-import { DestroyEntity } from "../../events/core_entity_events.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { animationSystem } from "../../systems/animation_system.js";
 import { initPlayerEntity, initWorldBounds, initControlsWidget, initWinSensor, initLoseSensor } from "../init_helpers.js";
@@ -36,8 +34,8 @@ export class Shot04 {
                 isStatic: true,
             }
         });
-        animationSystem.addAnimation(new UpdateRenderingAnim(textEntity, updateCountdownRendering, 60));
-        animationSystem.addAnimation(new DelayedCallback(() => { bus.dispatch(new DestroyEntity(textEntity)); }, releaseTime * 60));
+        animationSystem.start(new UpdateRenderingAnim(textEntity, updateCountdownRendering, 60));
+        animationSystem.start(new DelayedDestroy(textEntity, releaseTime * 60));
         const winBox = PositionedRect.trbl(VHEIGHT - 250, VWIDTH / 2, VHEIGHT, VWIDTH / 2 - 250);
         initWinSensor(winBox);
         initLoseSensor(PositionedRect.trbl(winBox.t, winBox.l, winBox.b, 0));

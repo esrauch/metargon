@@ -44,7 +44,7 @@ export class Flapping04 implements Level {
             initialPos: textPos.center,
             label: 'helpinfo',
         });
-        animationSystem.addAnimation(
+        animationSystem.start(
             new UpdateRenderingAnim(textEntity, makeCountdownRendering, 60)
         );
 
@@ -61,13 +61,13 @@ export class Flapping04 implements Level {
         this.makeMovingBlock(250, VHEIGHT/2, 1750, VHEIGHT/2, 2);
         this.makeMovingBlock(VWIDTH-250, VHEIGHT-250, VWIDTH-1750, VHEIGHT-1750, 8);
 
-        animationSystem.addAnimation(new DelayedWin(levelDurationS * 60));
+        animationSystem.start(new DelayedWin(levelDurationS * 60));
     }
 
     private makeMovingBlock(
         fromX: number, fromY: number, toX: number, toY: number, durationS: number) {
         const id = initStaticBox(
             new PositionedRect(new Pos(fromX, fromY), 250, 250));
-        animationSystem.addAnimation(CyclicMoveAnimation.to(id, new Pos(toX, toY), durationS));
+        animationSystem.start(CyclicMoveAnimation.to(id, new Pos(toX, toY), durationS));
     }
 }

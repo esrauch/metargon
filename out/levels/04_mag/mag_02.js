@@ -31,5 +31,4 @@ export class Mag02 {
         const b = initNonRotatingBox(PositionedRect.trbl(winRect.b, VWIDTH * 2 / 3 + 50, winRect.b + 100, VWIDTH / 3 - 50), Color.WATER);
         bus.dispatch(new ChangePhysicsEntityCategory(b, PhysicsEntityCategory.MAGNETIC));
     }
-    deactivate() { }
 }

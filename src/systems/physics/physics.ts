@@ -327,7 +327,7 @@ export class Physics implements BusListener {
         const b = this.getBody(id);
         if (!b || this.pendingUnlocks.has(id)) return;
         M.Body.setStatic(b, true);
-        const targetUnlockTick = 150 + this.tickCount;
+        const targetUnlockTick = 220 + this.tickCount;
         this.pendingUnlocks.set(id, targetUnlockTick);
     }
 

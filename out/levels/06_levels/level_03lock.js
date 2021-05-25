@@ -1,4 +1,4 @@
-import { DelayedDestroy } from "../../anim/delayed_callback.js";
+import { DelayedDestroy, DelayedSetPayload } from "../../anim/delayed_callback.js";
 import { UpdateRenderingAnim } from "../../anim/update_rendering_anim.js";
 import { bus } from "../../bus/bus.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
@@ -7,23 +7,26 @@ import { makeEntity } from "../../events/make_entity_helper.js";
 import { SetPayloadEvent } from "../../events/payload_events.js";
 import { Win } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
+import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
 import { animationSystem } from "../../systems/animation_system.js";
-import { initPlayerEntity, initWorldBounds, initLoseSensor, initStaticBox, initControls } from "../init_helpers.js";
-const releaseTime = 5;
-const textPos = PositionedRect.trbl(500, VWIDTH, 600, 0);
+import { initPlayerEntity, initWorldBounds, initLoseSensor, initControls } from "../init_helpers.js";
+const horizReleaseTime = 5;
+const horizBlockPos = PositionedRect.trbl(500, VWIDTH - 50, 600, 50);
 function updateCountdownRendering(tickCount) {
-    const s = releaseTime - Math.round(tickCount / 60);
+    const s = horizReleaseTime - Math.round(tickCount / 60);
     return {
         type: 'BOXED_TEXT',
-        boxW: textPos.w,
-        boxH: textPos.h,
+        boxW: horizBlockPos.w,
+        boxH: horizBlockPos.h,
         text: `OH NO... ${s}`,
         fontSize: 75,
+        color: Color.WATER,
     };
 }
+const vertReleaseTime = 7;
 const vertBlockPos = PositionedRect.trbl(0, 1300, 2000, 1200);
 function updateCountdownRenderingSmall(tickCount) {
-    const s = releaseTime - Math.round(tickCount / 60);
+    const s = vertReleaseTime - Math.round(tickCount / 60);
     return {
         type: 'BOXED_TEXT',
         boxW: vertBlockPos.w,
@@ -32,28 +35,45 @@ function updateCountdownRenderingSmall(tickCount) {
         fontSize: 75,
     };
 }
-export class Level03 {
+export class Level03Lock {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 2, 250));
         initWorldBounds(/* showWorldBounds */ false);
-        initControls('SHOT');
-        const vertBlock = initStaticBox(vertBlockPos);
-        animationSystem.start(new UpdateRenderingAnim(vertBlock, updateCountdownRenderingSmall, 60));
-        const textEntity = makeEntity({
-            label: 'holderupper',
-            initialPos: textPos.center,
+        initControls('LOCK');
+        const vertBlock = makeEntity({
+            label: 'vert',
+            initialPos: vertBlockPos.center,
             physics: {
                 hull: {
                     type: 'RECT',
-                    width: textPos.w,
-                    height: textPos.h,
+                    width: vertBlockPos.w,
+                    height: vertBlockPos.h,
                 },
                 isStatic: true,
+                entityCategory: PhysicsEntityCategory.COLLIDE_ONLY_WITH_PLAYER,
             }
         });
-        animationSystem.start(new UpdateRenderingAnim(textEntity, updateCountdownRendering, 60));
-        animationSystem.start(new DelayedDestroy(vertBlock, releaseTime * 60));
-        animationSystem.start(new DelayedDestroy(textEntity, releaseTime * 60));
+        animationSystem.start(new UpdateRenderingAnim(vertBlock, updateCountdownRenderingSmall, 60));
+        const horizBlockPhysics = {
+            hull: {
+                type: 'RECT',
+                width: horizBlockPos.w,
+                height: horizBlockPos.h,
+            },
+            isStatic: true,
+            entityCategory: PhysicsEntityCategory.MAGNETIC,
+        };
+        const horizBlock = makeEntity({
+            label: 'holderupper',
+            initialPos: horizBlockPos.center,
+            physics: horizBlockPhysics,
+        });
+        animationSystem.start(new UpdateRenderingAnim(horizBlock, updateCountdownRendering, 60));
+        animationSystem.start(new DelayedSetPayload(horizBlock, {
+            type: 'PHYSICS',
+            payload: Object.assign(Object.assign({}, horizBlockPhysics), { isStatic: false })
+        }, horizReleaseTime * 60));
+        animationSystem.start(new DelayedDestroy(vertBlock, vertReleaseTime * 60));
         const targetRect = new PositionedRect(new Pos(VWIDTH - 750 / 2, VHEIGHT / 4), 750, 100);
         this.shotTarget = makeEntity({
             label: 'shot_target',
