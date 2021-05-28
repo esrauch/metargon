@@ -17,5 +17,4 @@ export class Level01 {
         const lose = initLoseSensor(PositionedRect.trbl(-VHEIGHT - 200, VWIDTH, -200, 0));
         animationSystem.start(CyclicMoveAnimation.ofOffset(lose, new Vec(0, VHEIGHT + 200), 25));
     }
-    deactivate() { }
 }

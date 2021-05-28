@@ -18,6 +18,4 @@ export class Flapping01 implements Level {
 
         initWinSensor(new PositionedRect(new Pos(VWIDTH/2, 500), 250, 250));
     }
-
-    deactivate() {}
 }

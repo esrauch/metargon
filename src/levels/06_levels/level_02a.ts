@@ -107,7 +107,4 @@ export class Level02a implements Level {
             }
         });
     }
-
-    deactivate() {
-    }
 }

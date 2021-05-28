@@ -1,10 +1,8 @@
 
 import { DelayedDestroy } from "../../anim/delayed_callback.js";
 import { UpdateRenderingAnim } from "../../anim/update_rendering_anim.js";
-import { bus } from "../../bus/bus.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
-import { DestroyEntity } from "../../events/core_entity_events.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { RenderingPayload } from "../../payloads/rendering_payload.js";
 import { animationSystem } from "../../systems/animation_system.js";

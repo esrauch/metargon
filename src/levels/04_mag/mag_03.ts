@@ -47,5 +47,4 @@ export class Mag03 implements Level {
 
         initWinSensor(PositionedRect.trbl(VHEIGHT-250,VWIDTH,VHEIGHT,VWIDTH-250));
     }
-    deactivate() {}
 }

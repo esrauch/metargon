@@ -21,6 +21,4 @@ export class Rolling02 {
         initWinSensor(
             new PositionedRect(new Pos(VWIDTH - 125, VHEIGHT - 125), 250, 250));
     }
-
-    deactivate() {}
 }

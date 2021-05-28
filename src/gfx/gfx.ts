@@ -4,7 +4,7 @@ import { Icon } from "../payloads/rendering_payload.js";
 export enum Color {
     DEBUG = '#F00',
     BG = '#000',
-    BG_MILD = '#222',
+    BG_MILD = '#444',
     FG = '#FFF',
     FIRE = '#F8A',
     GRASS = '#AFB',

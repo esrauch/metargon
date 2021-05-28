@@ -11,5 +11,4 @@ export class Level04 {
         initStaticBox(holdup);
         initLoseSensor(PositionedRect.trbl(holdup.b, VWIDTH - 55, VHEIGHT, 0));
     }
-    deactivate() { }
 }

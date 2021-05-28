@@ -12,6 +12,4 @@ export class Shot03_old {
         initStaticBox(PositionedRect.trbl(VHEIGHT / 2, VWIDTH, VHEIGHT / 2 + 750, 0), { text: 'ROLL YOURSELF' });
         initWinSensor(PositionedRect.trbl(VHEIGHT / 2 - 250, VWIDTH / 2, VHEIGHT / 2, VWIDTH / 2 - 250));
     }
-    deactivate() {
-    }
 }

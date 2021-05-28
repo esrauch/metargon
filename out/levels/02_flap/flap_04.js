@@ -7,7 +7,7 @@ import { makeEntity } from "../../events/make_entity_helper.js";
 import { animationSystem } from "../../systems/animation_system.js";
 import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initLoseSensor } from "../init_helpers.js";
 const textPos = PositionedRect.trbl(VHEIGHT - 200, VWIDTH, VHEIGHT, 0);
-const levelDurationS = 20;
+const levelDurationS = 10;
 function makeCountdownRendering(tickCount) {
     const timeLeft = levelDurationS - Math.round(tickCount / 60);
     return {

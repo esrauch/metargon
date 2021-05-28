@@ -24,6 +24,4 @@ export class Shot03_old implements Level {
                 VHEIGHT/2 - 250, VWIDTH/2, VHEIGHT/2, VWIDTH/2 - 250));
 
     }
-    deactivate() {
-    }
 }

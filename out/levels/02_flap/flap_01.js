@@ -9,5 +9,4 @@ export class Flapping01 {
         initStaticBox(PositionedRect.trbl(VHEIGHT / 2, VWIDTH, VHEIGHT / 2 + 750, 0), { text: 'FLAP = TAP' });
         initWinSensor(new PositionedRect(new Pos(VWIDTH / 2, 500), 250, 250));
     }
-    deactivate() { }
 }

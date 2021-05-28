@@ -1,16 +1,12 @@
 import { CyclicMoveAnimation } from "../../anim/cyclic_move.js";
 import { DelayedWin } from "../../anim/delayed_callback.js";
 import { UpdateRenderingAnim } from "../../anim/update_rendering_anim.js";
-import { bus, BusEvent, BusListener } from "../../bus/bus.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
-import { SetPayloadEvent } from "../../events/payload_events.js";
-import { Win } from "../../events/win_loss_events.js";
-import { Id } from "../../payloads/entity_id.js";
 import { RenderingPayload } from "../../payloads/rendering_payload.js";
 import { animationSystem } from "../../systems/animation_system.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor, initResetButton, initLoseSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initLoseSensor } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 const textPos = PositionedRect.trbl(
@@ -20,7 +16,7 @@ const textPos = PositionedRect.trbl(
     0,
 );
 
-const levelDurationS = 20;
+const levelDurationS = 10;
 
 function makeCountdownRendering(tickCount: number): RenderingPayload {
     const timeLeft = levelDurationS - Math.round(tickCount / 60);

@@ -19,6 +19,4 @@ export class Level04 implements Level {
 
         initLoseSensor(PositionedRect.trbl(holdup.b,VWIDTH-55,VHEIGHT,0));
     }
-
-    deactivate() {}
 }

@@ -92,6 +92,4 @@ export class Level02a {
             }
         });
     }
-    deactivate() {
-    }
 }

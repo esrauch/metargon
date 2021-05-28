@@ -19,6 +19,4 @@ export class Rolling01 implements Level {
 
         initWinSensor(PositionedRect.trbl(VHEIGHT/2 - 250, VWIDTH, VHEIGHT/2, VWIDTH - 250));
     }
-
-    deactivate() {}
 }

@@ -10,5 +10,4 @@ export class Rolling04 {
         initWinSensor(PositionedRect.trbl(1750 - 250, 250, 1750, 0));
         initLoseSensor(PositionedRect.trbl(VHEIGHT - 250, 250, VHEIGHT, 0));
     }
-    deactivate() { }
 }
