@@ -2,12 +2,12 @@ import { CyclicMoveAnimation } from "../../anim/cyclic_move.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { animationSystem } from "../../systems/animation_system.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor, initLoseSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initStaticBox, initWinSensor, initLoseSensor, initControl } from "../init_helpers.js";
 export class Flapping03 {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT - 300));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['FLAP'], 'FLAP');
+        initControl('FLAP');
         initStaticBox(PositionedRect.trbl(VHEIGHT - 200, VWIDTH, VHEIGHT, 0));
         initLoseSensor(new PositionedRect(new Pos(500, 1250), 250, 250));
         initWinSensor(new PositionedRect(new Pos(500, 1500), 250, 250));

@@ -60,6 +60,11 @@ export type Primitive =
         readonly type: 'CONNECTOR',
         readonly otherEntity: Id,
         readonly color?: string,
+    } |
+    {
+        readonly type: 'TILT_INDICATOR',
+        readonly r: number,
+        readonly color?: string,
     }
 
 export interface CompoundRenderingOption {

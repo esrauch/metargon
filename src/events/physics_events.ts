@@ -33,3 +33,8 @@ export class ChangePhysicsEntityCategory {
         readonly physicsEntityCategory: PhysicsEntityCategory,
     ) {}
 }
+
+export class SetGravity {
+    readonly type = 'SET_GRAVITY';
+    constructor(readonly x: number, readonly y: number) {}
+}

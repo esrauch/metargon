@@ -5,7 +5,7 @@ import { SetPayloadEvent } from "../../events/payload_events.js";
 import { Win } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
 import { Id } from "../../payloads/entity_id.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initResetButton } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initResetButton, initControl } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 export class Shot01 implements Level, BusListener {
@@ -13,7 +13,7 @@ export class Shot01 implements Level, BusListener {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT - 250));
         initWorldBounds();
-        initControlsWidget(['SHOT'], 'SHOT');
+        initControl('SHOT');
 
         this.shotTarget = makeEntity({
             label: 'shot_target',

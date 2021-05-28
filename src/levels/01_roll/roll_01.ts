@@ -1,6 +1,6 @@
 import { Pos, VHEIGHT, VWIDTH } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
-import { initStaticBox, initControlsWidget, initPlayerEntity, initWinSensor, initWorldBounds } from "../init_helpers.js";
+import { initStaticBox, initControlsWidget, initPlayerEntity, initWinSensor, initWorldBounds, initControl } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 // A screen where you just have to move right to win.
@@ -8,7 +8,7 @@ export class Rolling01 implements Level {
     activate(): void {
         initPlayerEntity(new Pos(VWIDTH / 4, VHEIGHT/4));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['ROLL'], 'ROLL');
+        initControl('ROLL');
 
         initStaticBox(PositionedRect.trbl(
             VHEIGHT/2,

@@ -38,6 +38,14 @@ export abstract class PointerEvtControl {
         this.el.addEventListener('pointercancel', this.cancelWrapper, o);
     }
 
+    disable() {
+        const o = this.OPTS;
+        this.el.removeEventListener('pointerdown', this.downWrapper, o);
+        this.el.removeEventListener('pointermove', this.moveWrapper, o);
+        this.el.removeEventListener('pointerup', this.upWrapper,o);
+        this.el.removeEventListener('pointercancel', this.cancelWrapper, o);
+    }
+
     abstract onDown(pos: Pos): void;
     abstract onMove(pos: Pos): void;
     abstract onUp(pos: Pos): void;

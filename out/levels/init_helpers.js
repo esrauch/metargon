@@ -1,5 +1,4 @@
 import { bus } from "../bus/bus.js";
-import { allControls } from "../controls/controls.js";
 import { Pos, VWIDTH, VHEIGHT } from "../coords/coords.js";
 import { PositionedRect, Rect } from "../coords/rect.js";
 import { ActivateControl } from "../events/activate_control_events.js";
@@ -119,10 +118,10 @@ export function initPlayerEntity(pos, opts) {
         rendering: {
             type: 'FUNCTION',
             fn: (gfx, id, center) => {
-                gfx.fillcircle(center, 50, opts === null || opts === void 0 ? void 0 : opts.color);
+                gfx.circle(center, 50, opts === null || opts === void 0 ? void 0 : opts.color);
                 const angle = getRotation(id) || 0;
                 const eye = new Pos(center.x + Math.cos(angle) * 20, center.y + Math.sin(angle) * 20);
-                gfx.fillcircle(eye, 20, '#000');
+                gfx.circle(eye, 20, '#000');
             }
         },
         physics: {
@@ -220,11 +219,14 @@ function makeBoxedTextForControl(control) {
         }
     };
 }
+export function initControl(control) {
+    initControlsWidget([control], control);
+}
 export function initControls(initialActive, controls) {
     // Just opposite arg order, lol.
     initControlsWidget(controls, initialActive);
 }
-export function initControlsWidget(controls = allControls, initialActive) {
+export function initControlsWidget(controls = ['ROLL', 'FLAP', 'SHOT', 'MAG', 'LOCK'], initialActive) {
     const w = CONTROL_SIZE;
     const h = CONTROL_SIZE;
     function makeControlsWidget(control, x) {

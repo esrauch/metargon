@@ -20,10 +20,12 @@ export class Physics {
         };
         this.tickCount = 0;
         this.pendingUnlocks = new Map();
+        this.DEFAULT_GRAVITY = {
+            x: 0,
+            y: VHEIGHT / 600,
+        };
         this.engine = M.Engine.create({
-            gravity: {
-                y: VHEIGHT / 600,
-            }
+            gravity: this.DEFAULT_GRAVITY
         });
         this.mouse = M.Mouse.create(document.querySelector('canvas'));
     }
@@ -102,6 +104,10 @@ export class Physics {
             case 'CHANGE_PHYSICS_ENTITY_CATEGORY':
                 this.setEntityCategory(ev.entityId, ev.physicsEntityCategory);
                 break;
+            case 'SET_GRAVITY':
+                this.engine.gravity.x = ev.x;
+                this.engine.gravity.y = ev.y;
+                break;
         }
     }
     reset() {
@@ -109,6 +115,8 @@ export class Physics {
         this.pendingUnlocks.clear();
         M.Engine.clear(this.engine);
         M.Composite.clear(this.engine.world, false, true);
+        this.engine.gravity.x = this.DEFAULT_GRAVITY.x;
+        this.engine.gravity.y = this.DEFAULT_GRAVITY.y;
         this.disablePhysicsMouse();
     }
     tick() {

@@ -3,7 +3,7 @@ import { CreateEntity } from "./core_entity_events.js";
 import { SetPayloadEvent } from "./payload_events.js";
 // Utility that dispatches a common bundle of events for making a new entity.
 export function makeEntity({ entityId, initialPos, label, rendering, physics }, ...otherPayloads) {
-    const create = new CreateEntity(label, entityId);
+    const create = new CreateEntity(label || '<unknown>', entityId);
     const id = create.entityId;
     bus.dispatch(create);
     if (initialPos)

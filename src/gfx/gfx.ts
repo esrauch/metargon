@@ -30,7 +30,7 @@ export interface Gfx {
 
     circle(center: Pos, radius: number, color?: string): void;
 
-    fillcircle(center: Pos, radius: number, color?: string): void;
+    strokecircle(center: Pos, radius: number, color?: string): void;
 
     linestrip(c: Positions, color?: string): void;
 

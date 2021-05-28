@@ -11,7 +11,7 @@ import { Color } from "../../gfx/gfx.js";
 import { Id } from "../../payloads/entity_id.js";
 import { RenderingPayload } from "../../payloads/rendering_payload.js";
 import { animationSystem } from "../../systems/animation_system.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor, initControl } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 const releaseTime = 5;
@@ -39,7 +39,7 @@ export class Shot03 implements Level, BusListener {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 4, 250));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['SHOT'], 'SHOT');
+        initControl('SHOT');
 
         const textEntity = makeEntity({
             label: 'holderupper',

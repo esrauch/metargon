@@ -10,9 +10,6 @@ import { Control } from "./control.js";
 const minVecLength = 50;
 const maxVecLength = 500;
 export class VectorControl extends Control {
-    constructor() {
-        super();
-    }
     onDown(pos) {
         this.reset();
         if (pos.isInBounds())

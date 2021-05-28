@@ -6,7 +6,7 @@ import { PositionedRect } from "../../coords/rect.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { RenderingPayload } from "../../payloads/rendering_payload.js";
 import { animationSystem } from "../../systems/animation_system.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initWinSensor, initLoseSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initWinSensor, initLoseSensor, initControl } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 const releaseTime = 5;
@@ -33,7 +33,7 @@ export class Shot04 implements Level {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 4, 250));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['SHOT'], 'SHOT');
+        initControl('SHOT');
 
         const textEntity = makeEntity({
             label: 'holderupper',

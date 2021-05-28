@@ -141,14 +141,14 @@ export function initPlayerEntity(pos: Pos, opts?: {
         rendering: {
             type: 'FUNCTION',
             fn: (gfx, id, center) => {
-                gfx.fillcircle(center, 50, opts?.color);
+                gfx.circle(center, 50, opts?.color);
                 const angle = getRotation(id) || 0;
                 const eye =
                     new Pos(
                         center.x + Math.cos(angle) * 20,
                         center.y + Math.sin(angle) * 20);
 
-                gfx.fillcircle(eye, 20, '#000');
+                gfx.circle(eye, 20, '#000');
 
             }
         },
@@ -257,6 +257,10 @@ function makeBoxedTextForControl(control: ControlName): RenderingTypedPayload {
     };
 }
 
+export function initControl(control: ControlName) {
+    initControlsWidget([control], control);
+}
+
 export function initControls(
     initialActive?: ControlName,
     controls ?: ControlName[],
@@ -266,7 +270,7 @@ export function initControls(
 }
 
 export function initControlsWidget(
-        controls: ControlName[] = allControls,
+        controls: ControlName[] = ['ROLL', 'FLAP', 'SHOT', 'MAG', 'LOCK'],
         initialActive?: ControlName) {
     const w = CONTROL_SIZE;
     const h = CONTROL_SIZE;

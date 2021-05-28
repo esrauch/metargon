@@ -14,12 +14,16 @@ export class Vec {
     length() {
         return Math.sqrt(this.dx * this.dx + this.dy * this.dy);
     }
+    mult(m) {
+        if (m == 1)
+            return this;
+        return new Vec(this.dx * m, this.dy * m);
+    }
     normalize(newLen) {
         const len = this.length();
         if (len === 0)
             return this;
-        const mult = newLen / len;
-        return new Vec(this.dx * mult, this.dy * mult);
+        return this.mult(newLen / len);
     }
     normalizeIfLongerThan(newLen) {
         if (this.length() > newLen)

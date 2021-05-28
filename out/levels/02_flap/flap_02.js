@@ -4,7 +4,7 @@ import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { animationSystem } from "../../systems/animation_system.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initLoseSensor, initControl } from "../init_helpers.js";
 const textPos = PositionedRect.trbl(VHEIGHT - 200, VWIDTH, VHEIGHT, 0);
 const levelDurationS = 10;
 function makeCountdownRendering(tickCount) {
@@ -21,7 +21,7 @@ export class Flapping02 {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT / 2));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['FLAP'], 'FLAP');
+        initControl('FLAP');
         const textEntity = makeEntity({
             initialPos: textPos.center,
             label: 'helpinfo',

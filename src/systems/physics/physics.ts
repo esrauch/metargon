@@ -33,11 +33,14 @@ export class Physics implements BusListener {
 
     static singleton = new Physics();
 
+    readonly DEFAULT_GRAVITY = {
+        x: 0,
+        y: VHEIGHT / 600,
+    };
+
     private constructor() {
         this.engine = M.Engine.create({
-            gravity: {
-                y: VHEIGHT / 600,
-            }
+            gravity: this.DEFAULT_GRAVITY
         });
         this.mouse = M.Mouse.create(document.querySelector('canvas')!);
     }
@@ -52,7 +55,7 @@ export class Physics implements BusListener {
         return new Pos(body.position.x, body.position.y);
     }
 
-    getHullPoly(id: Id): Array<{x: number, y: number}> | undefined {
+    getHullPoly(id: Id): Array<Readonly<{x: number, y: number}>> | undefined {
         const b = this.getBody(id);
         if (!b) return undefined;
         return b.vertices;
@@ -116,6 +119,10 @@ export class Physics implements BusListener {
             case 'CHANGE_PHYSICS_ENTITY_CATEGORY':
                 this.setEntityCategory(ev.entityId, ev.physicsEntityCategory);
                 break;
+            case 'SET_GRAVITY':
+                this.engine.gravity.x = ev.x;
+                this.engine.gravity.y = ev.y;
+                break;
         }
     }
 
@@ -124,6 +131,8 @@ export class Physics implements BusListener {
         this.pendingUnlocks.clear();
         M.Engine.clear(this.engine);
         M.Composite.clear(this.engine.world, false, true);
+        this.engine.gravity.x = this.DEFAULT_GRAVITY.x;
+        this.engine.gravity.y = this.DEFAULT_GRAVITY.y;
         this.disablePhysicsMouse();
     }
 

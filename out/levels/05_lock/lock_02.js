@@ -8,7 +8,7 @@ import { Lose } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
 import { PLAYER } from "../../payloads/entity_id.js";
 import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initStaticBox, initWinSensor, initControls } from "../init_helpers.js";
 function dispatchLose() { bus.dispatch(new Lose()); }
 function makeLoseBall(x, y) {
     const r = 50;
@@ -59,7 +59,7 @@ export class Lock02 {
     activate() {
         initPlayerEntity(new Pos(100, VHEIGHT * 3 / 4));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['LOCK', 'FLAP', 'ROLL'], 'LOCK');
+        initControls('LOCK', ['LOCK', 'ROLL']);
         const staticBox = initStaticBox(new PositionedRect(new Pos(VWIDTH / 2, VHEIGHT * 3 / 4 + 25), VWIDTH, 100));
         bus.dispatch(new ChangePhysicsEntityCategory(staticBox, PhysicsEntityCategory.COLLIDE_ONLY_WITH_PLAYER));
         initWinSensor(new PositionedRect(new Pos(VWIDTH - 125, VHEIGHT * 3 / 4 - 125), 250, 250));

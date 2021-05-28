@@ -1,12 +1,12 @@
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor, initWinSensor, initStaticBox } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor, initWinSensor, initStaticBox, initControl } from "../init_helpers.js";
 
 export class Rolling02 {
     activate(): void {
         initPlayerEntity(new Pos(VWIDTH / 4, VHEIGHT/4));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['ROLL'], 'ROLL');
+        initControl('ROLL');
         
         initStaticBox(PositionedRect.trbl(
             VHEIGHT/2,

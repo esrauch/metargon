@@ -18,10 +18,6 @@ export abstract class VectorControl extends Control {
     startPosition?: Pos;
     vector?: Vec;
 
-    constructor() {
-        super();
-    }
-
     onDown(pos: Pos): void {
         this.reset();
         if (pos.isInBounds())

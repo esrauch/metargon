@@ -26,3 +26,10 @@ export class ChangePhysicsEntityCategory {
         this.type = 'CHANGE_PHYSICS_ENTITY_CATEGORY';
     }
 }
+export class SetGravity {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.type = 'SET_GRAVITY';
+    }
+}

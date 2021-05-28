@@ -8,7 +8,7 @@ import { SetPayloadEvent } from "../../events/payload_events.js";
 import { Win } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
 import { animationSystem } from "../../systems/animation_system.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initLoseSensor, initControl } from "../init_helpers.js";
 const releaseTime = 5;
 const textPos = PositionedRect.trbl(500, VWIDTH, 600, 0);
 function updateCountdownRendering(tickCount) {
@@ -25,7 +25,7 @@ export class Shot03 {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 4, 250));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['SHOT'], 'SHOT');
+        initControl('SHOT');
         const textEntity = makeEntity({
             label: 'holderupper',
             initialPos: textPos.center,

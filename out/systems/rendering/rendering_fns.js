@@ -1,4 +1,5 @@
 import { add } from "../../coords/coords.js";
+import { tilt } from "../../input/tilt.js";
 import { assertUnreachable } from "../../util/assert.js";
 import { getCenterPosition } from "../getters.js";
 import { physics } from "../physics/physics.js";
@@ -73,6 +74,11 @@ function makeCompoundRenderingFn(prims) {
                     if (!other)
                         return;
                     gfx.line(pos, other, p.color);
+                    break;
+                case 'TILT_INDICATOR':
+                    gfx.strokecircle(pos, p.r, p.color);
+                    const v = tilt.dir.mult(p.r);
+                    gfx.circle(add(pos, v), 50, p.color);
                     break;
                 default:
                     assertUnreachable(p);

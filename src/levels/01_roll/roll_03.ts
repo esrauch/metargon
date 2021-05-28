@@ -1,12 +1,12 @@
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor, initWinSensor, initStaticBox } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor, initWinSensor, initStaticBox, initControl } from "../init_helpers.js";
 
 export class Rolling03 {
     activate(): void {
         initPlayerEntity(new Pos(VWIDTH / 4, 100));
         initWorldBounds();
-        initControlsWidget(['ROLL'], 'ROLL');
+        initControl('ROLL');
         
         initStaticBox(PositionedRect.trbl(350, VWIDTH - 100, 350 + 200, 0), {text: 'AIR BUD'});
        

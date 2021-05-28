@@ -4,7 +4,7 @@ import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { animationSystem } from "../../systems/animation_system.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initWinSensor, initLoseSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initWinSensor, initLoseSensor, initControl } from "../init_helpers.js";
 const releaseTime = 5;
 const textPos = PositionedRect.trbl(500, VWIDTH, 600, 0);
 function updateCountdownRendering(tickCount) {
@@ -21,7 +21,7 @@ export class Shot04 {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 4, 250));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['SHOT'], 'SHOT');
+        initControl('SHOT');
         const textEntity = makeEntity({
             label: 'holderupper',
             initialPos: textPos.center,

@@ -2,7 +2,7 @@ import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { Color } from "../../gfx/gfx.js";
 import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor, initControl } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 export class Mag01 implements Level {
@@ -12,7 +12,7 @@ export class Mag01 implements Level {
             entityCategory: PhysicsEntityCategory.MAGNETIC
         });
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['MAG'], 'MAG');
+        initControl('MAG');
 
         initStaticBox(PositionedRect.trbl(
             VHEIGHT/2,

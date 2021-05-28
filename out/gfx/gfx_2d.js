@@ -98,12 +98,12 @@ export class Gfx2d {
         ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
         ctx.fill();
     }
-    fillcircle(center, radius, color) {
-        this.setFillStyle(color);
+    strokecircle(center, radius, color) {
+        this.setStrokeStyle(color);
         const ctx = this.ctx;
         ctx.beginPath();
         ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
-        ctx.fill();
+        ctx.stroke();
     }
     linestrip(c, color) {
         this.setStrokeStyle(color);

@@ -2,14 +2,14 @@ import { CyclicMoveAnimation } from "../../anim/cyclic_move.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
 import { animationSystem } from "../../systems/animation_system.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor, initResetButton, initLoseSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initStaticBox, initWinSensor, initResetButton, initLoseSensor, initControl } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 export class Flapping03 implements Level {
     activate(): void {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT - 300));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['FLAP'], 'FLAP');
+        initControl('FLAP');
 
         initStaticBox(PositionedRect.trbl(
             VHEIGHT - 200,

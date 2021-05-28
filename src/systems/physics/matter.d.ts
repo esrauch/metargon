@@ -2122,6 +2122,8 @@ declare namespace Matter {
         * @default a Matter.World instance
         */
         world: World;
+
+        gravity: {x?: number, y?: number, scale?: number};
     }
 
 

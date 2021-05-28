@@ -1,3 +1,5 @@
+
+
 import { bus } from "../../bus/bus.js";
 import { Pos, VWIDTH, VHEIGHT, pos } from "../../coords/coords.js";
 import { PositionedRect, Rect } from "../../coords/rect.js";
@@ -6,11 +8,14 @@ import { SetPayloadEvent } from "../../events/payload_events.js";
 import { ChangePhysicsEntityCategory } from "../../events/physics_events.js";
 import { Lose } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
-import { PLAYER } from "../../payloads/entity_id.js";
+import { Id, PLAYER } from "../../payloads/entity_id.js";
 import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor } from "../init_helpers.js";
-function dispatchLose() { bus.dispatch(new Lose()); }
-function makeLoseBall(x, y) {
+import { initPlayerEntity, initWorldBounds, initStaticBox, initWinSensor, initControls } from "../init_helpers.js";
+import { Level } from "../level.js";
+
+function dispatchLose() { bus.dispatch(new Lose()) }
+
+function makeLoseBall(x: number, y: number) {
     const r = 50;
     makeEntity({
         label: 'lose_ball',
@@ -20,7 +25,7 @@ function makeLoseBall(x, y) {
             radius: r,
             color: Color.FIRE,
         },
-        physics: {
+        physics:  {
             hull: {
                 type: 'CIRCLE',
                 radius: r,
@@ -31,12 +36,13 @@ function makeLoseBall(x, y) {
         type: 'SENSOR',
         payload: {
             target: PLAYER,
-            rect: new Rect(3 * r, 3 * r),
+            rect: new Rect(3*r, 3*r),
             callback: dispatchLose,
         }
-    });
+    })
 }
-function makeWhiteBall(x, y) {
+
+function makeWhiteBall(x: number, y: number) {
     const r = 75;
     makeEntity({
         label: 'blue_ball',
@@ -45,7 +51,7 @@ function makeWhiteBall(x, y) {
             type: 'CIRCLE',
             radius: r,
         },
-        physics: {
+        physics:  {
             hull: {
                 type: 'CIRCLE',
                 radius: r,
@@ -53,26 +59,35 @@ function makeWhiteBall(x, y) {
         }
     });
 }
-export class Lock03 {
-    activate() {
-        initPlayerEntity(new Pos(100, VHEIGHT * 3 / 4));
+
+export class Level02 implements Level {
+    activate(): void {
+        initPlayerEntity(new Pos(100, VHEIGHT*3/4));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['LOCK', 'FLAP', 'ROLL'], 'LOCK');
-        const staticBox = initStaticBox(new PositionedRect(new Pos(VWIDTH / 2, VHEIGHT * 3 / 4 + 25), VWIDTH, 100));
+        initControls('ROLL');
+
+        const staticBox = initStaticBox(
+            new PositionedRect(new Pos(VWIDTH/2, VHEIGHT*3/4 + 25), VWIDTH, 100));
         bus.dispatch(new ChangePhysicsEntityCategory(staticBox, PhysicsEntityCategory.COLLIDE_ONLY_WITH_PLAYER));
-        initWinSensor(new PositionedRect(new Pos(VWIDTH - 125, VHEIGHT * 3 / 4 - 125), 250, 250));
-        initStaticBox(new PositionedRect(new Pos(VWIDTH / 4, 1100), 1450, 50), {
-            rotation: Math.PI / 2.7,
-        });
-        initStaticBox(new PositionedRect(new Pos(VWIDTH * 3 / 4, 1100), 1450, 50), {
-            rotation: 2 * Math.PI - (Math.PI / 2.7),
-        });
+        initWinSensor(new PositionedRect(new Pos(VWIDTH-125, VHEIGHT*3/4-125), 250, 250));
+
+        initStaticBox(
+            new PositionedRect(new Pos(VWIDTH/4, 1100), 1450, 50), {
+                rotation: Math.PI / 2.7,
+            });
+        initStaticBox(
+            new PositionedRect(new Pos(VWIDTH*3/4, 1100), 1450, 50), {
+                rotation: 2*Math.PI - (Math.PI/2.7),
+            });
         initStaticBox(PositionedRect.trbl(400, 1800, 500, 200));
+
         for (let i = 0; i < 20; ++i)
-            makeLoseBall(i * 50, VHEIGHT - 600);
+            makeLoseBall(i * 50, VHEIGHT-600);
+
         for (let i = 0; i < 10; ++i)
-            makeWhiteBall(i * 50, VHEIGHT - 400);
-        const moveToTopSensor = PositionedRect.trbl(VHEIGHT - 400, VWIDTH, VHEIGHT, 0);
+            makeWhiteBall(i * 50, VHEIGHT-400);
+
+        const moveToTopSensor = PositionedRect.trbl(VHEIGHT-400, VWIDTH,VHEIGHT,0);
         makeEntity({
             label: 'moveToTopSensor',
             initialPos: moveToTopSensor.center,
@@ -83,15 +98,13 @@ export class Lock03 {
                 rect: moveToTopSensor.unpositionedRect,
                 triggerMultipleTimes: true,
                 instantActivate: true,
-                callback: (id) => {
+                callback: (id: Id) => {
                     bus.dispatch(new SetPayloadEvent(id, {
                         type: 'POSITION',
-                        payload: new Pos(VWIDTH / 2, 800)
-                    }));
+                        payload: new Pos(VWIDTH/2, 800)
+                    }))
                 }
             }
         });
-    }
-    deactivate() {
     }
 }

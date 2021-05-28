@@ -5,7 +5,7 @@ import { PositionedRect } from "../../coords/rect.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { RenderingPayload } from "../../payloads/rendering_payload.js";
 import { animationSystem } from "../../systems/animation_system.js";
-import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor } from "../init_helpers.js";
+import { initPlayerEntity, initWorldBounds, initControlsWidget, initLoseSensor, initControl } from "../init_helpers.js";
 import { Level } from "../level.js";
 
 const textPos = PositionedRect.trbl(
@@ -32,7 +32,7 @@ export class Flapping02 implements Level {
     activate(): void {
         initPlayerEntity(new Pos(VWIDTH / 2, VHEIGHT / 2));
         initWorldBounds(/* showWorldBounds */ false);
-        initControlsWidget(['FLAP'], 'FLAP');
+        initControl('FLAP');
 
         const textEntity = makeEntity({
             initialPos: textPos.center,

@@ -1,7 +1,7 @@
 // The Bus is a single global point where everything flows through.
 // At least for now, all possible event types are centrally defined here.
 
-import { ApplyForce, ChangePhysicsEntityCategory, RollMove, SetVelocity } from "../events/physics_events.js";
+import { ApplyForce, ChangePhysicsEntityCategory, RollMove, SetGravity, SetVelocity } from "../events/physics_events.js";
 import { CreateEntity, DestroyEntity } from "../events/core_entity_events.js";
 import { Draw } from "../events/draw.js";
 import { Tick } from "../events/tick_event.js";
@@ -20,6 +20,7 @@ export type BusEvent =
     SetVelocity |
     RollMove |
     ApplyForce |
+    SetGravity |
     Tick |
     Draw |
     CreateEntity |
@@ -48,7 +49,7 @@ export class Bus {
     static singleton = new Bus();
 
     logSpammyEvents = false
-    logNonSpammyEvents = true
+    logNonSpammyEvents = false
 
     dispatch(ev: BusEvent, consideredSpammyForLog: boolean = false) {
         if ((this.logSpammyEvents && consideredSpammyForLog) ||

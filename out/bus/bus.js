@@ -6,7 +6,7 @@ export class Bus {
         // ordered dependent).
         this.listeners = [];
         this.logSpammyEvents = false;
-        this.logNonSpammyEvents = true;
+        this.logNonSpammyEvents = false;
     }
     dispatch(ev, consideredSpammyForLog = false) {
         if ((this.logSpammyEvents && consideredSpammyForLog) ||

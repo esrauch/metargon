@@ -10,7 +10,7 @@ import { PhysicsPayload } from "../payloads/physics_payload.js";
 type MakeEntityArgs = {
     entityId?: Id,
     initialPos?: Pos,
-    label: string,
+    label?: string,
     rendering?: RenderingPayload,
     physics?: PhysicsPayload,
 };
@@ -23,7 +23,7 @@ export function makeEntity({
     rendering,
     physics
 }: MakeEntityArgs, ...otherPayloads: SomeTypedPayload[]): Id {
-    const create = new CreateEntity(label, entityId);
+    const create = new CreateEntity(label || '<unknown>', entityId);
     const id = create.entityId;
     bus.dispatch(create);
 

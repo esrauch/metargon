@@ -1,5 +1,6 @@
 import { Pos, add, Positions } from "../../coords/coords.js";
 import { Gfx } from "../../gfx/gfx.js";
+import { tilt } from "../../input/tilt.js";
 import { Id } from "../../payloads/entity_id.js";
 import { RenderingPayload, Primitive, ConditionalRenderingOption, Icon, } from "../../payloads/rendering_payload.js";
 import { assertUnreachable } from "../../util/assert.js";
@@ -78,6 +79,11 @@ function makeCompoundRenderingFn(prims: Primitive[]): DrawFn {
                     const other = getCenterPosition(p.otherEntity);
                     if (!other) return;
                     gfx.line(pos, other, p.color);
+                    break;
+                case 'TILT_INDICATOR':
+                    gfx.strokecircle(pos, p.r, p.color);
+                    const v = tilt.dir.mult(p.r);
+                    gfx.circle(add(pos, v), 50, p.color);
                     break;
                 default:
                     assertUnreachable(p);
