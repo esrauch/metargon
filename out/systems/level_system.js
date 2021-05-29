@@ -5,6 +5,7 @@ import { LevelChanged } from "../events/reset_all_systems_event.js";
 import { ScreenFullyShown } from "../events/screen_fully_shown_event.js";
 import { Color } from "../gfx/gfx.js";
 import { getLevelNumber } from "../levels/level.js";
+import { logAnalyticsEvent } from "../util/analytics.js";
 export var FadeSpeed;
 (function (FadeSpeed) {
     FadeSpeed[FadeSpeed["INSTANT"] = 0] = "INSTANT";
@@ -36,6 +37,7 @@ export class LevelSystem {
         this.crossFadeLevel(targetLevel);
     }
     crossFadeLevel(nextLevelNumber, temporaryForegroundColor, fadeSpeed = FadeSpeed.DEFAULT) {
+        logAnalyticsEvent('startlevel', nextLevelNumber);
         const next = getLevelNumber(nextLevelNumber);
         if (this.activeAnimation) {
             console.error('cannot start a new anim until last one is done');

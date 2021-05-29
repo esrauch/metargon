@@ -6,6 +6,7 @@ import { LevelChanged } from "../events/reset_all_systems_event.js";
 import { ScreenFullyShown } from "../events/screen_fully_shown_event.js";
 import { Color } from "../gfx/gfx.js";
 import { Level, getLevelNumber } from "../levels/level.js";
+import { logAnalyticsEvent } from "../util/analytics.js";
 
 export enum FadeSpeed {
     INSTANT = 0,
@@ -49,6 +50,9 @@ export class LevelSystem implements BusListener {
         nextLevelNumber: number,
         temporaryForegroundColor?: Color,
         fadeSpeed: FadeSpeed = FadeSpeed.DEFAULT) {
+
+        
+        logAnalyticsEvent('startlevel', nextLevelNumber);
 
         const next = getLevelNumber(nextLevelNumber);
 
