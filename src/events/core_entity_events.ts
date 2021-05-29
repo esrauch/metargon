@@ -8,7 +8,7 @@ export class CreateEntity {
     readonly corePayload: CoreTypedPayload;
 
     constructor(
-        label: string,
+        label?: string,
         // Note: it's an error to create an id that already exists.
         entityId?: Id
     ) {

@@ -30,7 +30,7 @@ export function getRotation(id: Id): number|undefined {
 
 export function getLabel(id: Id): string {
     const labelPayload = genericPayloadTable.getPayload('CORE', id);
-    return labelPayload?.payload.label || '<unknown>';
+    return labelPayload?.payload.label ?? '?';
 }
 
 export function hittest(test: Pos): HittestTypedPayload | undefined {

@@ -19,7 +19,6 @@ export class FinScreen implements Level {
 
     private init() {
         makeEntity({
-            label: 'credits1',
             initialPos: new Pos(VWIDTH / 2, VHEIGHT / 3),
             rendering: {
                 ...creditsFont,
@@ -29,7 +28,6 @@ export class FinScreen implements Level {
             }
         });
         makeEntity({
-            label: 'credits2',
             initialPos: new Pos(VWIDTH / 2, VHEIGHT / 2),
             rendering: {
                 ...creditsFont,
@@ -38,19 +36,15 @@ export class FinScreen implements Level {
         });
 
         const s = Math.round((performance.now() - (statsSystem.startTime||0)) / 1000);
-        const timeMin = Math.floor(s / 60);
-        let timeS = `${s - timeMin*60}`;
-        if (timeS.length < 2) timeS = '0' + timeS;
+
         makeEntity({
-            label: 'credits3',
             initialPos: new Pos(VWIDTH / 2, 2000),
             rendering: {
                 ...creditsFont,
-                text: `${timeMin}:${timeS} TIME`,
+                text: `${statsSystem.formattedTimeSinceStart} TIME`,
             }
         });
         makeEntity({
-            label: 'credits4',
             initialPos: new Pos(VWIDTH / 2, 2200),
             rendering: {
                 ...creditsFont,
@@ -58,7 +52,6 @@ export class FinScreen implements Level {
             }
         });
         makeEntity({
-            label: 'credits5',
             initialPos: new Pos(VWIDTH / 2, 2400),
             rendering: {
                 ...creditsFont,

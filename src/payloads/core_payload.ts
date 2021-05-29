@@ -5,7 +5,7 @@ import { TypedPayload } from "./payload.js";
 
 export class CorePayload {
     constructor(
-        readonly label: string,
+        readonly label?: string,
         ) {}
 }
 

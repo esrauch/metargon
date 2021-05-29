@@ -24,8 +24,9 @@ export function getRotation(id) {
     return (_a = physics.getBody(id)) === null || _a === void 0 ? void 0 : _a.angle;
 }
 export function getLabel(id) {
+    var _a;
     const labelPayload = genericPayloadTable.getPayload('CORE', id);
-    return (labelPayload === null || labelPayload === void 0 ? void 0 : labelPayload.payload.label) || '<unknown>';
+    return (_a = labelPayload === null || labelPayload === void 0 ? void 0 : labelPayload.payload.label) !== null && _a !== void 0 ? _a : '?';
 }
 export function hittest(test) {
     const payloads = genericPayloadTable.getPayloads("HITTEST");
