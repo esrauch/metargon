@@ -10,18 +10,21 @@ export class TiltGravityControl extends Control implements BusListener {
 
     enable() {
         tilt.enable();
-        bus.dispatch(new SetGravity(0, 0));
+        bus.dispatch(new SetGravity({x: 0, y: 0}));
         bus.addListener(this);
     }
 
     disable() {
         bus.removeListener(this);
+        bus.dispatch(new SetGravity());
         tilt.disable();
     }
 
     onEvent(ev: BusEvent): void {
         if (ev.type !== 'TICK') return;
 
-        bus.dispatch(new SetGravity(tilt.dir.dx * 2, tilt.dir.dy * 2), /*spammy*/ true);
+        bus.dispatch(
+            new SetGravity({x: tilt.dir.dx * 2, y: tilt.dir.dy * 2}),
+            /*spammy*/ true);
     }
 }

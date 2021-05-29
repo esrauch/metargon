@@ -15,6 +15,7 @@ export class Tilt extends PointerEvtControl {
     }
     enable() {
         super.enable();
+        this.dir = new Vec(0, 0);
         window.addEventListener('deviceorientation', this.listener);
         this.indicatorEntity = makeEntity({
             initialPos: indicatorCenter,
@@ -49,7 +50,7 @@ export class Tilt extends PointerEvtControl {
     }
     onDown(pos) { this.maybeUpdateOrientation(pos); }
     onMove(pos) { this.maybeUpdateOrientation(pos); }
-    onUp(pos) { }
+    onUp(pos) { this.maybeUpdateOrientation(pos); }
     onCancel() { }
 }
 Tilt.singleton = new Tilt();

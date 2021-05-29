@@ -21,6 +21,11 @@ const M = window.Matter;
 
 const STEP = 1000 / 60;
 
+const DEFAULT_GRAVITY = {
+    x: 0,
+    y: VHEIGHT / 600,
+};
+
 export class Physics implements BusListener {
     readonly debugUi = {
         renderHulls: false,
@@ -33,14 +38,9 @@ export class Physics implements BusListener {
 
     static singleton = new Physics();
 
-    readonly DEFAULT_GRAVITY = {
-        x: 0,
-        y: VHEIGHT / 600,
-    };
-
     private constructor() {
         this.engine = M.Engine.create({
-            gravity: this.DEFAULT_GRAVITY
+            gravity: DEFAULT_GRAVITY
         });
         this.mouse = M.Mouse.create(document.querySelector('canvas')!);
     }
@@ -120,8 +120,8 @@ export class Physics implements BusListener {
                 this.setEntityCategory(ev.entityId, ev.physicsEntityCategory);
                 break;
             case 'SET_GRAVITY':
-                this.engine.gravity.x = ev.x;
-                this.engine.gravity.y = ev.y;
+                this.engine.gravity.x = ev.grav?.x ?? DEFAULT_GRAVITY.x;
+                this.engine.gravity.y = ev.grav?.y ?? DEFAULT_GRAVITY.y;
                 break;
         }
     }
@@ -131,8 +131,8 @@ export class Physics implements BusListener {
         this.pendingUnlocks.clear();
         M.Engine.clear(this.engine);
         M.Composite.clear(this.engine.world, false, true);
-        this.engine.gravity.x = this.DEFAULT_GRAVITY.x;
-        this.engine.gravity.y = this.DEFAULT_GRAVITY.y;
+        this.engine.gravity.x = DEFAULT_GRAVITY.x;
+        this.engine.gravity.y = DEFAULT_GRAVITY.y;
         this.disablePhysicsMouse();
     }
 

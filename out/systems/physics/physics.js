@@ -13,6 +13,10 @@ import { genericPayloadTable } from "../generic_payload_table.js";
 // load it into the global namespace in index.html.
 const M = window.Matter;
 const STEP = 1000 / 60;
+const DEFAULT_GRAVITY = {
+    x: 0,
+    y: VHEIGHT / 600,
+};
 export class Physics {
     constructor() {
         this.debugUi = {
@@ -20,12 +24,8 @@ export class Physics {
         };
         this.tickCount = 0;
         this.pendingUnlocks = new Map();
-        this.DEFAULT_GRAVITY = {
-            x: 0,
-            y: VHEIGHT / 600,
-        };
         this.engine = M.Engine.create({
-            gravity: this.DEFAULT_GRAVITY
+            gravity: DEFAULT_GRAVITY
         });
         this.mouse = M.Mouse.create(document.querySelector('canvas'));
     }
@@ -45,6 +45,7 @@ export class Physics {
         return b.vertices;
     }
     onEvent(ev) {
+        var _a, _b, _c, _d;
         switch (ev.type) {
             case 'LEVEL_CHANGED':
                 this.reset();
@@ -105,8 +106,8 @@ export class Physics {
                 this.setEntityCategory(ev.entityId, ev.physicsEntityCategory);
                 break;
             case 'SET_GRAVITY':
-                this.engine.gravity.x = ev.x;
-                this.engine.gravity.y = ev.y;
+                this.engine.gravity.x = (_b = (_a = ev.grav) === null || _a === void 0 ? void 0 : _a.x) !== null && _b !== void 0 ? _b : DEFAULT_GRAVITY.x;
+                this.engine.gravity.y = (_d = (_c = ev.grav) === null || _c === void 0 ? void 0 : _c.y) !== null && _d !== void 0 ? _d : DEFAULT_GRAVITY.y;
                 break;
         }
     }
@@ -115,8 +116,8 @@ export class Physics {
         this.pendingUnlocks.clear();
         M.Engine.clear(this.engine);
         M.Composite.clear(this.engine.world, false, true);
-        this.engine.gravity.x = this.DEFAULT_GRAVITY.x;
-        this.engine.gravity.y = this.DEFAULT_GRAVITY.y;
+        this.engine.gravity.x = DEFAULT_GRAVITY.x;
+        this.engine.gravity.y = DEFAULT_GRAVITY.y;
         this.disablePhysicsMouse();
     }
     tick() {
