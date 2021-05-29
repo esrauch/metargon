@@ -30,6 +30,8 @@ export class Tilt extends PointerEvtControl {
     }
     handleOrientation(ev) {
         var _a, _b;
+        if (!ev.gamma || !ev.beta)
+            return;
         this.orientationAvailable = true;
         this.dir =
             new Vec((_a = ev.gamma) !== null && _a !== void 0 ? _a : 0, (_b = ev.beta) !== null && _b !== void 0 ? _b : 0)
