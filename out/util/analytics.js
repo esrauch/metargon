@@ -1,6 +1,6 @@
 export function logAnalyticsEvent(evt, value) {
     const gtag = window.gtag;
-    if (!gtag) {
+    if (typeof gtag !== 'function') {
         console.error('cant log analytics');
         return;
     }

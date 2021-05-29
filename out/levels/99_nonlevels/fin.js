@@ -2,6 +2,7 @@ import { Pos, VHEIGHT, VWIDTH } from "../../coords/coords.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { Color } from "../../gfx/gfx.js";
 import { statsSystem } from "../../systems/stats_system.js";
+import { logAnalyticsEvent } from "../../util/analytics.js";
 const creditsFont = {
     type: 'TEXT',
     size: 200,
@@ -22,22 +23,27 @@ export class FinScreen {
             initialPos: new Pos(VWIDTH / 2, VHEIGHT / 2),
             rendering: Object.assign(Object.assign({}, creditsFont), { text: 'WIN' })
         });
-        const timeAchieved = Math.round((performance.now() - (statsSystem.startTime || 0)) / 1000);
+        const s = Math.round((performance.now() - (statsSystem.startTime || 0)) / 1000);
+        const timeMin = Math.floor(s / 60);
+        let timeS = `${s - timeMin * 60}`;
+        if (timeS.length < 2)
+            timeS = '0' + timeS;
         makeEntity({
             label: 'credits3',
             initialPos: new Pos(VWIDTH / 2, 2000),
-            rendering: Object.assign(Object.assign({}, creditsFont), { text: `${timeAchieved} SECONDS` })
+            rendering: Object.assign(Object.assign({}, creditsFont), { text: `${timeMin}:${timeS} TIME` })
         });
         makeEntity({
             label: 'credits4',
             initialPos: new Pos(VWIDTH / 2, 2200),
-            rendering: Object.assign(Object.assign({}, creditsFont), { text: `${statsSystem.lossCount} RESETS` })
+            rendering: Object.assign(Object.assign({}, creditsFont), { text: `${statsSystem.lossCount} DEATHS` })
         });
         makeEntity({
             label: 'credits5',
             initialPos: new Pos(VWIDTH / 2, 2400),
             rendering: Object.assign(Object.assign({}, creditsFont), { text: `${statsSystem.winCount} LEVELS` })
         });
+        logAnalyticsEvent('fin_screen_shown');
     }
     deactivate() { }
 }

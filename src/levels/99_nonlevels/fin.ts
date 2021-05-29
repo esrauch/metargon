@@ -3,6 +3,7 @@ import { makeEntity } from "../../events/make_entity_helper.js";
 import { Color } from "../../gfx/gfx.js";
 import { RenderingPayload } from "../../payloads/rendering_payload.js";
 import { statsSystem } from "../../systems/stats_system.js";
+import { logAnalyticsEvent } from "../../util/analytics.js";
 import { Level } from "../level.js";
 
 const creditsFont = {
@@ -36,13 +37,16 @@ export class FinScreen implements Level {
             }
         });
 
-        const timeAchieved = Math.round((performance.now() - (statsSystem.startTime||0)) / 1000);
+        const s = Math.round((performance.now() - (statsSystem.startTime||0)) / 1000);
+        const timeMin = Math.floor(s / 60);
+        let timeS = `${s - timeMin*60}`;
+        if (timeS.length < 2) timeS = '0' + timeS;
         makeEntity({
             label: 'credits3',
             initialPos: new Pos(VWIDTH / 2, 2000),
             rendering: {
                 ...creditsFont,
-                text: `${timeAchieved} SECONDS`,
+                text: `${timeMin}:${timeS} TIME`,
             }
         });
         makeEntity({
@@ -50,7 +54,7 @@ export class FinScreen implements Level {
             initialPos: new Pos(VWIDTH / 2, 2200),
             rendering: {
                 ...creditsFont,
-                text: `${statsSystem.lossCount} RESETS`,
+                text: `${statsSystem.lossCount} DEATHS`,
             }
         });
         makeEntity({
@@ -61,6 +65,8 @@ export class FinScreen implements Level {
                 text: `${statsSystem.winCount} LEVELS`,
             }
         });
+
+        logAnalyticsEvent('fin_screen_shown');
     }
 
     deactivate() {}
