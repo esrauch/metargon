@@ -34,8 +34,6 @@ export class Tilt02 {
             animationSystem.start(CyclicMoveAnimation.ofOffset(loseSensor1, new Vec(-300, 0), 2));
             const loseSensor2 = initLoseSensor(PositionedRect.trbl(1550, 350, 1550 + 100, 350 - 150));
             animationSystem.start(CyclicMoveAnimation.ofOffset(loseSensor2, new Vec(-150, 0), 2.7));
-            const loseSensor3 = initLoseSensor(PositionedRect.trbl(1550, 350, 1550 + 100, 350 - 150));
-            animationSystem.start(CyclicMoveAnimation.ofOffset(loseSensor3, new Vec(-500, 0), 3.8));
         }
         initControl('TILT');
     }

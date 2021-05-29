@@ -229,7 +229,7 @@ export function makeWorldBoundsEntity(showBounds: boolean) {
     });
 }
 
-export const CONTROL_SIZE = 200;
+export const CONTROL_SIZE = 250;
 
 function makeBoxedTextForControl(control: ControlName): RenderingTypedPayload {
     return {

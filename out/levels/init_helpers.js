@@ -193,7 +193,7 @@ export function makeWorldBoundsEntity(showBounds) {
         }
     });
 }
-export const CONTROL_SIZE = 200;
+export const CONTROL_SIZE = 250;
 function makeBoxedTextForControl(control) {
     return {
         type: 'RENDERING',

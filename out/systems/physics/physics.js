@@ -195,7 +195,7 @@ export class Physics {
         const opts = {
             id,
             label,
-            restitution: physicsOptions.restitution || 0.8,
+            restitution: physicsOptions.restitution || 0.6,
             isStatic: physicsOptions.isStatic,
             friction: 0.3,
             inertia: physicsOptions.nonRotating ? Infinity : undefined,
