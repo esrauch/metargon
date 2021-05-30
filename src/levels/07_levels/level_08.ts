@@ -31,13 +31,11 @@ function updateCountdownRendering(tickCount: number): RenderingPayload {
         boxH: textPos.h,
         text: `OH NO... ${s}`,
         fontSize: 75,
+        color: Color.WATER,
     };
 }
 
-const targetRect = PositionedRect.trbl(500, VWIDTH, 1200, 1600); 
-
-// Done with either a tricky Lock
-export class Level03DropLock implements Level, BusListener {
+export class Level08 implements Level, BusListener {
     private shotTarget?: Id;
 
     activate() {
@@ -46,10 +44,8 @@ export class Level03DropLock implements Level, BusListener {
             color: Color.WATER,
         });
         initWorldBounds(/* showWorldBounds */ false);
-        initControls('LOCK');
-
-        initStaticBox(PositionedRect.trbl(0, 1600, 1500, 1200), {text: 'NOPE'});
-
+        initControls();
+        
         const textEntity = makeEntity({
             label: 'holderupper',
             initialPos: textPos.center,
@@ -60,11 +56,14 @@ export class Level03DropLock implements Level, BusListener {
                     height: textPos.h,
                 },
                 isStatic: true,
+                entityCategory: PhysicsEntityCategory.MAGNETIC,
             }
         });
         animationSystem.start(new UpdateRenderingAnim(textEntity, updateCountdownRendering, 60));
         animationSystem.start(new DelayedDestroy(textEntity, releaseTime * 60));
 
+        const targetRect = new PositionedRect(
+            new Pos(VWIDTH - 750 / 2, VHEIGHT / 4), 750, 100);
         this.shotTarget = makeEntity({
             label: 'shot_target',
             initialPos: targetRect.center,
@@ -77,6 +76,12 @@ export class Level03DropLock implements Level, BusListener {
                 color: Color.GRASS,
             }
         });
+
+        const jail = PositionedRect.trbl(targetRect.t - 200, targetRect.r + 50, targetRect.b + 200, targetRect.l - 50);
+        initStaticBox(new PositionedRect(new Pos(jail.l, (jail.t+jail.b) / 2), 50, jail.h));
+        initStaticBox(new PositionedRect(new Pos((jail.l+jail.r)/2, jail.t), jail.w, 50));
+        initStaticBox(new PositionedRect(new Pos(jail.r, (jail.t+jail.b) / 2), 50, jail.h));
+        initStaticBox(new PositionedRect(new Pos((jail.l+jail.r)/2, jail.b), jail.w, 50));    
 
         initLoseSensor(PositionedRect.trbl(
             VHEIGHT - 250, VWIDTH, VHEIGHT, 0));
@@ -99,7 +104,7 @@ export class Level03DropLock implements Level, BusListener {
                 type: 'SENSOR',
                 payload: {
                     target: this.shotTarget!,
-                    rect: { w: targetRect.w, h: targetRect.h },
+                    rect: { w: 750, h: 100 },
                     callback: () => bus.dispatch(new Win())
                 }
             }));

@@ -1,6 +1,6 @@
 import { Pos, VHEIGHT, VWIDTH } from "../../coords/coords.js";
 import { PositionedRect } from "../../coords/rect.js";
-import { initControl, initControlsWidget, initPlayerEntity, initStaticBox, initWinSensor, initWorldBounds } from "../init_helpers.js";
+import { initControl, initPlayerEntity, initStaticBox, initWinSensor, initWorldBounds } from "../init_helpers.js";
 
 
 export class Tilt01 {
@@ -14,7 +14,7 @@ export class Tilt01 {
             VWIDTH,
             VHEIGHT/2 + 750,
             0,
-        ), {text: 'TILT!'});
+        ), {text: 'TILT PHONE (ON DESKTOP CLICK ON SENSOR)'});
 
         initWinSensor(new PositionedRect(new Pos(VWIDTH/2, 500), 250, 250));
     }

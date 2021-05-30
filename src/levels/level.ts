@@ -16,22 +16,25 @@ import { Shot02 } from "./03_shot/shot_02.js";
 import { Shot04 } from "./03_shot/shot_04.js";
 import { Shot03 } from "./03_shot/shot_03.js";
 import { Mag01 } from "./04_mag/mag_01.js";
-import { Mag02 } from "./04_mag/mag_02.js";
+import { Mag03 } from "./04_mag/mag_03.js";
 import { Lock01 } from "./05_lock/lock_01.js";
 import { Lock02 } from "./05_lock/lock_02.js";
 import { Level02 } from "./07_levels/level_02.js";
 import { Level05 } from "./07_levels/level_05.js";
-import { Mag03 } from "./04_mag/mag_03.js";
+import { Mag02 } from "./04_mag/mag_02.js";
 import { Level01 } from "./07_levels/level_01.js";
 import { Level03MissingTop } from "./07_levels/level_03missingtop.js";
 import { Level03 } from "./07_levels/level_03.js";
 import { Level03DropLock } from "./07_levels/level_03droplock.js";
 import { Level03Lock } from "./07_levels/level_03lock.js";
-import { Level06 } from "./07_levels/level_06cheese.js";
+import { Level08 } from "./07_levels/level_08.js";
 import { Level04 } from "./07_levels/level_04.js";
 import { Tilt01 } from "./06_tilt/tilt_01.js";
 import { PlaygroundScreen } from "./99_nonlevels/playground.js";
 import { Tilt02 } from "./06_tilt/tilt_02.js";
+import { Shot05 } from "./03_shot/shot_05.js";
+import { Level07 } from "./07_levels/level_07.js";
+import { Level06 } from "./07_levels/level_06.js";
 
 export interface Level {
     activate: () => void;
@@ -68,12 +71,15 @@ const screens: (new() => Level)[] = [
     Level03DropLock,
     Level03MissingTop,
     Level04,
-    Level05, 
-    Level06,  // 30
+    Level05,
+    Level06,  // 30 
+    Level07, 
+    Level08,
     FinScreen,
 ]
 
 export function getLevelNumber(n: number): Level {
+    // return new Shot05();
     let screenCtor = screens[n];
     return screenCtor ? new screenCtor() : new BrokenScreen();
 }

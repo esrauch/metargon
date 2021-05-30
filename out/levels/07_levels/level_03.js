@@ -21,7 +21,8 @@ function updateCountdownRendering(tickCount) {
         fontSize: 75,
     };
 }
-const vertBlockPos = PositionedRect.trbl(0, 1300, 2000, 1200);
+const targetRect = PositionedRect.trbl(500, VWIDTH, 1200, 1600);
+const vertBlockPos = PositionedRect.trbl(0, targetRect.l, 2000, 1200);
 function updateCountdownRenderingSmall(tickCount) {
     const s = releaseTime - Math.round(tickCount / 60);
     return {
@@ -54,7 +55,6 @@ export class Level03 {
         animationSystem.start(new UpdateRenderingAnim(textEntity, updateCountdownRendering, 60));
         animationSystem.start(new DelayedDestroy(vertBlock, releaseTime * 60));
         animationSystem.start(new DelayedDestroy(textEntity, releaseTime * 60));
-        const targetRect = new PositionedRect(new Pos(VWIDTH - 750 / 2, VHEIGHT / 4), 750, 100);
         this.shotTarget = makeEntity({
             label: 'shot_target',
             initialPos: targetRect.center,
@@ -86,7 +86,7 @@ export class Level03 {
                 type: 'SENSOR',
                 payload: {
                     target: this.shotTarget,
-                    rect: { w: 750, h: 100 },
+                    rect: { w: targetRect.w, h: targetRect.h },
                     callback: () => bus.dispatch(new Win())
                 }
             }));

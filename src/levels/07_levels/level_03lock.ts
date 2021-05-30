@@ -1,4 +1,4 @@
-import { DelayedDestroy, DelayedSetPayload } from "../../anim/delayed_callback.js";
+import { DelayedDestroy, DelayedEntitySpecificCallback, DelayedSetPayload } from "../../anim/delayed_callback.js";
 import { UpdateRenderingAnim } from "../../anim/update_rendering_anim.js";
 import { bus, BusEvent, BusListener } from "../../bus/bus.js";
 import { Pos, VWIDTH, VHEIGHT } from "../../coords/coords.js";
@@ -6,6 +6,7 @@ import { PositionedRect } from "../../coords/rect.js";
 import { CreateEntity } from "../../events/core_entity_events.js";
 import { makeEntity } from "../../events/make_entity_helper.js";
 import { SetPayloadEvent } from "../../events/payload_events.js";
+import { ChangePhysicsEntityCategory } from "../../events/physics_events.js";
 import { Win } from "../../events/win_loss_events.js";
 import { Color } from "../../gfx/gfx.js";
 import { Id } from "../../payloads/entity_id.js";
@@ -35,7 +36,7 @@ function updateCountdownRendering(tickCount: number): RenderingPayload {
 }
 
 const vertReleaseTime = 7;
-const vertBlockPos = PositionedRect.trbl(0, 1300, 2000, 1200)
+const vertBlockPos = PositionedRect.trbl(0, 1600, 2000, 1200)
 function updateCountdownRenderingSmall(tickCount: number): RenderingPayload {
     const s = vertReleaseTime - Math.round(tickCount / 60);
     return {
@@ -46,6 +47,8 @@ function updateCountdownRenderingSmall(tickCount: number): RenderingPayload {
         fontSize: 75,
     };
 }
+
+const targetRect = PositionedRect.trbl(500, VWIDTH, 1200, 1600); 
 
 export class Level03Lock implements Level, BusListener {
     private shotTarget?: Id;
@@ -97,8 +100,6 @@ export class Level03Lock implements Level, BusListener {
         animationSystem.start(
             new DelayedDestroy(vertBlock, vertReleaseTime * 60))
 
-        const targetRect = new PositionedRect(
-            new Pos(VWIDTH - 750 / 2, VHEIGHT / 4), 750, 100);
         this.shotTarget = makeEntity({
             label: 'shot_target',
             initialPos: targetRect.center,
@@ -133,10 +134,25 @@ export class Level03Lock implements Level, BusListener {
                 type: 'SENSOR',
                 payload: {
                     target: this.shotTarget!,
-                    rect: { w: 750, h: 100 },
+                    rect: { w: targetRect.w, h: targetRect.h },
                     callback: () => bus.dispatch(new Win())
                 }
             }));
+            
+            // HACK ON TOP OF HACK!        
+            // Only for this level we make the shot be type=PLAYER so that we can
+            // have a vertical box that is collide_except_player that blocks player+shot but
+            // permits a vertical box to fall.
+            // In addition, this callback might be called _before_ physics handles the createvent
+            // and ChangePhsicsEntityCategory only works post-creation (unlike most payloads)
+            // so we also change the type _next_ frame
+            animationSystem.start(new DelayedEntitySpecificCallback(
+                ev.entityId,
+                () => {
+                    bus.dispatch(new ChangePhysicsEntityCategory(ev.entityId, PhysicsEntityCategory.PLAYER))
+                },
+                1
+            ));
         }
     }
 }

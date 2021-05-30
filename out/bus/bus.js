@@ -36,8 +36,10 @@ export class Bus {
         }
         else {
             for (let i = 0; i < this.listeners.length; ++i) {
-                if (ls[i] == l)
+                if (ls[i] == l) {
                     ls.splice(i, 1);
+                    return;
+                }
             }
         }
     }

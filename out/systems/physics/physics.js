@@ -5,7 +5,6 @@ import { getCenterPosition, getLabel, isLocked } from "../getters.js";
 import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
 import { assertUnreachable } from "../../util/assert.js";
 import { camera } from "../../coords/camera.js";
-import { PhysicsControls } from "../../events/physics_mouse_events.js";
 import { SetPayloadEvent } from "../../events/payload_events.js";
 import { genericPayloadTable } from "../generic_payload_table.js";
 // Importing a js module with ts typings is incredibly difficult for some reason.
@@ -43,6 +42,16 @@ export class Physics {
         if (!b)
             return undefined;
         return b.vertices;
+    }
+    query(pos, opts) {
+        let bodies = M.Query.point(this.engine.world.bodies, M.Vector.create(pos.x, pos.y));
+        if ((opts === null || opts === void 0 ? void 0 : opts.entityType) !== undefined)
+            bodies = bodies.filter((body) => body.collisionFilter.category == opts.entityType);
+        if ((opts === null || opts === void 0 ? void 0 : opts.includeStatic) !== true)
+            bodies = bodies.filter((body) => !body.isStatic);
+        if (bodies.length === 0)
+            return undefined;
+        return bodies[0].id;
     }
     onEvent(ev) {
         var _a, _b, _c, _d;
@@ -256,37 +265,26 @@ export class Physics {
     enablePhysicsMouse(which) {
         if (this.mouseConstraint)
             return;
-        if (which === PhysicsControls.MAG) {
-            this.mouseConstraint = M.MouseConstraint.create(this.engine, {
-                mouse: this.mouse,
-                constraint: {
-                    stiffness: 0.5,
-                },
-                collisionFilter: { mask: PhysicsEntityCategory.MAGNETIC }
-            });
-        }
-        else {
-            this.mouseConstraint = M.MouseConstraint.create(this.engine, {
-                mouse: this.mouse,
-                constraint: {
-                    stiffness: 0,
-                },
-                collisionFilter: { mask: PhysicsEntityCategory.MAGNETIC }
-            });
-            M.Events.on(this.mouseConstraint, 'startdrag', () => {
-                var _a;
-                const b = (_a = this.mouseConstraint) === null || _a === void 0 ? void 0 : _a.body;
-                if (!b)
-                    return;
-                bus.dispatch(new SetPayloadEvent(b.id, {
-                    type: 'LOCKED',
-                    payload: {
-                        isLocked: !isLocked(b.id),
-                        wasStatic: b.isStatic,
-                    }
-                }));
-            });
-        }
+        this.mouseConstraint = M.MouseConstraint.create(this.engine, {
+            mouse: this.mouse,
+            constraint: {
+                stiffness: 0,
+            },
+            collisionFilter: { mask: PhysicsEntityCategory.MAGNETIC }
+        });
+        M.Events.on(this.mouseConstraint, 'startdrag', () => {
+            var _a;
+            const b = (_a = this.mouseConstraint) === null || _a === void 0 ? void 0 : _a.body;
+            if (!b)
+                return;
+            bus.dispatch(new SetPayloadEvent(b.id, {
+                type: 'LOCKED',
+                payload: {
+                    isLocked: !isLocked(b.id),
+                    wasStatic: b.isStatic,
+                }
+            }));
+        });
         M.Composite.add(this.engine.world, this.mouseConstraint);
     }
     disablePhysicsMouse() {

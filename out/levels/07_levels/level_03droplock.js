@@ -22,7 +22,8 @@ function updateCountdownRendering(tickCount) {
         fontSize: 75,
     };
 }
-// Done with either a tricky Lock or an easy Mag to drag through a wall to cheese.
+const targetRect = PositionedRect.trbl(500, VWIDTH, 1200, 1600);
+// Done with either a tricky Lock
 export class Level03DropLock {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 2, 250), {
@@ -31,7 +32,7 @@ export class Level03DropLock {
         });
         initWorldBounds(/* showWorldBounds */ false);
         initControls('LOCK');
-        initStaticBox(PositionedRect.trbl(0, 1300, 1500, 1200));
+        initStaticBox(PositionedRect.trbl(0, 1600, 1500, 1200), { text: 'NOPE' });
         const textEntity = makeEntity({
             label: 'holderupper',
             initialPos: textPos.center,
@@ -46,7 +47,6 @@ export class Level03DropLock {
         });
         animationSystem.start(new UpdateRenderingAnim(textEntity, updateCountdownRendering, 60));
         animationSystem.start(new DelayedDestroy(textEntity, releaseTime * 60));
-        const targetRect = new PositionedRect(new Pos(VWIDTH - 750 / 2, VHEIGHT / 4), 750, 100);
         this.shotTarget = makeEntity({
             label: 'shot_target',
             initialPos: targetRect.center,
@@ -78,7 +78,7 @@ export class Level03DropLock {
                 type: 'SENSOR',
                 payload: {
                     target: this.shotTarget,
-                    rect: { w: 750, h: 100 },
+                    rect: { w: targetRect.w, h: targetRect.h },
                     callback: () => bus.dispatch(new Win())
                 }
             }));

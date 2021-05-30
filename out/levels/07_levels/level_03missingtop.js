@@ -21,13 +21,14 @@ function updateCountdownRendering(tickCount) {
         fontSize: 75,
     };
 }
+const targetRect = PositionedRect.trbl(500, VWIDTH, 1200, 1600);
 // Take away the top, but don't tell the player. Kind of rude actually
 export class Level03MissingTop {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 2, 250));
         initWorldBounds(/* showWorldBounds */ false, /* skipblockontop */ true);
         initControls();
-        initStaticBox(PositionedRect.trbl(0, 1300, VHEIGHT, 1200));
+        initStaticBox(PositionedRect.trbl(0, 1600, 1500, 1200), { text: 'NOPE' });
         const textEntity = makeEntity({
             label: 'holderupper',
             initialPos: textPos.center,
@@ -42,7 +43,6 @@ export class Level03MissingTop {
         });
         animationSystem.start(new UpdateRenderingAnim(textEntity, updateCountdownRendering, 60));
         animationSystem.start(new DelayedDestroy(textEntity, releaseTime * 60));
-        const targetRect = new PositionedRect(new Pos(VWIDTH - 750 / 2, VHEIGHT / 4), 750, 100);
         this.shotTarget = makeEntity({
             label: 'shot_target',
             initialPos: targetRect.center,
@@ -74,7 +74,7 @@ export class Level03MissingTop {
                 type: 'SENSOR',
                 payload: {
                     target: this.shotTarget,
-                    rect: { w: 750, h: 100 },
+                    rect: { w: targetRect.w, h: targetRect.h },
                     callback: () => bus.dispatch(new Win())
                 }
             }));

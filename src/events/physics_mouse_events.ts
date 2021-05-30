@@ -1,7 +1,7 @@
 
 
+// TODO: Ported Mag off of PhysicsMouse, should do the same for lock.
 export enum PhysicsControls {
-    MAG = 1,
     LOCK = 2,
 }
 

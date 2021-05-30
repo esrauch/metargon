@@ -5,16 +5,16 @@ import { ChangePhysicsEntityCategory } from "../../events/physics_events.js";
 import { Color } from "../../gfx/gfx.js";
 import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
 import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor, initResetButton, initNonRotatingBox } from "../init_helpers.js";
-export class Level05 {
+export class Level06 {
     activate() {
         initPlayerEntity(new Pos(VWIDTH / 4, VHEIGHT / 2));
         initWorldBounds();
-        initControlsWidget(['MAG', 'ROLL'], 'MAG');
+        initControlsWidget(['MAG'], 'MAG');
         initResetButton();
         initStaticBox(PositionedRect.trbl(VHEIGHT / 2, VWIDTH / 3, VHEIGHT / 2 + 750, 0));
         initStaticBox(PositionedRect.trbl(VHEIGHT / 2 + 175, VWIDTH, VHEIGHT, 0));
         initWinSensor(PositionedRect.trbl(0, VWIDTH, VHEIGHT / 3, VWIDTH * 3 / 4));
-        const b = initNonRotatingBox(new PositionedRect(new Pos(175, VHEIGHT / 4), 350, 175), Color.WATER);
+        const b = initNonRotatingBox(new PositionedRect(new Pos(VWIDTH / 2, VHEIGHT / 4), 350, 175), Color.WATER);
         bus.dispatch(new ChangePhysicsEntityCategory(b, PhysicsEntityCategory.MAGNETIC));
     }
 }

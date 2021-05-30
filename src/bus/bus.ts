@@ -79,7 +79,10 @@ export class Bus {
             console.error('tried to double add a listener to bus');
         } else {
             for (let i = 0; i < this.listeners.length; ++i) {
-                if (ls[i] == l) ls.splice(i, 1);
+                if (ls[i] == l) {
+                    ls.splice(i, 1);
+                    return;
+                }
             }
         }
     }

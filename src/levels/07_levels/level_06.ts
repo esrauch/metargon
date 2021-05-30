@@ -7,11 +7,11 @@ import { PhysicsEntityCategory } from "../../payloads/physics_payload.js";
 import { initPlayerEntity, initWorldBounds, initControlsWidget, initStaticBox, initWinSensor, initResetButton, initNonRotatingBox, initLoseSensor } from "../init_helpers.js";
 import { Level } from "../level.js";
 
-export class Level05 implements Level {
+export class Level06 implements Level {
     activate(): void {
         initPlayerEntity(new Pos(VWIDTH / 4, VHEIGHT/2));
         initWorldBounds();
-        initControlsWidget(['MAG', 'ROLL'], 'MAG');
+        initControlsWidget(['MAG'], 'MAG');
         initResetButton();
 
         initStaticBox(PositionedRect.trbl(
@@ -28,7 +28,7 @@ export class Level05 implements Level {
         initWinSensor(PositionedRect.trbl(0,VWIDTH, VHEIGHT/3, VWIDTH * 3/4));
 
        
-        const b=initNonRotatingBox(new PositionedRect(new Pos(175, VHEIGHT/4), 350, 175), Color.WATER);
+        const b=initNonRotatingBox(new PositionedRect(new Pos(VWIDTH/2, VHEIGHT/4), 350, 175), Color.WATER);
         bus.dispatch(new ChangePhysicsEntityCategory(b, PhysicsEntityCategory.MAGNETIC));
     }
 }

@@ -1,6 +1,6 @@
+// TODO: Ported Mag off of PhysicsMouse, should do the same for lock.
 export var PhysicsControls;
 (function (PhysicsControls) {
-    PhysicsControls[PhysicsControls["MAG"] = 1] = "MAG";
     PhysicsControls[PhysicsControls["LOCK"] = 2] = "LOCK";
 })(PhysicsControls || (PhysicsControls = {}));
 export class EnablePhysicsMouse {

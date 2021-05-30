@@ -18,7 +18,7 @@ interface RectangleHull {
 
 export enum PhysicsEntityCategory {
     PLAYER = 1<<0,
-    NORMAL = 1<<2,
+    NORMAL = 1<<1,
     MAGNETIC = 1<<2,
     NO_COLLIDE_WITH_PLAYER = 1<<3,
     COLLIDE_ONLY_WITH_PLAYER = 1<<4,

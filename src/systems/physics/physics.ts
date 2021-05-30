@@ -61,6 +61,24 @@ export class Physics implements BusListener {
         return b.vertices;
     }
 
+    query(pos: Pos, opts?: {
+        entityType?: PhysicsEntityCategory,
+        includeStatic?: boolean
+    }): Id|undefined {
+        let bodies = M.Query.point(
+            this.engine.world.bodies,
+            M.Vector.create(pos.x, pos.y));
+        
+        if (opts?.entityType !== undefined)
+            bodies = bodies.filter((body) => body.collisionFilter.category == opts.entityType);
+
+        if (opts?.includeStatic !== true)
+            bodies = bodies.filter((body) => !body.isStatic);
+
+        if (bodies.length === 0) return undefined;
+        return bodies[0].id;
+    }
+
     onEvent(ev: BusEvent): void {
         switch (ev.type) {
             case 'LEVEL_CHANGED':
@@ -292,35 +310,25 @@ export class Physics implements BusListener {
 
     enablePhysicsMouse(which: PhysicsControls) {
         if (this.mouseConstraint) return;
-        if (which === PhysicsControls.MAG) {
-            this.mouseConstraint = M.MouseConstraint.create(this.engine, {
-                mouse: this.mouse,
-                constraint: {
-                    stiffness: 0.5,
-                } as any,
-                collisionFilter: {mask: PhysicsEntityCategory.MAGNETIC}
-            });
-        } else {
-            this.mouseConstraint = M.MouseConstraint.create(this.engine, {
-                mouse: this.mouse,
-                constraint: {
-                    stiffness: 0, // Causes it to not actually move it
-                } as any,
-                collisionFilter: {mask: PhysicsEntityCategory.MAGNETIC}
-            });
+        this.mouseConstraint = M.MouseConstraint.create(this.engine, {
+            mouse: this.mouse,
+            constraint: {
+                stiffness: 0, // Causes it to not actually move it
+            } as any,
+            collisionFilter: {mask: PhysicsEntityCategory.MAGNETIC}
+        });
 
-            M.Events.on(this.mouseConstraint, 'startdrag', () => {
-                const b = this.mouseConstraint?.body;
-                if (!b) return;
-                bus.dispatch(new SetPayloadEvent(b.id, {
-                    type: 'LOCKED',
-                    payload: {
-                        isLocked: !isLocked(b.id),
-                        wasStatic: b.isStatic,
-                    }
-                }));
-            });
-        }
+        M.Events.on(this.mouseConstraint, 'startdrag', () => {
+            const b = this.mouseConstraint?.body;
+            if (!b) return;
+            bus.dispatch(new SetPayloadEvent(b.id, {
+                type: 'LOCKED',
+                payload: {
+                    isLocked: !isLocked(b.id),
+                    wasStatic: b.isStatic,
+                }
+            }));
+        });
 
         M.Composite.add(this.engine.world, this.mouseConstraint);
 

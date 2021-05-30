@@ -33,18 +33,26 @@ export class DelayedWin extends DelayedCallback {
     }
 }
 
-export class DelayedDestroy extends DelayedCallback {
-    constructor(readonly entityId: Id, tickDelay: number) {
+export class DelayedEntitySpecificCallback extends DelayedCallback {
+    constructor(readonly entityId: Id, cb: ()=>void, tickDelay: number) {
+        super(cb, tickDelay);
+    }
+}
+
+export class DelayedDestroy extends DelayedEntitySpecificCallback {
+    constructor(entityId: Id, tickDelay: number) {
         super(
+            entityId,
             () => bus.dispatch(new DestroyEntity(this.entityId)),
             tickDelay
         );
     }
 }
 
-export class DelayedSetPayload extends DelayedCallback {
-    constructor(readonly entityId: Id, readonly typedPayload: SomeTypedPayload, tickDelay: number) {
+export class DelayedSetPayload extends DelayedEntitySpecificCallback {
+    constructor(entityId: Id, readonly typedPayload: SomeTypedPayload, tickDelay: number) {
         super(
+            entityId,
             () => bus.dispatch(new SetPayloadEvent(this.entityId, this.typedPayload)),
             tickDelay
         );
