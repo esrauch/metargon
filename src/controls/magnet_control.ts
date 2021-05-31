@@ -41,8 +41,8 @@ export class MagnetControl extends Control implements BusListener {
         bus.dispatch(new SetVelocity(this.selected, v), /* spammy */ false);
     }
 
-    onDown(pos: Pos) {
-        this.reset();
+    private trySelect(pos: Pos) {
+        if (this.selected !== undefined) return;
         this.selected = physics.query(pos, {
             entityType: PhysicsEntityCategory.MAGNETIC,
             includeStatic: false,
@@ -59,7 +59,14 @@ export class MagnetControl extends Control implements BusListener {
         }
     }
 
+    onDown(pos: Pos) {
+        this.reset();
+        this.trySelect(pos);
+    }
+
     onMove(pos: Pos) {
+        // If nothing is selected, try to select something. If it still isn't, bail out.
+        if (this.indicator === undefined) this.trySelect(pos);
         if (this.indicator === undefined) return;
         bus.dispatch(new SetPayloadEvent(this.indicator, {
             type: 'POSITION',
@@ -67,7 +74,7 @@ export class MagnetControl extends Control implements BusListener {
         }), /* spammy */ true);
     }
 
-    onUp(pos: Pos) {
+    onUp(_pos: Pos) {
         this.reset();
     }
     onCancel() {

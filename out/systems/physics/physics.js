@@ -265,6 +265,8 @@ export class Physics {
     enablePhysicsMouse(which) {
         if (this.mouseConstraint)
             return;
+        // This logic is actually only LOCK. Mag was migrated off because
+        // the constraints behavior sucks.
         this.mouseConstraint = M.MouseConstraint.create(this.engine, {
             mouse: this.mouse,
             constraint: {

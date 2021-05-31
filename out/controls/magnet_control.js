@@ -34,8 +34,9 @@ export class MagnetControl extends Control {
         const v = delta(indicatorPos, selectedPos).normalizeIfLongerThan(200);
         bus.dispatch(new SetVelocity(this.selected, v), /* spammy */ false);
     }
-    onDown(pos) {
-        this.reset();
+    trySelect(pos) {
+        if (this.selected !== undefined)
+            return;
         this.selected = physics.query(pos, {
             entityType: PhysicsEntityCategory.MAGNETIC,
             includeStatic: false,
@@ -50,7 +51,14 @@ export class MagnetControl extends Control {
             });
         }
     }
+    onDown(pos) {
+        this.reset();
+        this.trySelect(pos);
+    }
     onMove(pos) {
+        // If nothing is selected, try to select something. If it still isn't, bail out.
+        if (this.indicator === undefined)
+            this.trySelect(pos);
         if (this.indicator === undefined)
             return;
         bus.dispatch(new SetPayloadEvent(this.indicator, {
@@ -58,7 +66,7 @@ export class MagnetControl extends Control {
             payload: pos,
         }), /* spammy */ true);
     }
-    onUp(pos) {
+    onUp(_pos) {
         this.reset();
     }
     onCancel() {
