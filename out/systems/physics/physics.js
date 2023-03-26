@@ -270,7 +270,7 @@ export class Physics {
         this.mouseConstraint = M.MouseConstraint.create(this.engine, {
             mouse: this.mouse,
             constraint: {
-                stiffness: 0,
+                stiffness: 0, // Causes it to not actually move it
             },
             collisionFilter: { mask: PhysicsEntityCategory.MAGNETIC }
         });
